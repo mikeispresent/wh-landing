@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wild Heavy - Chicago's Food Discovery Platform | Est. 2019</title>
+    <meta name="description" content="Wild Heavy - Chicago's community-driven food discovery platform. We're prepping something special. Est. 2019.">
+    <meta property="og:title" content="Wild Heavy - Chicago Food Discovery">
+    <meta property="og:description" content="We're prepping something special for Chicago's food scene.">
+    <meta property="og:image" content="/logo.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f2e8 0%, #e8e4d9 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #1a3d2e;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Subtle animated background */
+        body::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(26,61,46,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: backgroundMove 60s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes backgroundMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .container {
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            z-index: 1;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo-container {
+            margin-bottom: 40px;
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .logo {
+            width: 400px;
+            max-width: 90%;
+            height: auto;
+            filter: drop-shadow(0 4px 6px rgba(26,61,46,0.1));
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        /* Fallback logo text if image doesn't load */
+        .logo-text {
+            display: none;
+            font-size: 4rem;
+            font-weight: 900;
+            letter-spacing: -2px;
+            line-height: 0.9;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #f5f2e8 0%, #d4c5a0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.2);
+        }
+
+        /* Show text logo only if image fails to load */
+        .logo:not([src]), .logo[src=""] {
+            display: none;
+        }
+        
+        .logo:not([src]) ~ .logo-text, .logo[src=""] ~ .logo-text {
+            display: block;
+        }
+
+        .logo-text .heavy {
+            display: block;
+            margin-top: -5px;
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #2d5a45;
+            margin-bottom: 30px;
+            animation: fadeIn 1s ease-out 0.5s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .message {
+            font-size: 1.25rem;
+            line-height: 1.6;
+            color: #1a3d2e;
+            margin-bottom: 40px;
+            font-weight: 400;
+            animation: fadeIn 1s ease-out 0.7s both;
+        }
+
+        .kitchen-term {
+            display: inline-block;
+            background: rgba(26,61,46,0.08);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-style: italic;
+            position: relative;
+        }
+
+        .kitchen-term::after {
+            content: 'preparing for service';
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            color: #2d5a45;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .kitchen-term:hover::after {
+            opacity: 1;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            animation: fadeIn 1s ease-out 0.9s both;
+        }
+
+        .social-links a {
+            color: #2d5a45;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .social-links a:hover {
+            color: #1a3d2e;
+            transform: translateY(-2px);
+        }
+
+        .social-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #1a3d2e;
+            transition: width 0.3s ease;
+        }
+
+        .social-links a:hover::after {
+            width: 100%;
+        }
+
+        .established {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            color: #2d5a45;
+            text-transform: uppercase;
+            animation: fadeIn 1s ease-out 1.1s both;
+        }
+
+        .bear-icon {
+            display: inline-block;
+            margin-left: 10px;
+            animation: bearWiggle 2s ease-in-out infinite;
+        }
+
+        @keyframes bearWiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 480px) {
+            .logo-text {
+                font-size: 3rem;
+            }
+            
+            .tagline {
+                font-size: 1.2rem;
+                letter-spacing: 2px;
+            }
+            
+            .message {
+                font-size: 1.1rem;
+            }
+            
+            .social-links {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <!-- Logo with transparent background -->
+            <img src="logo.png" alt="Wild Heavy" class="logo">
+        </div>
+        
+        <div class="tagline">Chicago</div>
+        
+        <div class="message">
+            We're <span class="kitchen-term">prepping</span> something special.
+        </div>
+        
+        <div class="social-links">
+            <a href="https://www.instagram.com/wildheavy" target="_blank" rel="noopener noreferrer">Instagram</a>
+            <a href="mailto:wildheavychicago@gmail.com">Contact</a>
+        </div>
+    </div>
+    
+    <div class="established">
+        Est. 2019
+    </div>
+
+    <script>
+        // Simple console easter egg for the curious
+        console.log('%c🐻 Wild Heavy', 'font-size: 24px; font-weight: bold; color: #1a3d2e;');
+        console.log('%cEst. 2019 • Chicago', 'font-size: 14px; color: #8fa68e;');
+        
+        // Add some subtle interactivity
+        document.querySelector('.kitchen-term').addEventListener('click', function() {
+            this.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
+        });
+    </script>
+</body>
+</html>
