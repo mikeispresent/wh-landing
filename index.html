@@ -30,7 +30,6 @@
             overflow: hidden;
         }
 
-        /* Subtle animated background */
         body::before {
             content: '';
             position: absolute;
@@ -55,19 +54,12 @@
             width: 100%;
             z-index: 1;
             animation: fadeInUp 1s ease-out;
-            /* Push container up slightly to make room for footer */
-            margin-bottom: 80px; 
+            margin-bottom: 120px; 
         }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .logo-container {
@@ -88,38 +80,7 @@
             transition: transform 0.3s ease;
         }
 
-        .logo:hover {
-            transform: scale(1.05);
-        }
-
-        /* Fallback logo text if image doesn't load */
-        .logo-text {
-            display: none;
-            font-size: 4rem;
-            font-weight: 900;
-            letter-spacing: -2px;
-            line-height: 0.9;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, #f5f2e8 0%, #d4c5a0 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 2px 20px rgba(0,0,0,0.2);
-        }
-
-        /* Show text logo only if image fails to load */
-        .logo:not([src]), .logo[src=""] {
-            display: none;
-        }
-        
-        .logo:not([src]) ~ .logo-text, .logo[src=""] ~ .logo-text {
-            display: block;
-        }
-
-        .logo-text .heavy {
-            display: block;
-            margin-top: -5px;
-        }
+        .logo:hover { transform: scale(1.05); }
 
         .tagline {
             font-size: 1.5rem;
@@ -131,10 +92,7 @@
             animation: fadeIn 1s ease-out 0.5s both;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .message {
             font-size: 1.25rem;
@@ -167,9 +125,7 @@
             transition: opacity 0.3s ease;
         }
 
-        .kitchen-term:hover::after {
-            opacity: 1;
-        }
+        .kitchen-term:hover::after { opacity: 1; }
 
         .social-links {
             display: flex;
@@ -179,17 +135,29 @@
             animation: fadeIn 1s ease-out 0.9s both;
         }
 
+        /* UPDATED CSS FOR SOCIAL LINK WITH ICON */
         .social-links a {
             color: #2d5a45;
             text-decoration: none;
             font-size: 1rem;
             transition: all 0.3s ease;
             position: relative;
+            /* Ensures icon and text are aligned nicely */
+            display: inline-flex;
+            align-items: center;
         }
 
         .social-links a:hover {
             color: #1a3d2e;
             transform: translateY(-2px);
+        }
+
+        /* CSS FOR THE NEW SVG ICON */
+        .social-icon {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            fill: currentColor; /* Takes the color of the text link */
         }
 
         .social-links a::after {
@@ -203,14 +171,12 @@
             transition: width 0.3s ease;
         }
 
-        .social-links a:hover::after {
-            width: 100%;
-        }
+        .social-links a:hover::after { width: 100%; }
 
         /* LEGAL FOOTER STYLES */
         .legal-footer {
             position: absolute;
-            bottom: 20px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
             width: 100%;
@@ -219,44 +185,41 @@
             z-index: 10;
         }
 
-        .legal-footer p {
-            margin: 5px 0;
-        }
-
         .support-link {
             font-size: 0.9rem;
             color: #2d5a45;
-            margin-bottom: 8px;
+            margin-bottom: 20px;
         }
         
         .support-link a {
             color: inherit;
-            text-decoration: underline;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(45, 90, 69, 0.3);
         }
 
         .est-date {
-            font-size: 0.9rem;
-            letter-spacing: 2px;
+            font-size: 0.85rem;
+            letter-spacing: 2.5px;
             text-transform: uppercase;
             color: #2d5a45;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 25px;
+            opacity: 0.9;
         }
 
         .copyright {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: #4a4a4a;
-            opacity: 0.6;
-            line-height: 1.4;
+            opacity: 0.5;
+            line-height: 1.6;
+            letter-spacing: 0.5px;
         }
 
-        /* Mobile responsiveness */
         @media (max-width: 480px) {
-            .logo-text { font-size: 3rem; }
             .tagline { font-size: 1.2rem; letter-spacing: 2px; }
             .message { font-size: 1.1rem; }
-            .social-links { flex-direction: column; gap: 15px; }
-            .legal-footer { bottom: 10px; padding: 0 10px; }
+            .social-links { flex-direction: column; gap: 15px; align-items: center; }
+            .legal-footer { bottom: 20px; padding: 0 20px; }
         }
     </style>
 </head>
@@ -273,7 +236,12 @@
         </div>
         
         <div class="social-links">
-            <a href="https://www.instagram.com/wildheavy" target="_blank" rel="noopener noreferrer">Instagram</a>
+            <a href="https://www.instagram.com/wildheavy" target="_blank" rel="noopener noreferrer">
+                <svg class="social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+                Instagram
+            </a>
         </div>
     </div>
     
@@ -281,16 +249,11 @@
         <div class="support-link">
             Inquiries: <a href="mailto:support@wildheavy.com">support@wildheavy.com</a>
         </div>
-        
-        <div class="est-date">
-            Est. 2019
-        </div>
-
+        <div class="est-date">Est. 2019</div>
         <div class="copyright">
             &copy; 2025 Present Advisory LLC. All Rights Reserved.<br>
             WildHeavy is a trademark of Present Advisory LLC.
         </div>
     </div>
-
 </body>
 </html>
