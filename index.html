@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wild Heavy | Community of Culinary Discovery</title>
-    <meta name="description" content="Wild Heavy brings together those who know - We're prepping something special. Est. 2019.">
-    <meta property="og:title" content="Wild Heavy | Curation Collective">
+    <title>Wild Heavy | The Regular's Playbook</title>
+    <meta name="description" content="Wild Heavy is the playbook for regulars. We're prepping something special. Est. 2019.">
+    <meta property="og:title" content="Wild Heavy | The Regular's Playbook">
     <meta property="og:description" content="We're prepping something special for Chicago.">
     <meta property="og:image" content="/logo.png">
     <link rel="icon" type="image/png" href="/favicon.png">
@@ -56,7 +56,7 @@
             z-index: 1;
             animation: fadeInUp 1s ease-out;
             /* Push container up slightly to make room for footer */
-            margin-bottom: 60px; 
+            margin-bottom: 80px; 
         }
 
         @keyframes fadeInUp {
@@ -207,7 +207,7 @@
             width: 100%;
         }
 
-        /* NEW LEGAL FOOTER STYLES */
+        /* LEGAL FOOTER STYLES */
         .legal-footer {
             position: absolute;
             bottom: 20px;
@@ -250,43 +250,13 @@
             line-height: 1.4;
         }
 
-        .bear-icon {
-            display: inline-block;
-            margin-left: 10px;
-            animation: bearWiggle 2s ease-in-out infinite;
-        }
-
-        @keyframes bearWiggle {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(-5deg); }
-            75% { transform: rotate(5deg); }
-        }
-
         /* Mobile responsiveness */
         @media (max-width: 480px) {
-            .logo-text {
-                font-size: 3rem;
-            }
-            
-            .tagline {
-                font-size: 1.2rem;
-                letter-spacing: 2px;
-            }
-            
-            .message {
-                font-size: 1.1rem;
-            }
-            
-            .social-links {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            /* Ensure footer fits on small screens */
-            .legal-footer {
-                bottom: 10px;
-                padding: 0 10px;
-            }
+            .logo-text { font-size: 3rem; }
+            .tagline { font-size: 1.2rem; letter-spacing: 2px; }
+            .message { font-size: 1.1rem; }
+            .social-links { flex-direction: column; gap: 15px; }
+            .legal-footer { bottom: 10px; padding: 0 10px; }
         }
     </style>
 </head>
@@ -304,5 +274,23 @@
         
         <div class="social-links">
             <a href="https://www.instagram.com/wildheavy" target="_blank" rel="noopener noreferrer">Instagram</a>
-            </div>
+        </div>
     </div>
+    
+    <div class="legal-footer">
+        <div class="support-link">
+            Need a table? <a href="mailto:mike@wildheavy.com">mike@wildheavy.com</a>
+        </div>
+        
+        <div class="est-date">
+            Est. 2019
+        </div>
+
+        <div class="copyright">
+            &copy; 2025 Present Advisory LLC. All Rights Reserved.<br>
+            WildHeavy is a trademark of Present Advisory LLC.
+        </div>
+    </div>
+
+</body>
+</html>
