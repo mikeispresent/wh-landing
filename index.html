@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Wild Heavy | The Regular's Playbook</title>
     <meta name="description" content="Wild Heavy is the playbook for regulars. We're prepping something special. Est. 2019.">
     <meta property="og:title" content="Wild Heavy | The Regular's Playbook">
@@ -10,6 +10,7 @@
     <meta property="og:image" content="/logo.png">
     <link rel="icon" type="image/png" href="/favicon.png">
     <style>
+        /* RESET */
         * {
             margin: 0;
             padding: 0;
@@ -17,25 +18,22 @@
         }
 
         html {
-            /* Fixes the scroll bounce on some devices */
-            height: -webkit-fill-available;
+            height: 100%;
+            overflow-x: hidden;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: linear-gradient(135deg, #f5f2e8 0%, #e8e4d9 100%);
-            /* dVH adapts to the iOS address bar appearing/disappearing */
-            min-height: 100vh;
-            min-height: 100dvh; 
+            /* Forces body to be exactly the screen height */
+            height: 100%;
+            height: 100dvh; 
+            width: 100%;
             display: flex;
             flex-direction: column;
-            align-items: center;
             color: #1a3d2e;
             position: relative;
-            /* STRICTLY prevent side-scrolling */
             overflow-x: hidden;
-            /* Allow vertical scrolling if screen is too small */
-            overflow-y: auto; 
         }
 
         /* Subtle animated background */
@@ -58,16 +56,18 @@
             100% { transform: translate(50px, 50px); }
         }
 
-        /* This wrapper pushes the footer down but centers content */
+        /* FLEX WRAPPER: Centers content, pushes footer down */
         .main-wrapper {
-            flex: 1; /* Takes up all available space */
+            flex: 1; /* Takes all available space */
             display: flex;
             flex-direction: column;
-            justify-content: center; /* Centers vertically */
+            justify-content: center; /* PERFECT CENTER */
             align-items: center;
             width: 100%;
             padding: 20px;
-            padding-bottom: 0; /* Let margin handle spacing */
+            /* Ensure content doesn't hit the footer on tiny screens */
+            padding-bottom: 20px; 
+            overflow-y: auto; /* Only this section scrolls if needed */
         }
 
         .container {
@@ -84,7 +84,7 @@
         }
 
         .logo-container {
-            margin-bottom: 40px;
+            margin-bottom: 30px; /* Reduced slightly for mobile */
             animation: logoFloat 3s ease-in-out infinite;
         }
 
@@ -94,8 +94,8 @@
         }
 
         .logo {
-            width: 400px;
-            max-width: 90%;
+            width: 350px; /* Slightly smaller to prevent overflow */
+            max-width: 85%;
             height: auto;
             filter: drop-shadow(0 4px 6px rgba(26,61,46,0.1));
             transition: transform 0.3s ease;
@@ -104,22 +104,22 @@
         .logo:hover { transform: scale(1.05); }
 
         .tagline {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 300;
             letter-spacing: 3px;
             text-transform: uppercase;
             color: #2d5a45;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             animation: fadeIn 1s ease-out 0.5s both;
         }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .message {
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             line-height: 1.6;
             color: #1a3d2e;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             font-weight: 400;
             animation: fadeIn 1s ease-out 0.7s both;
         }
@@ -133,26 +133,11 @@
             position: relative;
         }
 
-        .kitchen-term::after {
-            content: 'preparing for service';
-            position: absolute;
-            bottom: -25px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.75rem;
-            color: #2d5a45;
-            white-space: nowrap;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .kitchen-term:hover::after { opacity: 1; }
-
         .social-links {
             display: flex;
             justify-content: center;
             gap: 30px;
-            margin-bottom: 20px;
+            margin-bottom: 0; /* Let main-wrapper handle spacing */
             animation: fadeIn 1s ease-out 0.9s both;
         }
 
@@ -166,11 +151,6 @@
             align-items: center;
         }
 
-        .social-links a:hover {
-            color: #1a3d2e;
-            transform: translateY(-2px);
-        }
-
         .social-icon {
             width: 18px;
             height: 18px;
@@ -178,21 +158,23 @@
             fill: currentColor;
         }
 
-        /* RESTRUCTURED FOOTER - No longer absolute */
+        /* LOCKED FOOTER */
         .legal-footer {
             width: 100%;
             text-align: center;
-            padding: 40px 20px 30px 20px; /* Top Right Bottom Left */
+            /* Padding accommodates iPhone Home Bar (Safe Area) */
+            padding-top: 20px;
+            padding-bottom: max(20px, env(safe-area-inset-bottom));
             animation: fadeIn 1s ease-out 1.1s both;
             z-index: 10;
-            /* Ensures it sits at the bottom naturally */
-            position: relative;
+            background: transparent; /* Seamless */
+            flex-shrink: 0; /* Never shrink this */
         }
 
         .support-link {
             font-size: 0.9rem;
             color: #2d5a45;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         
         .support-link a {
@@ -202,30 +184,30 @@
         }
 
         .est-date {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             letter-spacing: 2.5px;
             text-transform: uppercase;
             color: #2d5a45;
             font-weight: 600;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             opacity: 0.9;
         }
 
         .copyright {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             color: #4a4a4a;
             opacity: 0.5;
-            line-height: 1.6;
+            line-height: 1.4;
             letter-spacing: 0.5px;
+            padding: 0 10px;
         }
 
-        /* Mobile Adjustments */
-        @media (max-width: 480px) {
-            .tagline { font-size: 1.2rem; letter-spacing: 2px; }
-            .message { font-size: 1.1rem; }
-            .social-links { flex-direction: column; gap: 15px; align-items: center; }
-            .main-wrapper { padding: 40px 20px 0 20px; }
-            .legal-footer { padding-bottom: 40px; }
+        /* Mobile Landscape & Tiny Phones */
+        @media (max-height: 700px) {
+            .logo { width: 250px; }
+            .tagline { margin-bottom: 15px; }
+            .message { margin-bottom: 20px; }
+            .main-wrapper { justify-content: flex-start; padding-top: 40px; }
         }
     </style>
 </head>
