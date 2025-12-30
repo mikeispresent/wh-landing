@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Wild Heavy | Hospitality Intelligence</title>
-    <meta name="description" content="Wild Heavy is the premier hospitality intelligence platform for Chicago. A service of Present Advisory LLC.">
+    <title>Wild Heavy | Digital Services</title>
+    <meta name="description" content="Wild Heavy. A digital venture by Present Advisory LLC.">
     <link rel="icon" type="image/png" href="/favicon.png">
     <style>
         /* RESET & BASE STYLES */
@@ -13,13 +13,11 @@
         html { 
             height: 100%; 
             overflow-x: hidden;
-            /* THE FIX: Matches the bottom of the gradient so overscroll looks seamless */
             background-color: #e8e4d9; 
         }
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            /* Made the gradient slightly softer (more subtle fade) */
             background: linear-gradient(180deg, #f5f2e8 0%, #ebe7dc 100%);
             min-height: 100dvh;
             width: 100%;
@@ -29,23 +27,13 @@
             overflow-x: hidden;
         }
 
-        /* BACKGROUND TEXTURE */
-        body::before {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(26,61,46,0.02) 1px, transparent 1px);
-            background-size: 50px 50px;
-            animation: backgroundMove 60s linear infinite;
-            pointer-events: none; z-index: -1;
-            position: fixed; 
-        }
-        @keyframes backgroundMove { 0% { transform: translate(0, 0); } 100% { transform: translate(50px, 50px); } }
-
         /* LAYOUT */
         .main-wrapper {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             width: 100%;
             padding: 40px 20px;
             max-width: 800px;
@@ -56,41 +44,38 @@
         .logo-container { margin-bottom: 20px; text-align: center; }
         .logo { width: 300px; max-width: 80%; height: auto; filter: drop-shadow(0 4px 6px rgba(26,61,46,0.1)); }
         
-        .tagline {
-            font-size: 1.2rem; font-weight: 600; letter-spacing: 3px;
-            text-transform: uppercase; color: #2d5a45; margin-bottom: 50px;
+        /* BORING "CONSULTING" COPY */
+        .corporate-statement {
             text-align: center;
+            margin-top: 40px;
+            max-width: 600px;
         }
 
-        /* CONTENT CARDS */
-        .content-card {
-            background: rgba(255, 255, 255, 0.4);
-            border: 1px solid rgba(26, 61, 46, 0.1);
-            padding: 30px;
-            border-radius: 12px;
-            margin-bottom: 30px;
-            width: 100%;
-            text-align: center;
-            backdrop-filter: blur(5px);
-        }
-
-        h2 {
-            font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px;
-            color: #2d5a45; margin-bottom: 15px; border-bottom: 1px solid rgba(26,61,46,0.1);
-            display: inline-block; padding-bottom: 5px;
+        h1 {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #2d5a45;
+            margin-bottom: 20px;
+            font-weight: 600;
         }
 
         p {
-            font-size: 1.05rem; line-height: 1.6; color: #1a3d2e; margin-bottom: 0;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #1a3d2e;
+            margin-bottom: 20px;
         }
 
-        /* SOCIAL & CONTACT */
-        .social-links { margin: 30px 0; }
-        .social-links a {
-            color: #2d5a45; text-decoration: none; font-size: 1rem;
-            display: inline-flex; align-items: center; font-weight: 500;
+        .locations {
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #2d5a45;
+            opacity: 0.8;
+            margin-top: 30px;
+            font-weight: 600;
         }
-        .social-icon { width: 18px; height: 18px; margin-right: 8px; fill: currentColor; }
 
         /* FOOTER */
         .legal-footer {
@@ -98,7 +83,6 @@
             padding: 30px 20px;
             background: transparent;
             margin-top: auto;
-            /* Ensures safe spacing on iPhone X and newer */
             padding-bottom: max(30px, env(safe-area-inset-bottom));
         }
         .support-link { font-size: 0.9rem; color: #2d5a45; margin-bottom: 15px; }
@@ -114,37 +98,26 @@
         <div class="logo-container">
             <img src="logo.png" alt="Wild Heavy" class="logo">
         </div>
-        <div class="tagline">The Regular's Playbook</div>
 
-        <div class="content-card">
-            <h2>Our Mission</h2>
+        <div class="corporate-statement">
+            <h1>Digital Strategy & Design</h1>
             <p>
-                Wild Heavy is a dedicated culinary intelligence platform serving the Chicago hospitality market. We provide curated insights and digital tools designed to connect discerning regulars with the city's finest establishments.
+                Wild Heavy is a private digital label operated by <strong>Present Advisory LLC</strong>.
             </p>
-        </div>
-
-        <div class="content-card">
-            <h2>Corporate Ownership</h2>
             <p>
-                This platform is owned and operated by <strong>Present Advisory LLC</strong>. <br>
-                Based in Chicago, IL. Est. 2019.
+                We develop specialized software solutions for the hospitality industry, scaling from local markets to a global audience.
             </p>
-        </div>
-
-        <div class="social-links">
-            <a href="https://www.instagram.com/wildheavy" target="_blank" rel="noopener noreferrer">
-                <svg class="social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                </svg>
-                Instagram
-            </a>
+            
+            <div class="locations">
+                Chicago · New York · The World
+            </div>
         </div>
 
     </div>
 
     <div class="legal-footer">
         <div class="support-link">
-            Business Inquiries: <a href="mailto:support@wildheavy.com">support@wildheavy.com</a>
+            Contact: <a href="mailto:support@wildheavy.com">support@wildheavy.com</a>
         </div>
         <div class="copyright">
             &copy; 2025 Present Advisory LLC. All Rights Reserved.<br>
