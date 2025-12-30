@@ -33,7 +33,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             width: 100%;
             padding: 40px 20px;
             max-width: 800px;
@@ -44,38 +43,53 @@
         .logo-container { margin-bottom: 20px; text-align: center; }
         .logo { width: 300px; max-width: 80%; height: auto; filter: drop-shadow(0 4px 6px rgba(26,61,46,0.1)); }
         
-        /* BORING "CONSULTING" COPY */
-        .corporate-statement {
+        .tagline {
+            font-size: 1.1rem; font-weight: 600; letter-spacing: 3px;
+            text-transform: uppercase; color: #2d5a45; margin-bottom: 40px;
             text-align: center;
-            margin-top: 40px;
-            max-width: 600px;
         }
 
-        h1 {
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #2d5a45;
-            margin-bottom: 20px;
+        /* CONTENT CARDS (The "Pro" Look) */
+        .content-card {
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(26, 61, 46, 0.1);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            width: 100%;
+            text-align: center;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 15px rgba(26, 61, 46, 0.03);
+        }
+
+        h2 {
+            font-size: 1rem; text-transform: uppercase; letter-spacing: 1.5px;
+            color: #2d5a45; margin-bottom: 15px; border-bottom: 1px solid rgba(26,61,46,0.1);
+            display: inline-block; padding-bottom: 5px;
             font-weight: 600;
         }
 
         p {
-            font-size: 1rem;
-            line-height: 1.6;
-            color: #1a3d2e;
-            margin-bottom: 20px;
+            font-size: 1.05rem; line-height: 1.6; color: #1a3d2e; margin-bottom: 0;
         }
 
         .locations {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             letter-spacing: 1.5px;
             text-transform: uppercase;
             color: #2d5a45;
             opacity: 0.8;
-            margin-top: 30px;
+            margin-top: 15px;
             font-weight: 600;
         }
+
+        /* SOCIAL & CONTACT */
+        .social-links { margin: 20px 0; }
+        .social-links a {
+            color: #2d5a45; text-decoration: none; font-size: 1rem;
+            display: inline-flex; align-items: center; font-weight: 500;
+        }
+        .social-icon { width: 18px; height: 18px; margin-right: 8px; fill: currentColor; }
 
         /* FOOTER */
         .legal-footer {
@@ -98,26 +112,40 @@
         <div class="logo-container">
             <img src="logo.png" alt="Wild Heavy" class="logo">
         </div>
+        <div class="tagline">Digital Strategy & Design</div>
 
-        <div class="corporate-statement">
-            <h1>Digital Strategy & Design</h1>
+        <div class="content-card">
+            <h2>Capabilities</h2>
             <p>
-                Wild Heavy is a private digital label operated by <strong>Present Advisory LLC</strong>.
+                Wild Heavy is a specialized digital label developing software solutions for the hospitality industry.
             </p>
-            <p>
-                We develop specialized software solutions for the hospitality industry, scaling from local markets to a global audience.
-            </p>
-            
             <div class="locations">
                 Chicago · New York · The World
             </div>
+        </div>
+
+        <div class="content-card">
+            <h2>Operation</h2>
+            <p>
+                This platform is owned and operated by <strong>Present Advisory LLC</strong>. <br>
+                Based in Chicago, IL. Est. 2019.
+            </p>
+        </div>
+
+        <div class="social-links">
+            <a href="https://www.instagram.com/wildheavy" target="_blank" rel="noopener noreferrer">
+                <svg class="social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+                Instagram
+            </a>
         </div>
 
     </div>
 
     <div class="legal-footer">
         <div class="support-link">
-            Contact: <a href="mailto:support@wildheavy.com">support@wildheavy.com</a>
+            Business Inquiries: <a href="mailto:support@wildheavy.com">support@wildheavy.com</a>
         </div>
         <div class="copyright">
             &copy; 2025 Present Advisory LLC. All Rights Reserved.<br>
