@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="60" viewBox="0 0 400 60">
+  <defs>
+    <!-- Base tape color with slight variation -->
+    <linearGradient id="tapeBase" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4d9bc7" stop-opacity="0.92"/>
+      <stop offset="15%" stop-color="#4a93bd" stop-opacity="0.95"/>
+      <stop offset="50%" stop-color="#4890b8" stop-opacity="0.97"/>
+      <stop offset="85%" stop-color="#4a93bd" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#4d9bc7" stop-opacity="0.92"/>
+    </linearGradient>
+    
+    <!-- Fiber texture -->
+    <filter id="fibers" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02 0.8" numOctaves="3" seed="2" result="noise"/>
+      <feColorMatrix type="saturate" values="0" in="noise" result="gray"/>
+      <feComponentTransfer in="gray" result="fibers">
+        <feFuncA type="linear" slope="0.15" intercept="0"/>
+      </feComponentTransfer>
+      <feBlend in="SourceGraphic" in2="fibers" mode="overlay"/>
+    </filter>
+    
+    <!-- Subtle crinkle texture -->
+    <filter id="crinkle" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="turbulence" baseFrequency="0.05 0.03" numOctaves="2" seed="5" result="turb"/>
+      <feDisplacementMap in="SourceGraphic" in2="turb" scale="1.5" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+  
+  <!-- Tape body -->
+  <rect width="400" height="60" fill="url(#tapeBase)" filter="url(#fibers)"/>
+  
+  <!-- Horizontal fiber lines -->
+  <g opacity="0.08">
+    <line x1="0" y1="8" x2="400" y2="8.5" stroke="#fff" stroke-width="0.3"/>
+    <line x1="0" y1="12" x2="400" y2="11.5" stroke="#fff" stroke-width="0.5"/>
+    <line x1="0" y1="18" x2="400" y2="18.3" stroke="#fff" stroke-width="0.3"/>
+    <line x1="0" y1="24" x2="400" y2="24.2" stroke="#2a6080" stroke-width="0.4"/>
+    <line x1="0" y1="30" x2="400" y2="29.7" stroke="#fff" stroke-width="0.3"/>
+    <line x1="0" y1="36" x2="400" y2="36.4" stroke="#fff" stroke-width="0.5"/>
+    <line x1="0" y1="42" x2="400" y2="42.1" stroke="#2a6080" stroke-width="0.3"/>
+    <line x1="0" y1="48" x2="400" y2="47.8" stroke="#fff" stroke-width="0.4"/>
+    <line x1="0" y1="52" x2="400" y2="52.3" stroke="#fff" stroke-width="0.3"/>
+  </g>
+  
+  <!-- Torn top edge -->
+  <path d="M0,2 Q5,0 10,1.5 Q15,3 20,1 Q25,0 30,2 Q35,3.5 40,1.5 Q45,0 50,2.5 Q55,3 60,1 Q65,0 70,2 Q75,3 80,1.5 Q85,0 90,2 Q95,3.5 100,1 Q105,0.5 110,2.5 Q115,3 120,1.5 Q125,0 130,2 Q135,3 140,1 Q145,0 150,2.5 Q155,3.5 160,1.5 Q165,0 170,2 Q175,3 180,1 Q185,0.5 190,2.5 Q195,3 200,1.5 Q205,0 210,2 Q215,3 220,1 Q225,0 230,2.5 Q235,3.5 240,1 Q245,0 250,2 Q255,3 260,1.5 Q265,0 270,2.5 Q275,3 280,1 Q285,0.5 290,2 Q295,3.5 300,1.5 Q305,0 310,2 Q315,3 320,1 Q325,0 330,2.5 Q335,3 340,1.5 Q345,0 350,2 Q355,3 360,1 Q365,0 370,2.5 Q375,3.5 380,1 Q385,0 390,2 Q395,3 400,1.5 L400,0 L0,0 Z" fill="#e8e4d8"/>
+  
+  <!-- Torn bottom edge -->
+  <path d="M0,58 Q5,60 10,58.5 Q15,57 20,59 Q25,60 30,58 Q35,56.5 40,58.5 Q45,60 50,57.5 Q55,57 60,59 Q65,60 70,58 Q75,57 80,58.5 Q85,60 90,58 Q95,56.5 100,59 Q105,59.5 110,57.5 Q115,57 120,58.5 Q125,60 130,58 Q135,57 140,59 Q145,60 150,57.5 Q155,56.5 160,58.5 Q165,60 170,58 Q175,57 180,59 Q185,59.5 190,57.5 Q195,57 200,58.5 Q205,60 210,58 Q215,57 220,59 Q225,60 230,57.5 Q235,56.5 240,59 Q245,60 250,58 Q255,57 260,58.5 Q265,60 270,57.5 Q275,57 280,59 Q285,59.5 290,58 Q295,56.5 300,58.5 Q305,60 310,58 Q315,57 320,59 Q325,60 330,57.5 Q335,57 340,58.5 Q345,60 350,58 Q355,57 360,59 Q365,60 370,57.5 Q375,56.5 380,59 Q385,60 390,58 Q395,57 400,58.5 L400,60 L0,60 Z" fill="#e8e4d8"/>
+</svg>

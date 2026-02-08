@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>WildHeavy | Order Like a Regular</title>
+    <meta name="description" content="The shared playbook for the city's best dining experiences.">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&family=Permanent+Marker&family=Special+Elite&family=Space+Grotesk:wght@400;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* === CORE VARIABLES === */
+        :root {
+            --bg-cream: #f5f2e8;
+            --bg-darker: #e4e0d1;
+            --text-forest: #1a3d2e;
+            --text-slate: #2d5a45;
+            --glass-white: rgba(255, 255, 255, 0.9);
+            --border-light: rgba(26, 61, 46, 0.2);
+            --tape-blue: #4a8cb5;
+            --tape-blue-bg: rgba(74, 140, 181, 0.12);
+            --chrome-silver: #c0c0c0;
+            --chrome-dark: #888;
+            --burn-mark: rgba(139, 90, 43, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { height: 100%; background-color: #e8e4d8; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #e8e4d8;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            color: var(--text-forest);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* === BACKGROUND TEXTURE: worn butcher paper === */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                /* subtle grain */
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"),
+                /* warm vignette */
+                radial-gradient(ellipse at center, #ece8dc 0%, #e0dac8 50%, #d4cdb8 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* === LAYOUT === */
+        .main-wrapper {
+            flex: 1;
+            width: 100%;
+            padding: 20px;
+            max-width: 880px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* === CHROME SHELF STRIP (nav) === */
+        .nav-rail {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 22px 0;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-family: 'JetBrains Mono', monospace;
+            position: relative;
+            margin-bottom: 60px;
+        }
+        /* chrome strip effect */
+        .nav-rail::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: -20px;
+            right: -20px;
+            height: 5px;
+            background-image: url('chrome.png');
+            background-size: 100% 100%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .nav-rail a {
+            text-decoration: none;
+            color: var(--text-slate);
+            opacity: 0.5;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .nav-rail a:hover,
+        .nav-rail a.active { opacity: 1; color: var(--text-forest); }
+        .nav-rail a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 3px;
+            background: var(--text-forest);
+        }
+
+        /* === TYPOGRAPHY === */
+        h1, h2, h3 {
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-forest);
+            font-weight: 800;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .mono-label {
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.7rem;
+            color: var(--text-slate);
+            display: block;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        /* === HERO SECTION === */
+        .hero-section {
+            text-align: center;
+            margin-bottom: 70px;
+            width: 100%;
+            position: relative;
+        }
+        .logo-container { margin-bottom: 30px; }
+        .logo {
+            width: 260px;
+            max-width: 80%;
+            height: auto;
+            display: inline-block;
+            filter: contrast(1.1);
+        }
+
+        .hero-headline {
+            font-size: 3rem;
+            line-height: 0.95;
+            margin-bottom: 25px;
+            color: var(--text-forest);
+            font-weight: 900;
+        }
+
+        .hero-sub {
+            font-size: 1.2rem;
+            max-width: 500px;
+            margin: 0 auto 35px auto;
+            color: #3d3d3d;
+            font-weight: 400;
+            font-family: 'Inter', sans-serif;
+            font-style: italic;
+        }
+
+        /* === CTA: BLUE TAPE BUTTON with real texture === */
+        .cta-button {
+            display: inline-block;
+            background-image: url('tape-horizontal.png');
+            background-size: 100% 100%;
+            background-position: center;
+            color: #111;
+            padding: 22px 52px;
+            text-decoration: none;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-size: 1.3rem;
+            transition: all 0.15s ease;
+            font-family: 'Permanent Marker', cursive;
+            position: relative;
+            /* torn tape edges */
+            clip-path: polygon(
+                0% 3%, 3% 0%, 7% 2%, 12% 0%, 17% 1%, 22% 0%, 27% 2%, 32% 0%, 37% 1%, 42% 0%, 47% 2%, 52% 0%, 57% 1%, 62% 0%, 67% 2%, 72% 0%, 77% 1%, 82% 0%, 87% 2%, 92% 0%, 97% 1%, 100% 3%,
+                100% 97%, 97% 100%, 92% 98%, 87% 100%, 82% 99%, 77% 100%, 72% 98%, 67% 100%, 62% 99%, 57% 100%, 52% 98%, 47% 100%, 42% 99%, 37% 100%, 32% 98%, 27% 100%, 22% 99%, 17% 100%, 12% 98%, 7% 100%, 3% 99%, 0% 97%
+            );
+            cursor: pointer;
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.18));
+            animation: tape-pulse 2.8s ease-in-out infinite;
+        }
+        @keyframes tape-pulse {
+            0%, 100% { filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.18)); transform: scale(1); }
+            50% { filter: drop-shadow(3px 6px 12px rgba(0,0,0,0.25)); transform: scale(1.015); }
+        }
+        .cta-button:hover {
+            animation: none;
+            transform: rotate(-0.5deg) scale(1.03);
+            filter: drop-shadow(3px 6px 10px rgba(0,0,0,0.25)) brightness(1.03);
+        }
+        .cta-button:active {
+            animation: none;
+            transform: scale(0.98);
+            filter: drop-shadow(1px 2px 3px rgba(0,0,0,0.2));
+        }
+
+        .beta-note {
+            font-size: 0.65rem;
+            margin-top: 15px;
+            font-family: 'JetBrains Mono', monospace;
+            opacity: 0.5;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* === TICKET CARD (keep similar but refine) === */
+        .use-case-container {
+            width: 100%;
+            max-width: 550px;
+            margin: 0 auto 80px auto;
+            position: relative;
+        }
+        /* === COASTER ELEMENTS — real pressed-pulp with actual logo === */
+        .coaster {
+            position: absolute;
+            pointer-events: none;
+            z-index: 0;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            /* Pressed pulp paper base */
+            background-color: #c5bb9f;
+            background-image:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.8' numOctaves='5' seed='7'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='0.08' intercept='0.74'/%3E%3CfeFuncG type='linear' slope='0.07' intercept='0.71'/%3E%3CfeFuncB type='linear' slope='0.05' intercept='0.64'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23p)'/%3E%3C/svg%3E");
+            background-size: cover;
+            box-shadow:
+                inset 0 0 0 1px rgba(160, 140, 110, 0.4),
+                inset 0 0 8px rgba(100, 80, 50, 0.08),
+                2px 3px 8px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            opacity: 0.6;
+        }
+        /* Pressed manufacturing ring */
+        .coaster::before {
+            content: '';
+            position: absolute;
+            inset: 6px;
+            border-radius: 50%;
+            border: 1px solid rgba(100, 80, 50, 0.08);
+        }
+        /* Cup ring stain */
+        .coaster::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 8px solid rgba(100, 80, 50, 0.04);
+        }
+        .coaster .coaster-logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 75%;
+            height: auto;
+            opacity: 0.3;
+            mix-blend-mode: multiply;
+            filter: sepia(0.3) saturate(0.6);
+        }
+        .coaster .coaster-text {
+            position: absolute;
+            bottom: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 5px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(60, 45, 25, 0.15);
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        /* Slogan coaster text */
+        .coaster-slogan-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        .coaster-slogan-text .slogan {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            font-style: normal;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: rgba(50, 38, 20, 0.2);
+            line-height: 1.3;
+            display: block;
+        }
+        .coaster-slogan-text .est {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 7px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            color: rgba(50, 38, 20, 0.15);
+            margin-top: 6px;
+            display: block;
+        }
+        .coaster-slogan-text .city {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 5px;
+            letter-spacing: 2px;
+            color: rgba(50, 38, 20, 0.12);
+            margin-top: 2px;
+            display: block;
+        }
+        .coaster-slogan-text .divider {
+            display: block;
+            width: 35px;
+            height: 1px;
+            background: rgba(50, 38, 20, 0.1);
+            margin: 5px auto;
+        }
+        .coaster-1 {
+            top: 320px;
+            right: -35px;
+            transform: rotate(8deg);
+        }
+        .coaster-2 {
+            bottom: 250px;
+            left: -30px;
+            transform: rotate(-12deg);
+        }
+        @media (max-width: 900px) {
+            .coaster { display: none; }
+        }
+
+        .ticket-stub {
+            background: #fff;
+            padding: 0;
+            text-align: left;
+            border: 1px solid rgba(26, 61, 46, 0.15);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.8),
+                0 15px 35px -10px rgba(0,0,0,0.15),
+                4px 4px 0 rgba(0,0,0,0.03);
+            position: relative;
+            overflow: hidden;
+            transform: rotate(-0.3deg);
+        }
+
+        .ticket-header {
+            background: var(--bg-cream);
+            padding: 15px 25px;
+            border-bottom: 1px dashed var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ticket-body { padding: 25px; }
+
+        .ticket-dish { font-size: 1.3rem; font-weight: 800; font-family: 'Space Grotesk', sans-serif; color: var(--text-forest); margin-bottom: 5px; }
+        .ticket-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-slate); text-transform: uppercase; margin-bottom: 15px; }
+
+        .handwritten-note {
+            font-family: 'Special Elite', 'Courier New', Courier, monospace;
+            color: var(--text-forest);
+            font-size: 0.92rem;
+            line-height: 1.5;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 27px,
+                rgba(26, 61, 46, 0.06) 27px,
+                rgba(26, 61, 46, 0.06) 28px
+            );
+            padding: 15px 15px 15px 18px;
+            border-left: 3px solid var(--text-forest);
+            margin-top: 15px;
+            position: relative;
+        }
+
+        /* jagged edge */
+        .ticket-jag-top, .ticket-jag-bottom {
+            height: 8px; width: 100%;
+            background-image: radial-gradient(circle, transparent 70%, #fff 70%);
+            background-size: 16px 16px;
+            background-position: center;
+        }
+        .ticket-jag-top { background-image: radial-gradient(circle, transparent 50%, var(--bg-cream) 50%); margin-bottom: -1px; }
+
+        /* === CHROME DIVIDER === */
+        .chrome-divider {
+            width: calc(100% + 40px);
+            margin-left: -20px;
+            height: 5px;
+            background-image: url('chrome.png');
+            background-size: 100% 100%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 60px;
+            margin-top: 10px;
+        }
+
+        /* === FEATURE GRID === */
+        .grid-section {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            width: 100%;
+            margin-bottom: 60px;
+        }
+        @media (min-width: 600px) {
+            .grid-section { grid-template-columns: 1fr 1fr; }
+        }
+
+        /* Blue tape label on each card */
+        .feature-card {
+            padding: 35px 25px 30px 25px;
+            background: rgba(255, 255, 255, 0.65);
+            border: 1px solid rgba(26, 61, 46, 0.08);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            transition: transform 0.15s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+        }
+
+        /* tape strip on top of card - real tape texture */
+        .feature-card::before {
+            content: attr(data-label);
+            position: absolute;
+            top: -12px;
+            left: 18px;
+            background-image: url('tape-horizontal.png');
+            background-size: 100% 100%;
+            background-position: center;
+            color: #111;
+            padding: 5px 18px 6px 18px;
+            font-family: 'Permanent Marker', cursive;
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            transform: rotate(-1deg);
+            box-shadow: 1px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .feature-card h3 {
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-slate);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+        .feature-card strong {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            color: var(--text-forest);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .feature-card p { font-size: 0.9rem; color: #444; line-height: 1.6; }
+
+        /* === BOTTOM CTA === */
+        .bottom-cta {
+            text-align: center;
+            padding: 50px 0;
+            position: relative;
+        }
+        .bottom-cta-quote {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.15rem;
+            color: var(--text-forest);
+            margin-bottom: 22px;
+            font-style: italic;
+        }
+        .bottom-cta-link {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: var(--text-slate);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 2px solid var(--text-slate);
+            padding-bottom: 2px;
+            transition: all 0.2s;
+        }
+        .bottom-cta-link:hover {
+            color: var(--tape-blue);
+            border-color: var(--tape-blue);
+        }
+
+        /* === FOOTER === */
+        .legal-footer {
+            width: 100%;
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: auto;
+            font-size: 0.7rem;
+            color: var(--text-slate);
+            font-family: 'JetBrains Mono', monospace;
+            position: relative;
+            z-index: 1;
+        }
+        /* chrome strip above footer */
+        .legal-footer::before {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 5px;
+            background-image: url('chrome.png');
+            background-size: 100% 100%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 35px;
+        }
+        .footer-links { margin-bottom: 15px; }
+        .footer-links a {
+            margin: 0 12px;
+            color: inherit;
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.2s;
+        }
+        .footer-links a:hover { color: var(--text-forest); }
+        .footer-disclaimer {
+            font-size: 0.6rem;
+            opacity: 0.5;
+            max-width: 600px;
+            margin: 10px auto 0 auto;
+            line-height: 1.4;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* === SCATTERED BOH ARTIFACTS (cleaned up) === */
+
+        /* === DECORATIVE BEAR === */
+        .boh-bear {
+            position: absolute;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.08;
+            filter: grayscale(0.3);
+        }
+        .boh-bear-hungry {
+            width: 180px;
+            height: auto;
+            bottom: 120px;
+            right: -20px;
+            transform: rotate(12deg);
+        }
+        @media (max-width: 900px) {
+            .boh-bear { display: none; }
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 600px) {
+            .hero-headline { font-size: 2.2rem; }
+            .hero-sub { font-size: 1.05rem; }
+            .cta-button { padding: 18px 36px; font-size: 1rem; }
+            .nav-rail { gap: 20px; margin-bottom: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Coasters with real brand assets -->
+    <div class="coaster coaster-1">
+        <img src="Wild Heavy - Monogram - Transparent - Edited.png" alt="" class="coaster-logo">
+    </div>
+    <div class="coaster coaster-2">
+        <div class="coaster-slogan-text">
+            <span class="slogan">Certified<br>Heavy</span>
+            <span class="divider"></span>
+            <span class="est">EST. 2019</span>
+            <span class="city">CHICAGO, IL</span>
+        </div>
+    </div>
+
+    <!-- Decorative bear illustration -->
+    <img src="Wild Heavy - Hungry Bear - Transparent - Edited.png" alt="" class="boh-bear boh-bear-hungry">
+
+    <div class="main-wrapper">
+        <nav class="nav-rail">
+            <a href="/" class="active">Home</a>
+            <a href="/about.html">About</a>
+            <a href="/blog.html">Off Menu</a>
+        </nav>
+
+        <div class="hero-section">
+            <div class="logo-container">
+                <img src="logo.png" alt="WILDHEAVY" class="logo">
+            </div>
+
+            <h1 class="hero-headline">Order Like<br>A Regular.</h1>
+
+            <p class="hero-sub">
+                If the menu is a gamble. Stack the deck. <br>The shared playbook for the city's best dining experiences.
+            </p>
+
+            <a href="https://forms.gle/BHrqQrHFHhT3RyYx8" target="_blank" class="cta-button">Fire the Ticket</a>
+            <p class="beta-note">Request Beta Access: Invite Only</p>
+        </div>
+
+        <div class="use-case-container">
+            <span class="mono-label" style="text-align: center; margin-bottom: 15px;">// PREVIEW: THE SPEC CARD</span>
+
+            <div class="ticket-jag-top"></div>
+            <div class="ticket-stub">
+
+                <div class="ticket-header" style="flex-direction: column; align-items: flex-start; gap: 5px; padding-bottom: 15px;">
+                    <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+                        <h2 style="font-size: 1.5rem; margin: 0;">BAVETTE'S</h2>
+                        <span style="border: 1px solid #ccc; padding: 2px 6px; border-radius: 4px; font-size: 0.6rem; font-family: monospace; color: #666;">TKT #312</span>
+                    </div>
+                    <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-slate);">River North, Chicago // Steakhouse</div>
+                </div>
+
+                <div class="ticket-body" style="padding-top: 15px;">
+
+                    <div style="margin-bottom: 25px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
+                            <span style="font-size: 0.75rem; font-weight: 700;">Reservation Difficulty</span>
+                            <span style="font-size: 0.75rem; color: #d32f2f; font-weight: 800; text-transform: uppercase;">Tough Ticket</span>
+                        </div>
+                        <div style="display: flex; gap: 4px; height: 8px;">
+                            <div style="flex: 1; background: #d32f2f; border-radius: 4px;"></div>
+                            <div style="flex: 1; background: #d32f2f; border-radius: 4px;"></div>
+                            <div style="flex: 1; background: #d32f2f; border-radius: 4px;"></div>
+                            <div style="flex: 1; background: #d32f2f; border-radius: 4px;"></div>
+                            <div style="flex: 1; background: #e0e0e0; border-radius: 4px;"></div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 25px;">
+
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; border-bottom: 1px dashed #eee; padding-bottom: 10px;">
+                            <div>
+                                <div style="font-weight: 700; font-size: 0.95rem; color: var(--text-forest);">Bone-In Ribeye</div>
+                                <span style="font-size: 0.65rem; background: #eef2ff; color: #4f46e5; padding: 2px 6px; border-radius: 10px; font-weight: 600;">Shared</span>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="color: #b45309; letter-spacing: 2px; font-size: 0.8rem;">★★★★</div>
+                                <div style="font-size: 0.6rem; text-transform: uppercase; color: #78350f; font-weight: 700;">Can't Miss</div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; border-bottom: 1px dashed #eee; padding-bottom: 10px;">
+                            <div>
+                                <div style="font-weight: 700; font-size: 0.95rem; color: var(--text-forest);">Choc. Cream Pie</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="color: #b45309; letter-spacing: 2px; font-size: 0.8rem;">★★★★★</div>
+                                <div style="font-size: 0.6rem; text-transform: uppercase; color: #78350f; font-weight: 700;">Top Rank Worthy</div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div>
+                                <div style="font-weight: 700; font-size: 0.95rem; color: var(--text-forest);">Garlic Mash</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="color: #d97706; letter-spacing: 2px; font-size: 0.8rem; opacity: 0.7;">★★★</div>
+                                <div style="font-size: 0.6rem; text-transform: uppercase; color: #92400e; font-weight: 700;">Solid</div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="handwritten-note">
+                        <strong>SHIFT NOTE:</strong>
+                        Order the Chocolate Cream Pie <em>*as*</em> you order your martini at the start, it sells out.
+                    </div>
+                </div>
+            </div>
+            <div class="ticket-jag-bottom" style="background-image: radial-gradient(circle, transparent 50%, #fff 50%); margin-top: -5px; height: 10px;"></div>
+        </div>
+
+        <!-- Chrome shelf strip divider -->
+        <div class="chrome-divider"></div>
+
+        <div class="grid-section">
+
+            <div class="feature-card" data-label="01">
+                <h3>SPEC CARDS</h3>
+                <p>
+                    <strong>The Dossier.</strong>
+                    Documentation for specific dish experiences. Full breakdowns, must-orders, and "Shift Notes" (insider strategy) on the flip side.
+                </p>
+            </div>
+
+            <div class="feature-card" data-label="02">
+                <h3>TOP RANK</h3>
+                <p>
+                    <strong>Weighted Intelligence.</strong>
+                    Community-aggregated best-of lists. We weight votes based on expertise—Industry Pros and Tastemakers speak louder than the crowd.
+                </p>
+            </div>
+
+            <div class="feature-card" data-label="03">
+                <h3>HOT ROUTES</h3>
+                <p>
+                    <strong>The Itinerary.</strong>
+                    Don't just go to one place. Build multi-stop dining crawls. Drinks at A, Apps at B, Mains at C. Curate the perfect night out.
+                </p>
+            </div>
+
+            <div class="feature-card" data-label="04">
+                <h3>SIGNALS</h3>
+                <p>
+                    <strong>The Call.</strong>
+                    Coordinate without the group chat chaos. Post an "Open Ticket" to see who's interested in a rez, or let regulars know you're on shift.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="bottom-cta">
+            <p class="bottom-cta-quote">
+                "The antidote to menu anxiety."
+            </p>
+            <a href="https://forms.gle/BHrqQrHFHhT3RyYx8" target="_blank" class="bottom-cta-link">REQUEST BETA ACCESS &rarr;</a>
+        </div>
+
+    </div>
+
+    <footer class="legal-footer">
+        <div class="footer-links">
+            <a href="/terms.html">Terms</a>
+            <a href="/privacy.html">Privacy</a>
+            <a href="/guidelines.html">Guidelines</a>
+            <a href="mailto:support@wildheavy.com">Contact</a>
+        </div>
+        <div>&copy; 2026 Present Advisory LLC.</div>
+        <div class="footer-disclaimer">
+            WildHeavy is an independent entity and is not affiliated with, endorsed by, or sponsored by any restaurant or third-party platform listed herein. All trademarks are property of their respective owners.
+        </div>
+    </footer>
+
+    <script>
+        // Subtle parallax on BOH artifacts when scrolling
+        const artifacts = document.querySelectorAll('.boh-artifact');
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    const scrollY = window.scrollY;
+                    artifacts.forEach((el, i) => {
+                        const speed = 0.03 + (i * 0.015);
+                        el.style.transform = el.style.transform.replace(/translateY\([^)]*\)/, '') + ` translateY(${scrollY * speed}px)`;
+                    });
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        // Slight random rotation on feature cards for that "pinned to the board" feel
+        document.querySelectorAll('.feature-card').forEach((card, i) => {
+            const rotations = [-0.4, 0.3, -0.2, 0.5];
+            card.style.transform = `rotate(${rotations[i] || 0}deg)`;
+        });
+    </script>
+
+</body>
+</html>

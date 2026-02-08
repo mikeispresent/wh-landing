@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Community Guidelines | WildHeavy</title>
+    <meta name="description" content="WildHeavy Community Guidelines - How we maintain integrity and authenticity.">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        /* CORE VARIABLES (Aligned with Master Brand) */
+        :root {
+            --bg-cream: #f5f2e8;
+            --bg-darker: #e4e0d1;
+            --text-forest: #1a3d2e;
+            --text-slate: #2d5a45;
+            --glass-white: rgba(255, 255, 255, 0.9);
+            --border-light: rgba(26, 61, 46, 0.2);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html { height: 100%; background-color: #e8e4d8; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #e8e4d8;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            color: var(--text-forest);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Background texture */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"),
+                radial-gradient(ellipse at center, #ece8dc 0%, #e0dac8 50%, #d4cdb8 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* TYPOGRAPHY */
+        h1, h2, h3 { 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            color: var(--text-forest); 
+            font-weight: 800; 
+            font-family: 'Georgia', serif;
+        }
+        
+        h1 { font-size: 2.2rem; margin-bottom: 5px; line-height: 1; }
+        .meta { font-size: 0.8rem; color: #666; margin-bottom: 40px; font-family: ui-monospace, monospace; }
+
+        /* CONTENT STYLING */
+        h2 { 
+            font-size: 1.1rem; 
+            margin-bottom: 20px; 
+            border-bottom: 1px dashed var(--border-light); 
+            padding-bottom: 10px; 
+            color: var(--text-slate); 
+            font-family: ui-monospace, monospace;
+        }
+        h3 { font-size: 1rem; margin: 25px 0 10px 0; font-weight: 700; }
+        
+        p, li { font-size: 0.95rem; line-height: 1.6; margin-bottom: 12px; color: #333; }
+        ul { padding-left: 20px; margin-bottom: 20px; }
+        a { color: var(--text-slate); text-decoration: underline; }
+        
+        /* LAYOUT */
+        .main-wrapper { max-width: 880px; margin: 0 auto; padding: 20px; width: 100%; flex: 1; position: relative; z-index: 1; }
+        
+        /* NAV RAIL */
+        .nav-rail { 
+            width: 100%; 
+            display: flex; 
+            justify-content: center; 
+            gap: 30px; 
+            padding: 25px 0; 
+            font-size: 0.75rem; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 1.5px; 
+            position: relative;
+            margin-bottom: 40px; 
+            font-family: ui-monospace, monospace;
+        }
+        .nav-rail::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: -20px;
+            right: -20px;
+            height: 4px;
+            background-image: url('chrome.png'); background-size: 100% 100%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .nav-rail a { text-decoration: none; color: var(--text-slate); opacity: 0.5; transition: all 0.2s; position: relative; }
+        .nav-rail a:hover, .nav-rail a.active { opacity: 1; color: var(--text-forest); }
+        .nav-rail a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 3px;
+            background: var(--text-forest);
+        }
+
+        /* CARDS */
+        .content-card { 
+            background: rgba(255, 255, 255, 0.65); 
+            padding: 40px 30px; 
+            margin-bottom: 25px; 
+            border: 1px solid rgba(26, 61, 46, 0.08);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        
+        .note-box { 
+            background: rgba(0,0,0,0.03); 
+            padding: 15px; 
+            border-radius: 4px; 
+            font-size: 0.9rem; 
+            font-style: italic; 
+            margin-top: 15px; 
+            border-left: 2px solid var(--text-slate);
+        }
+
+        /* FOOTER */
+        .legal-footer { width: 100%; text-align: center; padding: 40px 20px; margin-top: auto; font-size: 0.7rem; color: var(--text-slate); font-family: ui-monospace, monospace; position: relative; z-index: 1; }
+        .legal-footer::before {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 4px;
+            background-image: url('chrome.png'); background-size: 100% 100%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 35px;
+        }
+        .footer-links { margin-bottom: 15px; }
+        .footer-links a { margin: 0 12px; color: inherit; text-decoration: none; font-weight: 700; transition: color 0.2s; }
+        .footer-links a:hover { color: var(--text-forest); }
+        .footer-disclaimer { font-size: 0.6rem; opacity: 0.5; max-width: 600px; margin: 10px auto 0 auto; line-height: 1.4; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+
+        /* Decorative bear watermark */
+        .page-bear {
+            position: fixed;
+            bottom: 40px;
+            right: -10px;
+            width: 130px;
+            height: auto;
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 0;
+            filter: grayscale(0.3);
+            transform: rotate(5deg);
+        }
+        @media (max-width: 900px) {
+            .page-bear { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-wrapper">
+    <nav class="nav-rail">
+        <a href="/">Home</a>
+        <a href="/about.html">About</a>
+        <a href="/blog.html">Off Menu</a>
+    </nav>
+    
+    <h1>WildHeavy Community Guidelines</h1>
+    <div class="meta">
+        Effective Date: February 1, 2026 // Last Updated: February 1, 2026
+    </div>
+
+    <div class="content-card">
+        <p>WildHeavy is built by eaters, for eaters. These guidelines help us maintain a community where authentic dining experiences are shared, trusted voices are heard, and everyone can discover what to order next.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>1. Core Principles</h2>
+        
+        <h3>1.1 Eat It to Rank It</h3>
+        <p>Every ranking you submit should reflect a dish you've actually eaten. WildHeavy's value comes from authentic, first-hand experiences. Speculation, hearsay, or rankings based on reputation alone undermine the community.</p>
+
+        <h3>1.2 Sponsored Meal Disclosure</h3>
+        <p>If your meal was sponsored by the restaurant—whether invited, gifted, or otherwise provided at no cost—you can still rate it fairly. Just be transparent. When creating a Spec Card, toggle on "This meal was sponsored by the restaurant" and a disclosure note will appear on your card.</p>
+        <div class="note-box">Sponsored meals can still be rated honestly. Disclosure builds trust; hiding it erodes it.</div>
+
+        <h3>1.3 Conflict of Interest</h3>
+        <p>If you own, manage, or work for a restaurant, you may rate your own establishment honestly. However, you must not:</p>
+        <ul>
+            <li>Use your account to negatively target competitors</li>
+            <li>Create multiple accounts to inflate your restaurant's rankings</li>
+            <li>Coordinate with others to manipulate scores</li>
+        </ul>
+
+        <h3>1.4 Respect the House</h3>
+        <p>When sharing dining experiences, be respectful of restaurant staff, fellow diners, and the establishments themselves:</p>
+        <ul>
+            <li>Do not share private information about staff members (doxxing)</li>
+            <li>Do not encourage illegal activity, trespassing, or health code violations</li>
+            <li>Critique the food, not the people</li>
+        </ul>
+    </div>
+
+    <div class="content-card">
+        <h2>2. Prohibited Content</h2>
+        <p>The following content is strictly prohibited and will result in removal and potential account suspension:</p>
+        <ul>
+            <li><strong>Hate Speech & Discrimination:</strong> Content that promotes hatred, violence, or discrimination based on race, ethnicity, religion, gender, sexual orientation, disability, or other protected characteristics.</li>
+            <li><strong>Violence & Threats:</strong> Threats of violence, encouragement of harm, or content that glorifies violent acts against individuals, groups, or establishments.</li>
+            <li><strong>Spam & Manipulation:</strong> Repetitive posting, bot-generated content, coordinated inauthentic behavior, or any attempt to artificially inflate engagement or rankings.</li>
+            <li><strong>Private Information:</strong> Sharing personal information about others without consent, including home addresses, phone numbers, financial information, or identity documents.</li>
+        </ul>
+    </div>
+
+    <div class="content-card">
+        <h2>3. Ranking Integrity</h2>
+        <p>WildHeavy's rankings are designed to surface the best dishes based on real community input. Here's how we maintain integrity:</p>
+        
+        <h3>3.1 What We Do</h3>
+        <ul>
+            <li><strong>Weight Trusted Voices:</strong> Rankings from users with demonstrated expertise (Industry Pros, Tastemakers) carry more influence in our scoring algorithm.</li>
+            <li><strong>Apply Freshness Signals:</strong> Recent experiences are weighted more heavily than older ones to reflect current menu quality.</li>
+            <li><strong>Deduplicate Votes:</strong> Each user's most recent ranking for a city + category combination counts. You can update your rankings anytime.</li>
+            <li><strong>Exclude Deleted Accounts:</strong> When an account is deleted, its rankings are removed from active leaderboard calculations (though historical data may be preserved for auditing).</li>
+        </ul>
+
+        <h3>3.2 What We Don't Do</h3>
+        <ul>
+            <li><strong>No Paid Placements:</strong> Restaurants cannot pay to appear higher in our rankings. Period.</li>
+            <li><strong>No Score Purchases:</strong> There is no way for a restaurant to buy a better position. Rankings are earned through community votes.</li>
+        </ul>
+        <div class="note-box">Why we don't reveal exact formulas: Sharing precise algorithmic details would make gaming easier. What matters is that our system rewards authentic, consistent, and trusted voices—not volume or manipulation.</div>
+    </div>
+
+    <div class="content-card">
+        <h2>4. The "Janitor" & Data Hygiene</h2>
+        <p>WildHeavy uses AI-assisted tools we call "The Janitor" to maintain clean, consistent data across the platform.</p>
+        <h3>What The Janitor Does</h3>
+        <ul>
+            <li>Normalizes dish names for consistency (e.g., "Cheeseburger" vs "cheese burger")</li>
+            <li>Matches dishes to canonical menu items across restaurants</li>
+            <li>Flags ambiguous entries for review</li>
+        </ul>
+        <div class="note-box">Our Promise: "We fix the data, not your opinion." The Janitor standardizes spelling and naming—it never changes your ratings, notes, or the substance of your reviews.</div>
+    </div>
+
+    <div class="content-card">
+        <h2>5. Reporting & Enforcement</h2>
+        
+        <h3>5.1 Report Violations</h3>
+        <p>If you encounter content that violates these guidelines, use the in-app "Report" button available on rankings, Spec Cards, and user profiles. All reports are reviewed by our team.</p>
+
+        <h3>5.2 Block Users</h3>
+        <p>You can block any user to prevent them from viewing your content, following you, or appearing in your feed. Manage blocked users in your account settings.</p>
+
+        <h3>5.3 Review Timeline</h3>
+        <p>We aim to review all reports within 48 hours. Complex cases may take longer. You'll be notified of outcomes when applicable.</p>
+
+        <h3>5.4 Enforcement Actions</h3>
+        <p>Depending on the severity and frequency of violations, we may take the following actions:</p>
+        <ul>
+            <li>Content removal</li>
+            <li>Warning notification</li>
+            <li>Temporary account suspension</li>
+            <li>Permanent account termination</li>
+        </ul>
+    </div>
+
+    <div class="content-card">
+        <h2>6. Questions?</h2>
+        <p>If you have questions about these guidelines or need to report an issue, contact us at <a href="mailto:support@wildheavy.com">support@wildheavy.com</a>.</p>
+        <p>For legal matters, see our <a href="/terms.html">Terms of Service</a> and <a href="/privacy.html">Privacy Policy</a>.</p>
+    </div>
+
+    <footer class="legal-footer">
+        <div class="footer-links">
+            <a href="/terms.html">Terms</a>
+            <a href="/privacy.html">Privacy</a>
+            <a href="/guidelines.html">Guidelines</a>
+            <a href="mailto:support@wildheavy.com">Contact</a>
+        </div>
+        <div>&copy; 2026 Present Advisory LLC.</div>
+        <div class="footer-disclaimer">
+            WildHeavy is an independent entity and is not affiliated with, endorsed by, or sponsored by any restaurant or third-party platform listed herein. All trademarks are property of their respective owners.
+        </div>
+    </footer>
+</div>
+
+    <img src="Wild Heavy Community Bear - Transparent - Edited.png" alt="" class="page-bear">
+</body>
+</html>

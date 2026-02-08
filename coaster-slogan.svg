@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180">
+  <defs>
+    <filter id="pulp2" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="1.5" numOctaves="6" seed="22" result="noise"/>
+      <feColorMatrix type="saturate" values="0" in="noise" result="gray"/>
+      <feComponentTransfer in="gray" result="pulpTex">
+        <feFuncR type="linear" slope="0.1" intercept="0.76"/>
+        <feFuncG type="linear" slope="0.09" intercept="0.73"/>
+        <feFuncB type="linear" slope="0.07" intercept="0.66"/>
+        <feFuncA type="linear" slope="1" intercept="0"/>
+      </feComponentTransfer>
+    </filter>
+    <filter id="letterpress2" x="-2%" y="-2%" width="104%" height="104%">
+      <feTurbulence type="fractalNoise" baseFrequency="3" numOctaves="2" seed="18" result="rough"/>
+      <feDisplacementMap in="SourceGraphic" in2="rough" scale="0.4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <clipPath id="circle2">
+      <circle cx="90" cy="90" r="85"/>
+    </clipPath>
+  </defs>
+  
+  <!-- Coaster shadow -->
+  <circle cx="92" cy="92" r="85" fill="rgba(0,0,0,0.06)"/>
+  
+  <!-- Coaster base -->
+  <circle cx="90" cy="90" r="85" fill="#c8bfa5"/>
+  
+  <!-- Pulp texture -->
+  <rect width="180" height="180" filter="url(#pulp2)" clip-path="url(#circle2)" opacity="0.9"/>
+  
+  <!-- Pressed ring -->
+  <circle cx="90" cy="90" r="78" fill="none" stroke="rgba(80,65,40,0.06)" stroke-width="1"/>
+  <circle cx="90" cy="90" r="72" fill="none" stroke="rgba(80,65,40,0.04)" stroke-width="0.5"/>
+  
+  <!-- Cup ring stain -->
+  <circle cx="92" cy="86" r="38" fill="none" stroke="rgba(100,80,50,0.05)" stroke-width="12"/>
+  
+  <!-- Edge -->
+  <circle cx="90" cy="90" r="84" fill="none" stroke="rgba(160,145,120,0.3)" stroke-width="1.5"/>
+  <circle cx="90" cy="90" r="85" fill="none" stroke="rgba(80,65,40,0.15)" stroke-width="0.5"/>
+  
+  <!-- Slogan text - faded letterpress -->
+  <g filter="url(#letterpress2)" opacity="0.2">
+    <!-- Slogan -->
+    <text x="90" y="68" text-anchor="middle" font-family="'Georgia', serif" font-size="11" font-style="italic" fill="#3a2a15" letter-spacing="0.5">Order Like</text>
+    <text x="90" y="83" text-anchor="middle" font-family="'Georgia', serif" font-size="11" font-style="italic" fill="#3a2a15" letter-spacing="0.5">A Regular.</text>
+    
+    <!-- Divider -->
+    <line x1="62" y1="92" x2="118" y2="92" stroke="#3a2a15" stroke-width="0.5"/>
+    
+    <!-- Est date -->
+    <text x="90" y="107" text-anchor="middle" font-family="ui-monospace, monospace" font-size="7" font-weight="700" fill="#3a2a15" letter-spacing="4">EST. 2025</text>
+    
+    <!-- City -->
+    <text x="90" y="120" text-anchor="middle" font-family="ui-monospace, monospace" font-size="5.5" fill="#3a2a15" letter-spacing="3">CHICAGO, IL</text>
+  </g>
+</svg>
