@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Privacy Policy | WildHeavy</title>
+    <meta name="description" content="WildHeavy Privacy Policy - How we collect, use, and protect your data.">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        /* CORE VARIABLES (Aligned with Master Brand) */
+        :root {
+            --bg-cream: #f5f2e8;
+            --bg-darker: #e4e0d1;
+            --text-forest: #1a3d2e;
+            --text-slate: #2d5a45;
+            --glass-white: rgba(255, 255, 255, 0.9);
+            --border-light: rgba(26, 61, 46, 0.2);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html { height: 100%; background-color: #e8e4d8; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #e8e4d8;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            color: var(--text-forest);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Background texture */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"),
+                radial-gradient(ellipse at center, #ece8dc 0%, #e0dac8 50%, #d4cdb8 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* TYPOGRAPHY */
+        h1, h2, h3 { 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            color: var(--text-forest); 
+            font-weight: 800; 
+            font-family: 'Georgia', serif;
+        }
+        
+        h1 { font-size: 2.2rem; margin-bottom: 5px; line-height: 1; }
+        .meta { font-size: 0.8rem; color: #666; margin-bottom: 40px; font-family: ui-monospace, monospace; }
+
+        /* CONTENT STYLING */
+        h2 { 
+            font-size: 1.1rem; 
+            margin-bottom: 20px; 
+            border-bottom: 1px dashed var(--border-light); 
+            padding-bottom: 10px; 
+            color: var(--text-slate); 
+            font-family: ui-monospace, monospace;
+        }
+        h3 { font-size: 1rem; margin: 25px 0 10px 0; font-weight: 700; }
+        p, li { font-size: 0.95rem; line-height: 1.6; margin-bottom: 12px; color: #333; }
+        ul, ol { padding-left: 20px; margin-bottom: 20px; }
+        strong { color: var(--text-forest); font-weight: 700; }
+        a { color: var(--text-slate); text-decoration: underline; }
+        
+        /* LAYOUT */
+        .main-wrapper { max-width: 880px; margin: 0 auto; padding: 20px; width: 100%; flex: 1; position: relative; z-index: 1; }
+        
+        /* NAV RAIL */
+        .nav-rail { 
+            width: 100%; 
+            display: flex; 
+            justify-content: center; 
+            gap: 30px; 
+            padding: 25px 0; 
+            font-size: 0.75rem; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 1.5px; 
+            position: relative;
+            margin-bottom: 40px; 
+            font-family: ui-monospace, monospace;
+        }
+        .nav-rail::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: -20px;
+            right: -20px;
+            height: 4px;
+            background-image: url('chrome.png'); background-size: 100% 100%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .nav-rail a { text-decoration: none; color: var(--text-slate); opacity: 0.5; transition: all 0.2s; position: relative; }
+        .nav-rail a:hover, .nav-rail a.active { opacity: 1; color: var(--text-forest); }
+        .nav-rail a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 3px;
+            background: var(--text-forest);
+        }
+
+        /* CARDS */
+        .content-card { 
+            background: rgba(255, 255, 255, 0.65); 
+            padding: 40px 30px; 
+            margin-bottom: 25px; 
+            border: 1px solid rgba(26, 61, 46, 0.08);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        
+        .note-box { 
+            background: rgba(0,0,0,0.03); 
+            padding: 15px; 
+            border-radius: 4px; 
+            font-size: 0.9rem; 
+            font-style: italic; 
+            margin-top: 15px; 
+            border-left: 2px solid var(--text-slate);
+        }
+
+        /* FOOTER */
+        .legal-footer { width: 100%; text-align: center; padding: 40px 20px; margin-top: auto; font-size: 0.7rem; color: var(--text-slate); font-family: ui-monospace, monospace; position: relative; z-index: 1; }
+        .legal-footer::before {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 4px;
+            background-image: url('chrome.png'); background-size: 100% 100%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 35px;
+        }
+        .footer-links { margin-bottom: 15px; }
+        .footer-links a { margin: 0 12px; color: inherit; text-decoration: none; font-weight: 700; transition: color 0.2s; }
+        .footer-links a:hover { color: var(--text-forest); }
+        .footer-disclaimer { font-size: 0.6rem; opacity: 0.5; max-width: 600px; margin: 10px auto 0 auto; line-height: 1.4; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+    </style>
+</head>
+<body>
+
+<div class="main-wrapper">
+    <nav class="nav-rail">
+        <a href="/">Home</a>
+        <a href="/about.html">About</a>
+        <a href="/blog.html">Off Menu</a>
+    </nav>
+    
+    <h1>WildHeavy Privacy Policy</h1>
+    <div class="meta">
+        Effective Date: February 1, 2026 // Last Updated: February 4, 2026
+    </div>
+
+    <div class="content-card">
+        <h2>1. Introduction</h2>
+        <p>Present Advisory LLC ("Company," "we," "us," or "our") respects your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website wildheavy.com and use the WildHeavy mobile application (the "Service").</p>
+        <p>We are based in Chicago, Illinois. By accessing or using our Service, you agree to the terms of this Privacy Policy. If you do not agree with the terms of this Privacy Policy, please do not access the Service.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>2. Information We Collect</h2>
+        <p>We collect information that you provide directly to us, as well as data we learn from your use of the Service.</p>
+
+        <h3>2.1 Personal Data</h3>
+        <p>When you register for an account, we may collect personally identifiable information, such as:</p>
+        <p><strong>Contact Data:</strong> Your email address. (We do not currently require your legal name).</p>
+        <p><strong>Account Credentials:</strong> Username and password.</p>
+        <p><strong>Profile Data:</strong> Your dining preferences, dietary restrictions (if you choose to save them), and profile photo.</p>
+        <p><strong>Location Data:</strong></p>
+        <ul>
+            <li><strong>Private Location:</strong> You may choose to input a specific location (verified via Google Places API) to enable "Near Me" discovery features. This data is private and used only for localizing recommendations.</li>
+            <li><strong>Public Profile Location:</strong> You may choose to display a location on your public profile (e.g., "Chicago"). This is free-text and fully optional.</li>
+        </ul>
+        <p><strong>Usage Preferences:</strong> How you intend to use the Service (e.g., as a content creator or explorer).</p>
+        <p><strong>Referral Data:</strong> If you use or share a referral code, we track this for verification purposes.</p>
+
+        <h3>2.2 Derivative Data & Usage</h3>
+        <p>Our servers automatically collect information when you access the Service, such as:</p>
+        <ul>
+            <li><strong>Device Information:</strong> Your mobile device ID, model, manufacturer, and operating system version.</li>
+            <li><strong>Usage Habits:</strong> Which restaurants you view, how you rank dishes, and your interactions with our AI features.</li>
+            <li><strong>Content Interactions:</strong> Which rankings and spec cards you view, save, and interact with.</li>
+            <li><strong>Spec Card Data:</strong> Your restaurant visit logs including dishes ordered, ratings, occasion, party size, and visit dates.</li>
+            <li><strong>Log Data:</strong> IP address, browser type, and timestamps of access.</li>
+            <li><strong>Onboarding Analytics:</strong> Progress through our setup flow to improve user experience.</li>
+            <li><strong>AI Interaction Logs:</strong> When you use AI-powered features, we log usage for quality assurance and cost management.</li>
+            <li><strong>Security Logs:</strong> Authentication attempts, rate limit events, and potential security incidents.</li>
+            <li><strong>Posts & Coordination Data:</strong> When you create dining coordination posts, we collect the restaurant name, event date, post type, and any visibility preferences you set. Other users' "interested" responses to your posts are visible to you as the post creator.</li>
+        </ul>
+
+        <h3>2.3 Mobile Permissions</h3>
+        <p>We may request access to certain features on your mobile device, including:</p>
+        <ul>
+            <li><strong>Camera & Photo Gallery:</strong> To allow you to upload a Profile Photo. (Note: Dish and menu photo uploads are not currently enabled for user submission).</li>
+            <li><strong>Push Notifications:</strong> To send you alerts about account activity or service updates.</li>
+        </ul>
+        <div class="note-box">Note: You can change these permissions at any time in your device settings, though some app features may stop working.</div>
+
+        <h3>2.4 Third-Party Data & Authentication</h3>
+        <p><strong>Google Maps Platform:</strong> We use Google Places API for restaurant and city search, and Google Maps Directions API for travel time estimates between route stops. This includes restaurant names, addresses, hours, cover photos, and navigation data.</p>
+        <p><strong>Restaurant Menu Data:</strong> We utilize Firecrawl to index publicly available restaurant websites and menus to validate dish names and improve data accuracy.</p>
+        <p><strong>Authentication Providers:</strong> We currently support email and password authentication. If we enable third-party authentication options in the future (such as Google, Apple, or Phone Number authentication), we would receive your basic profile information from those providers.</p>
+
+        <h3>2.5 Verification Data</h3>
+        <p>If you apply for verified status (Industry Professional or Tastemaker badges), we collect:</p>
+        <ul>
+            <li>Evidence of your employment or professional status</li>
+            <li>Proof documentation (e.g., business cards, LinkedIn profiles, referral information)</li>
+            <li>Any supporting text or URLs you provide</li>
+        </ul>
+
+        <h3>2.6 Cookies and Local Storage</h3>
+        <p>WildHeavy is a "privacy-first" platform. We do not use third-party advertising cookies or tracking pixels. We use storage strictly for functionality:</p>
+        <ul>
+            <li><strong>Cookies (Web Only):</strong> We use a single functional cookie to remember your sidebar preference (expanded/collapsed). This expires after 7 days.</li>
+            <li><strong>Local Storage (App & Web):</strong> Includes authentication tokens (Supabase), theme preference, onboarding state, and temporary performance cache (feed, rankings, routes).</li>
+        </ul>
+        <p><strong>Managing Data:</strong></p>
+        <ul>
+            <li><strong>Web:</strong> You can clear cookies/storage in your browser settings.</li>
+            <li><strong>iOS App:</strong> Uninstalling and reinstalling the app will clear all locally stored data.</li>
+            <li><strong>Log Out:</strong> Logging out clears your authentication token immediately.</li>
+        </ul>
+    </div>
+
+    <div class="content-card">
+        <h2>3. How We Use Your Information</h2>
+        <p>We use the information we collect to:</p>
+        <ul>
+            <li><strong>Provide the Service:</strong> Create your account, facilitate rankings, and display restaurant data.</li>
+            <li><strong>Improve Our Algorithms:</strong> We use aggregated, anonymized ranking data to calculate "Dish Scores" and "Reservation Difficulty" metrics.</li>
+            <li><strong>Train AI Models:</strong> We may use your anonymized reviews and text inputs to train our AI (Large Language Models) to provide better dining recommendations.</li>
+            <li><strong>Provide Verified Status:</strong> Verify employment or professional credentials for Industry Professional or Tastemaker badges.</li>
+            <li><strong>Communication:</strong> Send you administrative emails (password resets) and, if you opt-in, marketing emails.</li>
+            <li><strong>Security:</strong> Detect and prevent fraudulent activity, spam, and "review bombing." We log authentication attempts to detect and prevent unauthorized access.</li>
+        </ul>
+    </div>
+
+    <div class="content-card">
+        <h2>4. Disclosure of Your Information</h2>
+        <p>We may share information we have collected about you in certain situations:</p>
+
+        <h3>4.1 By Law or to Protect Rights</h3>
+        <p>We may disclose your information if we believe it is necessary to respond to legal process, to investigate or remedy potential violations of our policies, or to protect the rights, property, and safety of others.</p>
+
+        <h3>4.2 Third-Party Service Providers</h3>
+        <p>We may share your information with third parties that perform services for us, such as:</p>
+        <ul>
+            <li><strong>Cloud Infrastructure:</strong> Supabase (database, authentication, file storage).</li>
+            <li><strong>AI Services:</strong> Anthropic's Claude AI models for recommendation features, content summarization, and data normalization.</li>
+            <li><strong>Data Processing:</strong> Firecrawl (menu indexing) and Google Maps Platform (location search and directions).</li>
+            <li><strong>Email Delivery:</strong> Resend for transactional emails (password resets, notifications) and service communications.</li>
+        </ul>
+
+        <h3>4.3 Business Transfers</h3>
+        <p>If Present Advisory LLC undergoes a merger, acquisition, or asset sale, your user data may be transferred as part of that transaction.</p>
+
+        <h3>4.4 Aggregated & Anonymized Data</h3>
+        <p>We may share anonymized data (which cannot identify you) with third parties for marketing, advertising, research, or similar purposes. For example, we might publish a report on "The Most Popular Italian Dishes in Chicago" using your data in aggregate.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>5. Content Moderation & Data Processing</h2>
+        <p>To maintain data quality and community safety, we collect and process certain information related to content moderation:</p>
+
+        <h3>5.1 Human Review Data</h3>
+        <p>When our team reviews content for policy compliance or data accuracy, we log the reviewer's identity, the action taken, the original content, and the modified content (if applicable). This data is stored securely and used only for accountability and quality assurance purposes.</p>
+
+        <h3>5.2 Automated Processing ("Janitor" System)</h3>
+        <p>We use AI-assisted tools to normalize and standardize User Content, such as:</p>
+        <ul>
+            <li>Correcting dish name spelling and capitalization</li>
+            <li>Matching dishes to official restaurant menu items</li>
+            <li>Identifying and merging duplicate entries</li>
+            <li>Flagging content that may require human review</li>
+        </ul>
+        <p>This processing is performed to improve search accuracy and data consistency across the platform. The AI system may access scraped restaurant menu data to validate dish names.</p>
+
+        <h3>5.3 Audit Trail & Retention</h3>
+        <p>We maintain detailed logs of all moderation actions, including:</p>
+        <ul>
+            <li>The type of action (edit, delete, flag, approve)</li>
+            <li>The identity of the reviewer (for human actions)</li>
+            <li>Timestamp of the action</li>
+            <li>The original and modified content values</li>
+            <li>Reason for the action (if applicable)</li>
+        </ul>
+        <p>These logs are retained for a minimum of 2 years to support dispute resolution and ensure accountability.</p>
+
+        <h3>5.4 Your Rights Regarding Moderated Content</h3>
+        <p>You may request information about moderation actions taken on your content by contacting <a href="mailto:support@wildheavy.com">support@wildheavy.com</a>. We will provide details about what was changed, when, and why, subject to any legal or security limitations.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>6. Third-Party Websites</h2>
+        <p>The Service may contain links to third-party websites (e.g., OpenTable, Resy, Google Maps). We are not responsible for the privacy practices or content of third-party sites. Information you provide to those third parties is not covered by this Privacy Policy.</p>
+        <p>We load fonts from Google Fonts, which involves your browser making requests to Google's servers.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>7. Security of Your Information</h2>
+        <p>We use administrative, technical, and physical security measures to help protect your personal information. We log authentication attempts, rate limit events, and potential security incidents to detect and prevent unauthorized access and abuse. However, please be aware that no security measures are perfect or impenetrable, and no method of data transmission can be guaranteed against any interception or other type of misuse.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>8. Policy for Children</h2>
+        <p>We do not knowingly solicit information from or market to children under the age of 13. If we become aware that we have collected data from a child under age 13 without verification of parental consent, we will delete that information as quickly as possible.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>9. Controls for Do-Not-Track Features</h2>
+        <p>Most web browsers and some mobile operating systems include a Do-Not-Track ("DNT") feature. No uniform technology standard for recognizing and implementing DNT signals has been finalized. As such, we do not currently respond to DNT browser signals.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>10. Your Privacy Rights</h2>
+        <p>Depending on your location, you may have certain rights regarding your personal data:</p>
+
+        <h3>Access & Correction</h3>
+        <p>You may review and change your personal information by logging into your account settings.</p>
+
+        <h3>Notification Preferences</h3>
+        <p>You can manage your notification preferences in your account settings, including controls for follows, saves, and other activity alerts.</p>
+
+        <h3>Deletion</h3>
+        <p>You may request that we delete your account and personal data by contacting us or using the in-app deletion tools. Account deletion involves the following process:</p>
+        <ol>
+            <li>Permanently disabling your authentication credentials</li>
+            <li>Replacing your email with an anonymized placeholder</li>
+            <li>Removing all personal profile information</li>
+            <li>Deleting private location data and social connections</li>
+            <li>Attributing any content you created to "Deleted User" so it can no longer be linked to your identity</li>
+        </ol>
+
+        <p><strong>What Gets Removed:</strong></p>
+        <ul>
+            <li>Your profile information (bio, avatar, location data)</li>
+            <li>Your social connections (follows, saves, likes)</li>
+            <li>Your notification history and preferences</li>
+            <li>Your private location data</li>
+        </ul>
+
+        <p><strong>What Gets Anonymized:</strong></p>
+        <ul>
+            <li>Your authentication credentials are permanently disabled and your email is replaced with an anonymized placeholder (the original email is not recoverable)</li>
+            <li>Your public rankings and spec cards are anonymized (attributed to "Deleted User")</li>
+            <li>Your contributions continue to count in aggregate scoring calculations</li>
+            <li>Your badge status (if applicable) is retained for algorithm accuracy but not publicly displayed</li>
+        </ul>
+
+        <div class="note-box">
+            <strong>Why we use anonymization:</strong> This approach satisfies data protection requirements by ensuring your personal data cannot be recovered or linked back to you, while preserving the integrity of our community-driven rankings. As described in our <a href="/terms.html">Terms of Service</a>, we retain anonymized ranking data to ensure fair, accurate dish scores.
+        </div>
+    </div>
+
+    <div class="content-card">
+        <h2>11. Regional Privacy Rights</h2>
+
+        <h3>11.1 California Residents (CCPA/CPRA)</h3>
+        <p>If you are a California resident, you have specific rights under the California Consumer Privacy Act:</p>
+        <ul>
+            <li><strong>Right to Know:</strong> You may request details about the categories of personal information we collect and how it is used.</li>
+            <li><strong>Right to Delete:</strong> You may request the deletion of your personal data (subject to our retention of anonymized ranking data as disclosed above).</li>
+            <li><strong>Right to Opt-Out of Sale:</strong> WildHeavy does not sell your personal information to third parties.</li>
+            <li><strong>Non-Discrimination:</strong> We will not discriminate against you for exercising these rights.</li>
+        </ul>
+        <p>To exercise these rights, contact <a href="mailto:support@wildheavy.com">support@wildheavy.com</a>.</p>
+
+        <h3>11.2 European Users (GDPR)</h3>
+        <p>If you access the Service from the European Economic Area or United Kingdom:</p>
+        <ul>
+            <li><strong>Legal Basis:</strong> We process data based on Contract (to provide the Service), Legitimate Interest (fraud prevention, ranking integrity), and Consent (where applicable).</li>
+            <li><strong>Data Transfer:</strong> Your data is processed and stored in the United States. By using the Service, you consent to this transfer. We rely on standard contractual clauses where required.</li>
+            <li><strong>Your Rights:</strong> You have the right to access, rectify, erase, restrict processing, data portability, and object to processing of your personal data.</li>
+            <li><strong>Data Protection Authority:</strong> You have the right to lodge a complaint with your local supervisory authority.</li>
+        </ul>
+        <p>To exercise these rights, contact <a href="mailto:support@wildheavy.com">support@wildheavy.com</a>.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>12. Contact Us</h2>
+        <p>If you have questions or comments about this Privacy Policy, please contact us at:</p>
+        <p>
+            Present Advisory LLC<br>
+            Chicago, Illinois<br>
+            Email: <a href="mailto:support@wildheavy.com">support@wildheavy.com</a><br>
+            Security Issues: <a href="mailto:security@wildheavy.com">security@wildheavy.com</a>
+        </p>
+    </div>
+
+    <footer class="legal-footer">
+        <div class="footer-links">
+            <a href="/terms.html">Terms</a>
+            <a href="/privacy.html">Privacy</a>
+            <a href="/guidelines.html">Guidelines</a>
+            <a href="mailto:support@wildheavy.com">Contact</a>
+        </div>
+        <div>&copy; 2026 Present Advisory LLC.</div>
+        <div class="footer-disclaimer">
+            WildHeavy is an independent entity and is not affiliated with, endorsed by, or sponsored by any restaurant or third-party platform listed herein. All trademarks are property of their respective owners.
+        </div>
+    </footer>
+</div>
+
+</body>
+</html>

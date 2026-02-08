@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Off Menu | WildHeavy</title>
+    <meta name="description" content="WildHeavy Shift Notes and Off Menu updates. Behind the scenes of the restaurant discovery app.">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&family=Permanent+Marker&family=Special+Elite&family=Space+Grotesk:wght@400;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* === CORE VARIABLES === */
+        :root {
+            --bg-cream: #f5f2e8;
+            --bg-darker: #e4e0d1;
+            --text-forest: #1a3d2e;
+            --text-slate: #2d5a45;
+            --glass-white: rgba(255, 255, 255, 0.9);
+            --border-light: rgba(26, 61, 46, 0.2);
+            --tape-blue: #4a8cb5;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { height: 100%; background-color: #e8e4d8; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #e8e4d8;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            color: var(--text-forest);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Background texture */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"),
+                radial-gradient(ellipse at center, #ece8dc 0%, #e0dac8 50%, #d4cdb8 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* === LAYOUT === */
+        .main-wrapper { max-width: 880px; margin: 0 auto; padding: 20px; width: 100%; flex: 1; position: relative; z-index: 1; }
+
+        /* === CHROME SHELF STRIP (nav) === */
+        .nav-rail {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 22px 0;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-family: 'JetBrains Mono', monospace;
+            position: relative;
+            margin-bottom: 60px;
+        }
+        .nav-rail::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: -20px;
+            right: -20px;
+            height: 4px;
+            background-image: url('chrome.png'); background-size: 100% 100%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .nav-rail a {
+            text-decoration: none;
+            color: var(--text-slate);
+            opacity: 0.5;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .nav-rail a:hover, .nav-rail a.active { opacity: 1; color: var(--text-forest); }
+        .nav-rail a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 3px;
+            background: var(--text-forest);
+        }
+
+        /* === HEADER === */
+        .menu-header { text-align: center; margin-bottom: 60px; }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-forest);
+            margin-bottom: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            line-height: 1;
+        }
+        .menu-subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            color: var(--text-slate);
+            letter-spacing: 2px;
+            opacity: 0.8;
+        }
+
+        /* === SECTION TITLES with real tape strip === */
+        .menu-section-title {
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 1rem;
+            letter-spacing: 4px;
+            font-weight: 700;
+            color: #111;
+            margin: 60px auto 40px auto;
+            position: relative;
+            font-family: 'Permanent Marker', cursive;
+            background-image: url('tape-horizontal.png');
+            background-size: 100% 100%;
+            background-position: center;
+            display: inline-block;
+            padding: 8px 30px 9px 30px;
+            /* torn tape edges */
+            clip-path: polygon(
+                0% 15%, 2% 0%, 6% 10%, 10% 0%, 14% 8%, 18% 0%, 22% 5%, 26% 0%, 30% 10%, 34% 0%, 38% 5%, 42% 0%, 46% 8%, 50% 0%, 54% 5%, 58% 0%, 62% 10%, 66% 0%, 70% 5%, 74% 0%, 78% 10%, 82% 0%, 86% 5%, 90% 0%, 94% 8%, 98% 0%, 100% 15%,
+                100% 85%, 98% 100%, 94% 92%, 90% 100%, 86% 95%, 82% 100%, 78% 90%, 74% 100%, 70% 95%, 66% 100%, 62% 90%, 58% 100%, 54% 95%, 50% 100%, 46% 92%, 42% 100%, 38% 95%, 34% 100%, 30% 90%, 26% 100%, 22% 95%, 18% 100%, 14% 92%, 10% 100%, 6% 90%, 2% 100%, 0% 85%
+            );
+        }
+        .section-title-wrapper {
+            text-align: center;
+        }
+
+        /* === MENU ITEMS === */
+        .menu-item {
+            margin-bottom: 45px;
+            padding-bottom: 35px;
+            border-bottom: 1px dashed var(--border-light);
+            position: relative;
+        }
+        .menu-item:last-child { border-bottom: none; }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .item-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-forest);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .item-meta {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--text-slate);
+            white-space: nowrap;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: rgba(26, 61, 46, 0.06);
+            padding: 3px 10px;
+        }
+
+        .item-desc {
+            font-size: 1rem;
+            color: #333;
+            max-width: 100%;
+        }
+        .item-desc p { margin-bottom: 15px; }
+
+        .item-desc strong {
+            color: var(--text-forest);
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .highlight {
+            background: linear-gradient(180deg, transparent 60%, rgba(74, 140, 181, 0.15) 60%);
+            padding: 0 3px;
+            font-weight: 600;
+        }
+
+        /* Blockquote / Vision statement */
+        .vision-quote {
+            font-style: italic;
+            opacity: 0.85;
+            font-family: 'Special Elite', 'Georgia', serif;
+            border-left: 3px solid var(--tape-blue);
+            padding: 12px 0 12px 18px;
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+            line-height: 1.5;
+            background: repeating-linear-gradient(
+                transparent,
+                transparent 27px,
+                rgba(26, 61, 46, 0.04) 27px,
+                rgba(26, 61, 46, 0.04) 28px
+            );
+        }
+
+        /* Chrome divider */
+        .chrome-divider {
+            width: calc(100% + 40px);
+            margin-left: -20px;
+            height: 4px;
+            background-image: url('chrome.png'); background-size: 100% 100%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 0;
+            margin-top: 20px;
+        }
+
+        /* === FOOTER === */
+        .legal-footer {
+            width: 100%;
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: auto;
+            font-size: 0.7rem;
+            color: var(--text-slate);
+            font-family: 'JetBrains Mono', monospace;
+            position: relative;
+            z-index: 1;
+        }
+        .legal-footer::before {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 4px;
+            background-image: url('chrome.png'); background-size: 100% 100%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 35px;
+        }
+        .footer-links { margin-bottom: 15px; }
+        .footer-links a { margin: 0 12px; color: inherit; text-decoration: none; font-weight: 700; transition: color 0.2s; }
+        .footer-links a:hover { color: var(--text-forest); }
+        .footer-disclaimer { font-size: 0.6rem; opacity: 0.5; max-width: 600px; margin: 10px auto 0 auto; line-height: 1.4; font-family: 'Inter', sans-serif; }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2rem; }
+            .nav-rail { gap: 20px; margin-bottom: 40px; }
+            .item-title { font-size: 1.2rem; }
+        }
+
+        /* Decorative bear watermark */
+        .page-bear {
+            position: fixed;
+            bottom: 40px;
+            left: -10px;
+            width: 130px;
+            height: auto;
+            opacity: 0.06;
+            pointer-events: none;
+            z-index: 0;
+            filter: grayscale(0.3);
+            transform: scaleX(-1) rotate(-5deg);
+        }
+        @media (max-width: 900px) {
+            .page-bear { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-wrapper">
+        <nav class="nav-rail">
+            <a href="/">Home</a>
+            <a href="/about.html">About</a>
+            <a href="/blog.html" class="active">Off Menu</a>
+        </nav>
+
+        <div class="menu-header">
+            <h1>Off Menu</h1>
+            <div class="menu-subtitle">Shift Notes // Editorials // Updates</div>
+        </div>
+
+        <div class="section-title-wrapper">
+            <div class="menu-section-title">Fresh Sheet</div>
+        </div>
+
+        <div class="menu-item">
+            <div class="item-header">
+                <div class="item-title">Opening the Pass: Beta v1.0</div>
+                <div class="item-meta">FEB 2026 // CHICAGO</div>
+            </div>
+            <div class="item-desc">
+                <p>You’re at a restaurant everyone says is incredible. You open the menu. Fourteen appetizers, nine entrées, a raw bar, a specials board your server rattled off too fast. You pick three things that sound fine. The food is good. But when your friend orders next week and texts you for advice, you realize you can’t actually tell them <span class="highlight">what to get or how to navigate it</span>.</p>
+
+<p>That gap between eating somewhere and actually <em>knowing</em> it is what we built Wild Heavy to close.</p>
+
+<p>Today we’re opening our public beta in <strong>Chicago, New York, and Nantucket</strong>. Wild Heavy gives you the tools to rank your favorite dishes, build detailed Spec Cards for restaurants you know well, and tap into community-powered leaderboards where industry voices carry weight. The platform doesn’t tell you what’s good. The people on it do.</p>
+
+<p>If you work in hospitality, request your verified Industry badge inside the app. Your expertise shapes the rankings. If you’re a passionate regular, start building your stack. Either way: we rate dishes, not restaurants. We enhance experiences, not egos.</p>
+
+<p>Welcome to the line.</p>
+
+            </div>
+        </div>
+
+        <div class="menu-item">
+            <div class="item-header">
+                <div class="item-title">The "Janitor" AI</div>
+                <div class="item-meta">DEC 2025 // TECH</div>
+            </div>
+            <div class="item-desc">
+                <p>Here’s a problem nobody thinks about when building a food platform: one person types “Cheeseburger.” Another types “Cheese Burger.” A third writes “the burger with cheese.” A fourth uses all lowercase. They all mean the same thing, and if your system doesn’t know that, your rankings are broken before anyone uses them.</p>
+
+<p>This is a data normalization problem, and it’s the kind of thing that keeps someone with an accounting background up at night. In auditing, you learn fast that dirty data isn’t just messy. It produces wrong answers that look right. A ledger that miscategorizes expenses doesn’t throw an error. It just quietly lies to you.</p>
+
+<p>So we built The Janitor, a custom AI agent that runs behind the scenes normalizing dish names, catching duplicates, and making sure “Cheeseburger” and “Cheese Burger” score toward the same ranking. It’s not the feature anyone will see in the app. But it’s the reason the features you do see actually work.</p>
+
+<p>Cleaning data is the unsexy part of building a food platform. But if the foundation is wrong, everything you stack on top of it is wrong too.</p>
+            </div>
+        </div>
+
+        <div class="section-title-wrapper">
+            <div class="menu-section-title">House Philosophy</div>
+        </div>
+
+        <div class="menu-item">
+            <div class="item-header">
+                <div class="item-title">Vision, Mission, & Pillars</div>
+                <div class="item-meta">DEC 2025 // MISSION</div>
+            </div>
+            <div class="item-desc">
+                <p class="vision-quote">"A world where every dining experience is a synchronization between guest and kitchen, powered by a community that values taste, empathy, and craft."</p>
+
+                <p><strong>Mission:</strong> To unlock the 'Regular's Advantage', giving every diner the confidence to know exactly what to order and how to navigate the service, powered by industry wisdom. We are building a shared table where hospitality pros and passionate guests exchange knowledge, turning every meal into an insider experience.</p>
+
+                <p><strong>The Utility Problem:</strong> We don't just struggle with where to go—we struggle with how to do it right. Even when we find a spot with the right vibe, we often miss the restaurant's full potential by ordering disjointed dishes or missing the chef's intent. We are drowning in data, but starving for guidance.</p>
+
+                <p><strong>The Cultural Problem:</strong> The relationship between Guest and Hospitality has become transactional and (at times) adversarial. Guests often don't understand the 'dance' of service—how a menu is structured, the pacing of a kitchen, or proper etiquette—which results in friction, sub-par experiences, and burnout for industry workers.</p>
+
+                <p><strong>Pillar A: Curated Pathways.</strong> We don't just log food; we curate chemistry. A "Ranking" isolates a dish, but a "Spec Card" builds a cohesive meal. <em>"Don't just order random plates. Build a flow."</em></p>
+
+                <p><strong>Pillar B: The Industry Standard.</strong> We validate expertise. Weighted Influence means an endorsement from a Chef counts for more towards our rankings. <em>"Listen to the people who do this for a living."</em></p>
+            </div>
+        </div>
+
+        <div class="menu-item">
+            <div class="item-header">
+                <div class="item-title">What's the Wild Heavy?</div>
+                <div class="item-meta">NOV 2025 // ORIGIN</div>
+            </div>
+            <div class="item-desc">
+                <p>When you go to a new restaurant and you're not sure how to tackle the menu, what do you do? You ask the waiter to help you navigate. <span class="highlight">That shpiel is the Wild Heavy.</span></p>
+
+                <p>When you don't want to ask the waiter, so you text a friend in advance—what are the must orders? Their insight is the Wild Heavy.</p>
+
+                <p>When you're trying to snag a Resy and don't know how to play the game, so you scour Reddit or ask friends of friends? That tip about being online at midnight two weeks in advance—that is the Wild Heavy.</p>
+            </div>
+        </div>
+
+        <div class="section-title-wrapper">
+            <div class="menu-section-title">86'd Items (Archive)</div>
+        </div>
+
+        <div class="menu-item" style="opacity: 0.6;">
+            <div class="item-header">
+                <div class="item-title">First Feedback!</div>
+                <div class="item-meta">DEC 2025 // UPDATE</div>
+            </div>
+            <div class="item-desc">
+                <p>Thank you to our first 10 testers. Your time and feedback have been extremely helpful. Can’t wait to see how this continues to develop.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="legal-footer">
+        <div class="footer-links">
+            <a href="/terms.html">Terms</a>
+            <a href="/privacy.html">Privacy</a>
+            <a href="/guidelines.html">Guidelines</a>
+            <a href="mailto:support@wildheavy.com">Contact</a>
+        </div>
+        <div>&copy; 2026 Present Advisory LLC.</div>
+        <div class="footer-disclaimer">
+            WildHeavy is an independent entity and is not affiliated with, endorsed by, or sponsored by any restaurant or third-party platform listed herein. All trademarks are property of their respective owners.
+        </div>
+    </footer>
+
+    <img src="Wild Heavy - Happy Bear - Transparent - Edited.png" alt="" class="page-bear">
+</body>
+</html>

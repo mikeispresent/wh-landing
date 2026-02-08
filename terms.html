@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Terms of Service | WildHeavy</title>
+    <meta name="description" content="WildHeavy Terms of Service - Rules and guidelines for using our platform.">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        /* CORE VARIABLES (Aligned with Master Brand) */
+        :root {
+            --bg-cream: #f5f2e8;
+            --bg-darker: #e4e0d1;
+            --text-forest: #1a3d2e;
+            --text-slate: #2d5a45;
+            --glass-white: rgba(255, 255, 255, 0.9);
+            --border-light: rgba(26, 61, 46, 0.2);
+            --alert-bg: rgba(220, 38, 38, 0.05); 
+            --alert-border: rgba(185, 28, 28, 0.3); 
+            --alert-text: #7f1d1d;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html { height: 100%; background-color: #e8e4d8; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #e8e4d8;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            color: var(--text-forest);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Background texture */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"),
+                radial-gradient(ellipse at center, #ece8dc 0%, #e0dac8 50%, #d4cdb8 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* TYPOGRAPHY */
+        h1, h2, h3 { 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            color: var(--text-forest); 
+            font-weight: 800; 
+            font-family: 'Georgia', serif;
+        }
+        
+        h1 { font-size: 2.2rem; margin-bottom: 5px; line-height: 1; }
+        .meta { font-size: 0.8rem; color: #666; margin-bottom: 40px; font-family: ui-monospace, monospace; }
+
+        /* CONTENT STYLING */
+        h2 { 
+            font-size: 1.1rem; 
+            margin-bottom: 20px; 
+            border-bottom: 1px dashed var(--border-light); 
+            padding-bottom: 10px; 
+            color: var(--text-slate); 
+            font-family: ui-monospace, monospace;
+        }
+        h3 { font-size: 1rem; margin: 25px 0 10px 0; font-weight: 700; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+        h4 { font-size: 0.9rem; margin: 15px 0 5px 0; font-weight: 700; color: var(--text-slate); }
+        
+        p, li { font-size: 0.95rem; line-height: 1.6; margin-bottom: 12px; color: #333; }
+        ul, ol { padding-left: 20px; margin-bottom: 20px; }
+        a { color: var(--text-slate); text-decoration: underline; }
+        
+        .caps-text { font-weight: 600; font-size: 0.85rem; letter-spacing: 0.5px; }
+        .small-text { font-size: 0.85rem; color: #666; }
+
+        /* LAYOUT */
+        .main-wrapper { max-width: 880px; margin: 0 auto; padding: 20px; width: 100%; flex: 1; position: relative; z-index: 1; }
+        
+        /* NAV RAIL */
+        .nav-rail { 
+            width: 100%; 
+            display: flex; 
+            justify-content: center; 
+            gap: 30px; 
+            padding: 25px 0; 
+            font-size: 0.75rem; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 1.5px; 
+            position: relative;
+            margin-bottom: 40px; 
+            font-family: ui-monospace, monospace;
+        }
+        .nav-rail::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: -20px;
+            right: -20px;
+            height: 4px;
+            background-image: url('chrome.png'); background-size: 100% 100%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .nav-rail a { text-decoration: none; color: var(--text-slate); opacity: 0.5; transition: all 0.2s; position: relative; }
+        .nav-rail a:hover, .nav-rail a.active { opacity: 1; color: var(--text-forest); }
+        .nav-rail a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 3px;
+            background: var(--text-forest);
+        }
+
+        /* CARDS */
+        .content-card { 
+            background: rgba(255, 255, 255, 0.65); 
+            padding: 40px 30px; 
+            margin-bottom: 25px; 
+            border: 1px solid rgba(26, 61, 46, 0.08);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        
+        .community-card { border-top: 4px solid #b91c1c; } /* Red accent for strict rules */
+        .community-card h2 { color: #b91c1c; }
+
+        .alert-box { 
+            background: var(--alert-bg); 
+            border: 1px solid var(--alert-border); 
+            color: var(--alert-text); 
+            padding: 20px; 
+            border-radius: 4px; 
+            margin-bottom: 30px; 
+            font-size: 0.85rem; 
+            font-weight: 600; 
+            line-height: 1.5;
+        }
+
+        .note-box { 
+            background: rgba(0,0,0,0.03); 
+            padding: 15px; 
+            border-radius: 4px; 
+            font-size: 0.9rem; 
+            font-style: italic; 
+            margin-top: 15px; 
+            border-left: 2px solid var(--text-slate);
+        }
+
+        /* FOOTER */
+        .legal-footer { width: 100%; text-align: center; padding: 40px 20px; margin-top: auto; font-size: 0.7rem; color: var(--text-slate); font-family: ui-monospace, monospace; position: relative; z-index: 1; }
+        .legal-footer::before {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 4px;
+            background-image: url('chrome.png'); background-size: 100% 100%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 35px;
+        }
+        .footer-links { margin-bottom: 15px; }
+        .footer-links a { margin: 0 12px; color: inherit; text-decoration: none; font-weight: 700; transition: color 0.2s; }
+        .footer-links a:hover { color: var(--text-forest); }
+        .footer-disclaimer { font-size: 0.6rem; opacity: 0.5; max-width: 600px; margin: 10px auto 0 auto; line-height: 1.4; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+    </style>
+</head>
+<body>
+
+<div class="main-wrapper">
+    <nav class="nav-rail">
+        <a href="/">Home</a>
+        <a href="/about.html">About</a>
+        <a href="/blog.html">Off Menu</a>
+    </nav>
+    
+    <h1>WildHeavy Terms of Service</h1>
+    <div class="meta">
+        Effective Date: February 1st, 2026 // Last Updated: February 4th, 2026
+    </div>
+
+    <div class="alert-box">
+        ARBITRATION NOTICE: EXCEPT FOR CERTAIN TYPES OF DISPUTES DESCRIBED IN THE ARBITRATION SECTION BELOW, YOU AGREE THAT DISPUTES BETWEEN YOU AND PRESENT ADVISORY LLC WILL BE RESOLVED BY BINDING, INDIVIDUAL ARBITRATION AND YOU WAIVE YOUR RIGHT TO PARTICIPATE IN A CLASS ACTION LAWSUIT OR CLASS-WIDE ARBITRATION.
+    </div>
+
+    <div class="content-card">
+        <h2>1. Agreement to Terms</h2>
+        <p>These Terms of Service (the "Terms") constitute a legally binding agreement between you and Present Advisory LLC ("Company," "we," "us," or "our"), governing your access to and use of the WildHeavy mobile application, website, and related services (collectively, the "Service"). By accessing or using the Service, you represent that you have read, understood, and agree to be bound by these Terms. If you do not agree, you are expressly prohibited from using the Service and must discontinue use immediately.</p>
+        <p class="caps-text">PLEASE READ THESE TERMS CAREFULLY. BY ACCESSING OR USING THE SERVICE, YOU AGREE TO BE BOUND BY THESE TERMS. IF YOU DO NOT AGREE, YOU MAY NOT ACCESS OR USE THE SERVICE.</p>
+
+        <h3>1.1 Privacy Policy</h3>
+        <p>Your use of the Service is also subject to our <a href="/privacy.html">Privacy Policy</a>, which explains how we collect, use, and share your personal information. By using the Service, you acknowledge that you have read and understood our Privacy Policy.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>2. Eligibility and Accounts</h2>
+
+        <h3>2.1 Age Requirement</h3>
+        <p>You must be at least 13 years of age to use the Service. By using the Service, you represent and warrant that you meet this requirement. If you are under 18, you represent that you have your parent or guardian's permission to use the Service.</p>
+
+        <h3>2.2 Account Security</h3>
+        <p>To access certain features, you must register for an account. You are solely responsible for maintaining the confidentiality of your account credentials and agree to accept responsibility for all activities that occur under your account. You agree to:</p>
+        <ul>
+            <li>Provide accurate, current, and complete account information.</li>
+            <li>Maintain the security of your password and accept all risks of unauthorized access to your account.</li>
+            <li>Notify us immediately at <a href="mailto:security@wildheavy.com">security@wildheavy.com</a> if you discover or suspect any security breaches.</li>
+        </ul>
+        <p>We reserve the right to remove, reclaim, or change any username that we determine, in our sole discretion, is inappropriate, impersonates another, or violates any trademark.</p>
+
+        <h3>2.3 Prohibited Activities</h3>
+        <p>You agree not to:</p>
+        <ul>
+            <li>Use the Service for any illegal purpose or in violation of any local, state, national, or international law.</li>
+            <li>Circumvent, disable, or otherwise interfere with security-related features of the Service.</li>
+            <li>Manipulate or "game" the ranking system or "Top Rank" scores via multiple accounts, bot networks, or coordinated inauthentic behavior.</li>
+            <li>Impersonate any person or entity, including industry professionals or WildHeavy staff.</li>
+            <li>Scrape, crawl, or use automated means to access the Service's data without our express written consent.</li>
+            <li>Reverse engineer or attempt to extract the source code or ranking algorithms of the Service.</li>
+            <li>Interfere with or disrupt the integrity or performance of the Service.</li>
+        </ul>
+        <p class="small-text"><strong>Username Policy:</strong> Usernames are automatically filtered against a list of prohibited terms including profanity, slurs, impersonation of others, and reserved system words.</p>
+    </div>
+
+    <div class="content-card community-card">
+        <h2>3. Community Standards & User Conduct</h2>
+        <p>WildHeavy is a community-driven platform. To maintain a positive environment for all users, we have established the following conduct guidelines:</p>
+
+        <h4>Prohibited Content</h4>
+        <ul>
+            <li>Users must not post objectionable, offensive, or inappropriate content.</li>
+            <li>Content that is hateful, discriminatory, or promotes violence is strictly prohibited.</li>
+            <li>Sexually explicit content, spam, or misleading information is not allowed.</li>
+            <li>Content that infringes on intellectual property rights of others.</li>
+        </ul>
+
+        <h4>Harassment & Abuse</h4>
+        <ul>
+            <li>Users must not harass, bully, or threaten other users.</li>
+            <li>Personal attacks, doxxing, or sharing private information without consent is prohibited.</li>
+            <li>Coordinated harassment campaigns will result in immediate account termination.</li>
+        </ul>
+
+        <h4>Enforcement</h4>
+        <ul>
+            <li>Violation of these guidelines may result in content removal, account suspension, or permanent termination at our sole discretion.</li>
+            <li>WildHeavy reserves the right to remove any content that violates these terms without prior notice.</li>
+            <li>Users may report violations using the in-app reporting feature.</li>
+            <li>All reports are reviewed by our moderation team promptly, typically within 48 hours.</li>
+        </ul>
+
+        <h4>Blocking & Safety</h4>
+        <ul>
+            <li>Users may block other users to prevent interaction.</li>
+            <li>Blocked users cannot view your content, follow you, or appear in your feed.</li>
+            <li>You can manage blocked users in your account settings.</li>
+        </ul>
+
+        <div class="note-box">
+            <strong>Our Commitment:</strong> We are committed to fostering a respectful, inclusive community where food lovers can share their experiences. We take all reports seriously and will act swiftly to address violations.
+        </div>
+    </div>
+
+    <div class="content-card">
+        <h2>4. User Content and License</h2>
+
+        <h3>4.1 Your Content</h3>
+        <p>"User Content" includes any rankings, dish reviews, photos (of menus, food, or venues), dining coordination posts, comments, and other materials you post. You retain ownership of your User Content.</p>
+
+        <h3>4.2 License Grant to WildHeavy</h3>
+        <p>By posting User Content, you grant Present Advisory LLC a worldwide, non-exclusive, perpetual, irrevocable, royalty-free, fully paid, sublicensable, and transferable license to use, reproduce, distribute, prepare derivative works of, display, and perform your User Content in connection with the Service and our business, including without limitation for marketing, training proprietary AI models, and aggregating data for leaderboards and scoring.</p>
+        <div class="note-box">
+            <strong>Why this matters:</strong> This license allows us to keep your rankings in our aggregate scores even if you delete your account, ensuring the community data remains intact. To preserve the integrity of community leaderboards, you acknowledge that your rankings and scores may be retained in anonymized aggregate form even after account deletion.
+        </div>
+
+        <h3>4.3 Accuracy of Rankings</h3>
+        <p>You represent and warrant that:</p>
+        <ul>
+            <li>Your rankings regarding dishes and restaurants are based on your actual, first-hand experiences.</li>
+            <li>You have not received payment or incentives from a business to post a ranking (unless clearly disclosed as Sponsored Content).</li>
+            <li>You own or have the necessary rights to the photos you upload.</li>
+        </ul>
+
+        <h3>4.4 Content Removal</h3>
+        <p>We reserve the right to remove any content that violates these Terms, is deemed harmful, or affects the integrity of our ranking algorithms, at our sole discretion and without prior notice.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>5. Special Features & Disclaimers</h2>
+
+        <h3>5.1 Industry Verification</h3>
+        <p>"Verified" status is provided as a community indicator and indicates a user's likely connection to or experience in the hospitality industry. It is NOT a criminal background check, employment verification, safety clearance, endorsement, or guarantee of current employment status or professional competence. Present Advisory LLC expressly disclaims any and all liability for the actions, conduct, advice, or recommendations of any Verified user.</p>
+
+        <h3>5.2 User Experiences & "The Handshake"</h3>
+        <p>Descriptions of tipping strategies, "greasing the palm," or service interactions reflect individual user experiences and opinions. Pursuant to Section 230 of the Communications Decency Act, WildHeavy is a neutral platform and is not the publisher or speaker of this information. WildHeavy does not officially encourage, endorse, condone, or induce bribery, trespassing, violation of health codes, or any illegal activity. You are solely responsible for your conduct in physical establishments.</p>
+
+        <h3>5.3 Artificial Intelligence (AI) Features</h3>
+        <p>WildHeavy utilizes AI and LLMs for strategy recommendations and data normalization. AI is experimental. You acknowledge that AI outputs may be inaccurate, incomplete, or "hallucinate" facts. Do not rely on AI features for medical, legal, financial, or nutritional advice.</p>
+
+        <h3>5.4 Reservation & Availability Data</h3>
+        <p>We are an information tool, not a reservation agent. We are not responsible for failed bookings, lost deposits, or disputes with third-party booking platforms or restaurants.</p>
+
+        <h3>5.5 Content Moderation & Data Integrity</h3>
+        <p>The "Janitor" System: We use AI-assisted tools to normalize dish names (e.g., standardizing "burger" vs "Burger"). This automated processing is a technical necessity to maintain clean, searchable data and does not constitute an editorial modification of your original text, which remains preserved. All moderation actions are logged in our internal audit system.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>6. Intellectual Property</h2>
+        <p>The Service, including its "Dish-Level Ranking" algorithms, "Top Rank" scoring system, visual interfaces, graphics, design, compilation, computer code, and software, is the exclusive property of Present Advisory LLC. Any feedback you provide regarding the Service is entirely voluntary and we may use such feedback without obligation or compensation to you.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>7. Copyright Policy (DMCA)</h2>
+        <p>We comply with the DMCA. If you believe your copyrighted work has been infringed, please send a notice to <a href="mailto:legal@wildheavy.com">legal@wildheavy.com</a> with the required electronic signature, description of the work, and location on the Service.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>8. Third-Party Services</h2>
+        <p>The Service may contain links to third-party services (e.g., Resy, Google Maps). We do not control these services and are not responsible for their content, privacy practices, or availability.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>9. Disclaimer of Warranties</h2>
+        <p class="caps-text">THE SERVICE IS PROVIDED "AS IS" AND ON AN "AS AVAILABLE" BASIS WITHOUT WARRANTIES OF ANY KIND. TO THE MAXIMUM EXTENT PERMITTED BY LAW, PRESENT ADVISORY LLC DISCLAIMS ALL WARRANTIES, EXPRESS, IMPLIED, OR STATUTORY.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>10. Limitation of Liability</h2>
+        <p class="caps-text">IN NO EVENT SHALL PRESENT ADVISORY LLC BE LIABLE FOR ANY INDIRECT, CONSEQUENTIAL, INCIDENTAL, OR PUNITIVE DAMAGES, INCLUDING LOST PROFITS OR DATA. OUR AGGREGATE LIABILITY SHALL AT ALL TIMES BE LIMITED TO THE LESSER OF (A) THE AMOUNT PAID BY YOU TO US DURING THE PRIOR SIX (6) MONTH PERIOD, OR (B) ONE HUNDRED U.S. DOLLARS ($100.00 USD).</p>
+        
+        <h3>10.1 Indemnification</h3>
+        <p>You agree to defend, indemnify, and hold harmless Present Advisory LLC from and against any and all claims, damages, and expenses (including reasonable attorney's fees) arising from your use of the Service, your User Content, or your violation of these Terms. This obligation will survive these Terms and your use of the Service.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>11. Dispute Resolution: Arbitration & Class Action Waiver</h2>
+        <p>Any dispute arising out of or relating to these Terms shall be determined by binding arbitration in Cook County, Illinois, administered by JAMS. YOU AND PRESENT ADVISORY LLC AGREE THAT EACH MAY BRING CLAIMS AGAINST THE OTHER ONLY IN YOUR OR ITS INDIVIDUAL CAPACITY AND NOT AS A PLAINTIFF OR CLASS MEMBER. You may opt out of this arbitration agreement by sending written notice to <a href="mailto:legal@wildheavy.com">legal@wildheavy.com</a> within 30 days of first accepting these Terms.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>12. Apple App Store Provisions</h2>
+        <p>You acknowledge that these Terms are between you and Present Advisory LLC only, and not with Apple Inc. ("Apple"). Apple has no obligation to furnish any maintenance or support services with respect to the Service. Apple is not responsible for addressing any claims relating to the Service. Apple and its subsidiaries are third-party beneficiaries of these Terms.</p>
+    </div>
+
+    <div class="content-card">
+        <h2>13. General Terms</h2>
+        <p>These Terms are governed by the laws of the State of Illinois. We reserve the right to modify these Terms at any time; material changes will include 30 days' notice. If any provision is held to be invalid, the remaining provisions will continue in full force.</p>
+        <p><strong>Contact:</strong> <a href="mailto:support@wildheavy.com">support@wildheavy.com</a> | <a href="mailto:legal@wildheavy.com">legal@wildheavy.com</a> | <a href="mailto:security@wildheavy.com">security@wildheavy.com</a></p>
+    </div>
+
+    <footer class="legal-footer">
+        <div class="footer-links">
+            <a href="/terms.html">Terms</a>
+            <a href="/privacy.html">Privacy</a>
+            <a href="/guidelines.html">Guidelines</a>
+            <a href="mailto:support@wildheavy.com">Contact</a>
+        </div>
+        <div>&copy; 2026 Present Advisory LLC.</div>
+        <div class="footer-disclaimer">
+            WildHeavy is an independent entity and is not affiliated with, endorsed by, or sponsored by any restaurant or third-party platform listed herein. All trademarks are property of their respective owners.
+        </div>
+    </footer>
+</div>
+
+</body>
+</html>
