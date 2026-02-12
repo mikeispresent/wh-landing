@@ -18,7 +18,7 @@
       <circle cx="90" cy="90" r="85"/>
     </clipPath>
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&amp;display=swap');
     </style>
   </defs>
   
@@ -45,16 +45,15 @@
   <!-- Slogan text - faded letterpress -->
   <g filter="url(#letterpress2)" opacity="0.55">
     <!-- Slogan -->
-    <text x="90" y="68" text-anchor="middle" font-family="'Space Grotesk', sans-serif" font-size="11" font-style="italic" fill="#3a2a15" letter-spacing="0.5">Order Like</text>
-    <text x="90" y="83" text-anchor="middle" font-family="'Space Grotesk', sans-serif" font-size="11" font-style="italic" fill="#3a2a15" letter-spacing="0.5">A Regular.</text>
+    <text x="90" y="78" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="700" fill="#1a3d2e" letter-spacing="1">CERTIFIED HEAVY</text>
     
     <!-- Divider -->
-    <line x1="62" y1="92" x2="118" y2="92" stroke="#3a2a15" stroke-width="0.5"/>
+    <line x1="62" y1="92" x2="118" y2="92" stroke="#1a3d2e" stroke-width="0.5"/>
     
     <!-- Est date -->
-    <text x="90" y="107" text-anchor="middle" font-family="ui-monospace, monospace" font-size="7" font-weight="700" fill="#3a2a15" letter-spacing="4">EST. 2025</text>
+    <text x="90" y="107" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="7" font-weight="700" fill="#1a3d2e" letter-spacing="4">EST. 2019</text>
     
     <!-- City -->
-    <text x="90" y="120" text-anchor="middle" font-family="ui-monospace, monospace" font-size="5.5" fill="#3a2a15" letter-spacing="3">CHICAGO, IL</text>
+    <text x="90" y="120" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="7" fill="#1a3d2e" letter-spacing="3">CHICAGO, IL</text>
   </g>
 </svg>
