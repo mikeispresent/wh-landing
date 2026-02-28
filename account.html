@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>WildHeavy | Email Confirmed</title>
+    <meta name="description" content="Your email change has been confirmed.">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-cream: #ffffff;
+            --text-forest: #1a3d2e;
+            --text-slate: #2d5a45;
+            --success-green: #16a34a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-cream);
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-forest);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 24px;
+            border-radius: 24px;
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-forest);
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--text-slate);
+            font-size: 16px;
+            margin-bottom: 32px;
+        }
+
+        .checkmark {
+            width: 64px;
+            height: 64px;
+            background: rgba(22, 163, 74, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 32px;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px 32px;
+            background-color: var(--text-forest);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 16px;
+            text-align: center;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover { opacity: 0.85; }
+
+        .secondary-link {
+            display: block;
+            margin-top: 16px;
+            color: var(--text-slate);
+            font-size: 14px;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="/favicon.png" alt="WildHeavy" class="logo">
+        <div class="checkmark">&#10003;</div>
+        <h1>Email Updated</h1>
+        <p class="subtitle">Your email address has been changed successfully. Open the app to continue.</p>
+        <a href="https://testflight.apple.com/join/UUrFyauF" class="btn">Open WildHeavy</a>
+        <a href="/" class="secondary-link">Visit wildheavy.com</a>
+    </div>
+</body>
+</html>
