@@ -217,16 +217,41 @@
         const matchError = document.getElementById('matchError');
         const submitBtn = document.getElementById('submitBtn');
 
-        // Check if this is a recovery link (has tokens in the URL hash)
+        // Check if this is a recovery link
+        // Supabase may pass tokens via hash fragment OR query params (PKCE flow)
         async function init() {
+            // Check hash fragment first (implicit flow)
             const hash = window.location.hash.substring(1);
-            const params = new URLSearchParams(hash);
-            const type = params.get('type');
-            const accessToken = params.get('access_token');
-            const refreshToken = params.get('refresh_token');
+            const hashParams = new URLSearchParams(hash);
 
+            // Also check query parameters (PKCE flow)
+            const queryParams = new URLSearchParams(window.location.search);
+
+            const type = hashParams.get('type') || queryParams.get('type');
+            const accessToken = hashParams.get('access_token') || queryParams.get('access_token');
+            const refreshToken = hashParams.get('refresh_token') || queryParams.get('refresh_token');
+            const code = queryParams.get('code'); // PKCE auth code
+
+            // PKCE flow: exchange the code for a session
+            if (code) {
+                try {
+                    const { error } = await supabase.auth.exchangeCodeForSession(code);
+                    if (error) {
+                        showError('This reset link has expired or is invalid. Please request a new one from the app.');
+                        return;
+                    }
+                    // Show the reset form
+                    defaultView.classList.add('hidden');
+                    resetView.classList.remove('hidden');
+                    return;
+                } catch (e) {
+                    showError('Something went wrong. Please request a new reset link from the app.');
+                    return;
+                }
+            }
+
+            // Implicit flow: set session directly from tokens
             if (type === 'recovery' && accessToken) {
-                // Set the session using the recovery tokens
                 try {
                     const { error } = await supabase.auth.setSession({
                         access_token: accessToken,
@@ -244,8 +269,16 @@
                 } catch (e) {
                     showError('Something went wrong. Please request a new reset link from the app.');
                 }
+                return;
             }
-            // If no recovery tokens, the default view (Open in App) is shown
+
+            // Also listen for Supabase auth state changes (catches redirects we might miss)
+            supabase.auth.onAuthStateChange((event, session) => {
+                if (event === 'PASSWORD_RECOVERY') {
+                    defaultView.classList.add('hidden');
+                    resetView.classList.remove('hidden');
+                }
+            });
         }
 
         // Live validation for password match
