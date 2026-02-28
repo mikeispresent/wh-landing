@@ -205,7 +205,14 @@
         const SUPABASE_URL = 'https://kufhzivrzvqayvzbwrpn.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1Zmh6aXZyenZxYXl2emJ3cnBuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI5NjU4MDYsImV4cCI6MjA3ODU0MTgwNn0._igWjyFar_AmHmRsVOz0T7PvpC_Wz5Xtc3Iw4UVqxdk';
 
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let supabaseClient = null;
+
+        function getSupabase() {
+            if (!supabaseClient && window.supabase) {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+            return supabaseClient;
+        }
 
         const defaultView = document.getElementById('defaultView');
         const resetView = document.getElementById('resetView');
@@ -220,6 +227,12 @@
         // Check if this is a recovery link
         // Supabase may pass tokens via hash fragment OR query params (PKCE flow)
         async function init() {
+            const sb = getSupabase();
+            if (!sb) {
+                // Supabase JS hasn't loaded yet, retry
+                setTimeout(init, 200);
+                return;
+            }
             // Check hash fragment first (implicit flow)
             const hash = window.location.hash.substring(1);
             const hashParams = new URLSearchParams(hash);
@@ -235,7 +248,7 @@
             // PKCE flow: exchange the code for a session
             if (code) {
                 try {
-                    const { error } = await supabase.auth.exchangeCodeForSession(code);
+                    const { error } = await sb.auth.exchangeCodeForSession(code);
                     if (error) {
                         showError('This reset link has expired or is invalid. Please request a new one from the app.');
                         return;
@@ -253,7 +266,7 @@
             // Implicit flow: set session directly from tokens
             if (type === 'recovery' && accessToken) {
                 try {
-                    const { error } = await supabase.auth.setSession({
+                    const { error } = await sb.auth.setSession({
                         access_token: accessToken,
                         refresh_token: refreshToken
                     });
@@ -273,7 +286,7 @@
             }
 
             // Also listen for Supabase auth state changes (catches redirects we might miss)
-            supabase.auth.onAuthStateChange((event, session) => {
+            sb.auth.onAuthStateChange((event, session) => {
                 if (event === 'PASSWORD_RECOVERY') {
                     defaultView.classList.add('hidden');
                     resetView.classList.remove('hidden');
@@ -313,7 +326,7 @@
             submitBtn.textContent = 'Updating...';
 
             try {
-                const { error } = await supabase.auth.updateUser({
+                const { error } = await getSupabase().auth.updateUser({
                     password: newPassword
                 });
 
