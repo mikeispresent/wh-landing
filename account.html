@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>WildHeavy | Email Confirmed</title>
-    <meta name="description" content="Your email change has been confirmed.">
+    <title>WildHeavy</title>
+    <meta name="description" content="WildHeavy - Order Like a Regular.">
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -96,16 +96,42 @@
             font-size: 14px;
             text-decoration: underline;
         }
+
+        .hidden { display: none; }
     </style>
 </head>
 <body>
     <div class="container">
         <img src="/favicon.png" alt="WildHeavy" class="logo">
-        <div class="checkmark">&#10003;</div>
-        <h1>Email Updated</h1>
-        <p class="subtitle">Your email address has been changed successfully. Open the app to continue.</p>
-        <a href="https://testflight.apple.com/join/UUrFyauF" class="btn">Open WildHeavy</a>
-        <a href="/" class="secondary-link">Visit wildheavy.com</a>
+
+        <!-- Default view: shown when no tokens (someone just visits /account) -->
+        <div id="defaultView">
+            <h1>Open WildHeavy</h1>
+            <p class="subtitle">Tap the button below to continue in the app. If you don't have it yet, join our TestFlight to get started.</p>
+            <a href="https://testflight.apple.com/join/UUrFyauF" class="btn">Get WildHeavy on TestFlight</a>
+            <a href="/" class="secondary-link">Visit wildheavy.com</a>
+        </div>
+
+        <!-- Success view: shown after email change confirmation -->
+        <div id="successView" class="hidden">
+            <div class="checkmark">&#10003;</div>
+            <h1>Email Updated</h1>
+            <p class="subtitle">Your email address has been changed successfully. Open the app to continue.</p>
+            <a href="https://testflight.apple.com/join/UUrFyauF" class="btn">Open WildHeavy</a>
+            <a href="/" class="secondary-link">Visit wildheavy.com</a>
+        </div>
     </div>
+
+    <script>
+        // Only show success if there are auth tokens in the URL
+        const hash = window.location.hash.substring(1);
+        const query = window.location.search;
+        const hasTokens = hash.includes('access_token') || hash.includes('type=') || query.includes('code=') || query.includes('access_token');
+
+        if (hasTokens) {
+            document.getElementById('defaultView').classList.add('hidden');
+            document.getElementById('successView').classList.remove('hidden');
+        }
+    </script>
 </body>
 </html>
