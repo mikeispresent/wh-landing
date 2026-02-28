@@ -4,7 +4,7 @@
     "details": [
       {
         "appID": "TZHKZP68T8.com.wildheavy.app",
-        "paths": ["/auth", "/auth*", "/onboarding", "/onboarding*"]
+        "paths": ["/onboarding", "/onboarding*"]
       }
     ]
   }
