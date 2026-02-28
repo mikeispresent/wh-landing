@@ -3,18 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>WildHeavy | Open in App</title>
-    <meta name="description" content="Open WildHeavy in the app to continue.">
+    <title>WildHeavy | Reset Password</title>
+    <meta name="description" content="Reset your WildHeavy password.">
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <style>
         :root {
             --bg-cream: #ffffff;
             --text-forest: #1a3d2e;
             --text-slate: #2d5a45;
             --border-light: rgba(26, 61, 46, 0.2);
+            --error-red: #dc2626;
+            --success-green: #16a34a;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -51,30 +54,87 @@
             font-size: 24px;
             font-weight: 700;
             color: var(--text-forest);
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
 
-        p {
+        .subtitle {
             color: var(--text-slate);
             font-size: 16px;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-forest);
+            margin-bottom: 6px;
+        }
+
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            color: var(--text-forest);
+            background: #fff;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="password"]:focus {
+            border-color: var(--text-forest);
         }
 
         .btn {
-            display: inline-block;
+            display: block;
+            width: 100%;
             padding: 14px 32px;
             background-color: var(--text-forest);
             color: #fff;
             text-decoration: none;
+            border: none;
             border-radius: 12px;
             font-family: 'Inter', sans-serif;
             font-weight: 600;
             font-size: 16px;
+            cursor: pointer;
             transition: opacity 0.2s;
+            margin-top: 8px;
         }
 
-        .btn:hover {
-            opacity: 0.85;
+        .btn:hover { opacity: 0.85; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .error {
+            color: var(--error-red);
+            font-size: 13px;
+            margin-top: 6px;
+            text-align: left;
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .message.success {
+            background: rgba(22, 163, 74, 0.1);
+            color: var(--success-green);
+        }
+
+        .message.error-msg {
+            background: rgba(220, 38, 38, 0.1);
+            color: var(--error-red);
         }
 
         .secondary-link {
@@ -84,15 +144,171 @@
             font-size: 14px;
             text-decoration: underline;
         }
+
+        .hidden { display: none; }
+
+        .password-hint {
+            font-size: 12px;
+            color: var(--text-slate);
+            margin-top: 4px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <img src="/favicon.png" alt="WildHeavy" class="logo">
-        <h1>Open WildHeavy</h1>
-        <p>Tap the button below to continue in the app. If you don't have it yet, join our TestFlight to get started.</p>
-        <a href="https://testflight.apple.com/join/UUrFyauF" class="btn" id="ctaButton">Get WildHeavy on TestFlight</a>
-        <a href="/" class="secondary-link">Visit wildheavy.com</a>
+
+        <!-- Default view: open in app / get TestFlight -->
+        <div id="defaultView">
+            <h1>Open WildHeavy</h1>
+            <p class="subtitle">Tap the button below to continue in the app. If you don't have it yet, join our TestFlight to get started.</p>
+            <a href="https://testflight.apple.com/join/UUrFyauF" class="btn" style="text-align:center; display:block;">Get WildHeavy on TestFlight</a>
+            <a href="/" class="secondary-link">Visit wildheavy.com</a>
+        </div>
+
+        <!-- Password reset form (shown when recovery token detected) -->
+        <div id="resetView" class="hidden">
+            <h1>Reset Your Password</h1>
+            <p class="subtitle">Enter your new password below.</p>
+
+            <div id="resetMessage" class="hidden"></div>
+
+            <form id="resetForm">
+                <div class="form-group">
+                    <label for="newPassword">New Password</label>
+                    <input type="password" id="newPassword" placeholder="Enter new password" required minlength="10" autocomplete="new-password">
+                    <p class="password-hint">Must be at least 10 characters</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" placeholder="Confirm new password" required minlength="10" autocomplete="new-password">
+                    <p id="matchError" class="error hidden">Passwords do not match</p>
+                </div>
+
+                <button type="submit" class="btn" id="submitBtn">Update Password</button>
+            </form>
+
+            <a href="/" class="secondary-link">Back to wildheavy.com</a>
+        </div>
+
+        <!-- Success view -->
+        <div id="successView" class="hidden">
+            <h1>Password Updated</h1>
+            <p class="subtitle">Your password has been reset. Open the app and sign in with your new password.</p>
+            <a href="https://testflight.apple.com/join/UUrFyauF" class="btn" style="text-align:center; display:block;">Open WildHeavy</a>
+            <a href="/" class="secondary-link">Visit wildheavy.com</a>
+        </div>
     </div>
+
+    <script>
+        const SUPABASE_URL = 'https://kufhzivrzvqayvzbwrpn.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1Zmh6aXZyenZxYXl2emJ3cnBuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI5NjU4MDYsImV4cCI6MjA3ODU0MTgwNn0._igWjyFar_AmHmRsVOz0T7PvpC_Wz5Xtc3Iw4UVqxdk';
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const defaultView = document.getElementById('defaultView');
+        const resetView = document.getElementById('resetView');
+        const successView = document.getElementById('successView');
+        const resetForm = document.getElementById('resetForm');
+        const resetMessage = document.getElementById('resetMessage');
+        const newPasswordInput = document.getElementById('newPassword');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const matchError = document.getElementById('matchError');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // Check if this is a recovery link (has tokens in the URL hash)
+        async function init() {
+            const hash = window.location.hash.substring(1);
+            const params = new URLSearchParams(hash);
+            const type = params.get('type');
+            const accessToken = params.get('access_token');
+            const refreshToken = params.get('refresh_token');
+
+            if (type === 'recovery' && accessToken) {
+                // Set the session using the recovery tokens
+                try {
+                    const { error } = await supabase.auth.setSession({
+                        access_token: accessToken,
+                        refresh_token: refreshToken
+                    });
+
+                    if (error) {
+                        showError('This reset link has expired or is invalid. Please request a new one from the app.');
+                        return;
+                    }
+
+                    // Show the reset form
+                    defaultView.classList.add('hidden');
+                    resetView.classList.remove('hidden');
+                } catch (e) {
+                    showError('Something went wrong. Please request a new reset link from the app.');
+                }
+            }
+            // If no recovery tokens, the default view (Open in App) is shown
+        }
+
+        // Live validation for password match
+        confirmPasswordInput.addEventListener('input', function() {
+            if (this.value && this.value !== newPasswordInput.value) {
+                matchError.classList.remove('hidden');
+            } else {
+                matchError.classList.add('hidden');
+            }
+        });
+
+        // Handle form submission
+        resetForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const newPassword = newPasswordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+
+            // Validate
+            if (newPassword.length < 10) {
+                showError('Password must be at least 10 characters.');
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                matchError.classList.remove('hidden');
+                return;
+            }
+
+            // Disable button while processing
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Updating...';
+
+            try {
+                const { error } = await supabase.auth.updateUser({
+                    password: newPassword
+                });
+
+                if (error) {
+                    showError(error.message || 'Failed to update password. Please try again.');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Update Password';
+                    return;
+                }
+
+                // Success — show confirmation
+                resetView.classList.add('hidden');
+                successView.classList.remove('hidden');
+            } catch (e) {
+                showError('An unexpected error occurred. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Update Password';
+            }
+        });
+
+        function showError(msg) {
+            resetMessage.textContent = msg;
+            resetMessage.className = 'message error-msg';
+            resetMessage.classList.remove('hidden');
+        }
+
+        // Initialize on page load
+        init();
+    </script>
 </body>
 </html>
