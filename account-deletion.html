@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Delete Your Account | WildHeavy</title>
+    <meta name="description" content="How to delete your WildHeavy account and what happens to your data.">
+
+    <!-- Open Graph / Social Share -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://wildheavy.com/account-deletion.html">
+    <meta property="og:title" content="Delete Your Account | WildHeavy">
+    <meta property="og:description" content="How to delete your WildHeavy account and what happens to your data.">
+    <meta property="og:image" content="https://wildheavy.com/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Delete Your Account | WildHeavy">
+    <meta name="twitter:description" content="How to delete your WildHeavy account and what happens to your data.">
+    <meta name="twitter:image" content="https://wildheavy.com/og-image.png">
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        /* CORE VARIABLES (Aligned with Master Brand) */
+        :root {
+            --bg-cream: #ffffff;
+            --bg-darker: #f0f0f0;
+            --text-forest: #1a3d2e;
+            --text-slate: #2d5a45;
+            --glass-white: rgba(255, 255, 255, 0.9);
+            --border-light: rgba(26, 61, 46, 0.2);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { height: 100%; background-color: #ffffff; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #ffffff;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            color: var(--text-forest);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Background texture */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"),
+                radial-gradient(ellipse at center, #ffffff 0%, #f8f8f8 50%, #f0f0f0 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* TYPOGRAPHY */
+        h1, h2, h3 {
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-forest);
+            font-weight: 800;
+            font-family: 'Georgia', serif;
+        }
+
+        h1 { font-size: 2.2rem; margin-bottom: 5px; line-height: 1; }
+        .meta { font-size: 0.8rem; color: #666; margin-bottom: 40px; font-family: ui-monospace, monospace; }
+
+        /* CONTENT STYLING */
+        h2 {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            border-bottom: 1px dashed var(--border-light);
+            padding-bottom: 10px;
+            color: var(--text-slate);
+            font-family: ui-monospace, monospace;
+        }
+        h3 { font-size: 1rem; margin: 25px 0 10px 0; font-weight: 700; }
+        p, li { font-size: 0.95rem; line-height: 1.6; margin-bottom: 12px; color: #333; }
+        ul, ol { padding-left: 20px; margin-bottom: 20px; }
+        strong { color: var(--text-forest); font-weight: 700; }
+        a { color: var(--text-slate); text-decoration: underline; }
+
+        /* LAYOUT */
+        .main-wrapper { max-width: 880px; margin: 0 auto; padding: 20px; width: 100%; flex: 1; position: relative; z-index: 1; }
+
+        /* NAV RAIL */
+        .nav-rail {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 25px 0;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            position: relative;
+            margin-bottom: 40px;
+            font-family: ui-monospace, monospace;
+        }
+        .nav-rail::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: -20px;
+            right: -20px;
+            height: 4px;
+            background-image: url('chrome.png'); background-size: 100% 100%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .nav-rail a { text-decoration: none; color: var(--text-slate); opacity: 0.7; transition: all 0.2s; position: relative; }
+        .nav-rail a:hover, .nav-rail a.active { opacity: 1; color: var(--text-forest); }
+        .nav-rail a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 3px;
+            background: var(--text-forest);
+        }
+
+        /* CARDS */
+        .content-card {
+            background: rgba(255, 255, 255, 0.65);
+            padding: 40px 30px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(26, 61, 46, 0.08);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .step-list { counter-reset: steps; list-style: none; padding-left: 0; }
+        .step-list li {
+            counter-increment: steps;
+            padding-left: 36px;
+            position: relative;
+            margin-bottom: 18px;
+        }
+        .step-list li::before {
+            content: counter(steps);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 24px;
+            height: 24px;
+            background: var(--text-forest);
+            color: white;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .note-box {
+            background: rgba(0,0,0,0.03);
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-style: italic;
+            margin-top: 15px;
+            border-left: 2px solid var(--text-slate);
+        }
+
+        /* FOOTER */
+        .legal-footer { width: 100%; text-align: center; padding: 40px 20px; margin-top: auto; font-size: 0.7rem; color: var(--text-slate); font-family: ui-monospace, monospace; position: relative; z-index: 1; }
+        .legal-footer::before {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 4px;
+            background-image: url('chrome.png'); background-size: 100% 100%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 35px;
+        }
+        .footer-links { margin-bottom: 15px; }
+        .footer-links a { margin: 0 12px; color: inherit; text-decoration: none; font-weight: 700; transition: color 0.2s; }
+        .footer-links a:hover { color: var(--text-forest); }
+        .footer-disclaimer { font-size: 0.6rem; opacity: 0.5; max-width: 600px; margin: 10px auto 0 auto; line-height: 1.4; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+    </style>
+</head>
+<body>
+
+<div class="main-wrapper">
+    <nav class="nav-rail">
+        <a href="/">Home</a>
+        <a href="/about.html">About</a>
+        <a href="/blog.html">Off Menu</a>
+    </nav>
+
+    <h1>Delete Your Account</h1>
+    <div class="meta">
+        How to delete your WildHeavy account and what happens to your data
+    </div>
+
+    <div class="content-card">
+        <h2>How to Delete Your Account</h2>
+        <p>You can delete your WildHeavy account at any time from within the app. The process is immediate and irreversible.</p>
+
+        <h3>Steps to delete from the app</h3>
+        <ol class="step-list">
+            <li>Open WildHeavy and go to your <strong>Profile</strong> tab</li>
+            <li>Tap the <strong>gear icon</strong> to open Account Settings</li>
+            <li>Scroll to the bottom and tap <strong>"Delete My Account"</strong></li>
+            <li>Confirm by typing "DELETE" when prompted</li>
+            <li>Your account will be permanently deleted</li>
+        </ol>
+
+        <div class="note-box">
+            If you cannot access the app, you can request account deletion by emailing <a href="mailto:support@wildheavy.com">support@wildheavy.com</a> from the email address associated with your account. We will process your request within 48 hours.
+        </div>
+    </div>
+
+    <div class="content-card">
+        <h2>What Happens When You Delete</h2>
+        <p>Account deletion is permanent. Once confirmed, the following actions are taken immediately:</p>
+
+        <h3>Permanently removed</h3>
+        <ul>
+            <li>Your profile information (bio, avatar, display name, location)</li>
+            <li>Your email address and authentication credentials</li>
+            <li>Your social connections (follows, followers)</li>
+            <li>Your saves, likes, and notification history</li>
+            <li>Your private location data and preferences</li>
+            <li>Your dietary restrictions and taste profile</li>
+        </ul>
+
+        <h3>Anonymized (no longer linked to you)</h3>
+        <ul>
+            <li>Rankings you published are attributed to "Deleted User"</li>
+            <li>Menu cards you created are attributed to "Deleted User"</li>
+            <li>Your contributions continue to count toward aggregate dish scores, but cannot be traced back to your identity</li>
+        </ul>
+
+        <div class="note-box">
+            <strong>Why anonymization instead of full removal?</strong> WildHeavy's community rankings rely on contributions from many users. Removing individual data points from aggregate scores would compromise the accuracy of recommendations for everyone. By anonymizing rather than deleting this content, we preserve community value while ensuring your personal identity is completely and permanently severed from the data. Your email is replaced with a non-recoverable placeholder — there is no way to reconnect the anonymized content to you.
+        </div>
+    </div>
+
+    <div class="content-card">
+        <h2>After Deletion</h2>
+        <p>Once your account is deleted:</p>
+        <ul>
+            <li>You will be immediately signed out of the app</li>
+            <li>Your username will become available for others to claim</li>
+            <li>You cannot recover your account or any of its data</li>
+            <li>If you'd like to use WildHeavy again, you'll need to create a new account</li>
+        </ul>
+    </div>
+
+    <div class="content-card">
+        <h2>Questions?</h2>
+        <p>If you have questions about account deletion or your data, contact us at <a href="mailto:support@wildheavy.com">support@wildheavy.com</a>.</p>
+        <p>For full details on how we handle your data, see our <a href="/privacy.html">Privacy Policy</a>.</p>
+    </div>
+
+    <footer class="legal-footer">
+        <div class="footer-links">
+            <a href="/terms.html">Terms</a>
+            <a href="/privacy.html">Privacy</a>
+            <a href="/guidelines.html">Guidelines</a>
+            <a href="mailto:support@wildheavy.com">Contact</a>
+        </div>
+        <div>&copy; 2026 Present Advisory LLC.</div>
+        <div class="footer-disclaimer">
+            WildHeavy is an independent entity and is not affiliated with, endorsed by, or sponsored by any restaurant or third-party platform listed herein. All trademarks are property of their respective owners.
+        </div>
+    </footer>
+</div>
+
+</body>
+</html>
