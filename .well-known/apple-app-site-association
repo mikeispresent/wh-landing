@@ -4,7 +4,18 @@
     "details": [
       {
         "appID": "TZHKZP68T8.com.wildheavy.app",
-        "paths": ["/onboarding", "/onboarding*"]
+        "paths": [
+          "/onboarding",
+          "/onboarding*",
+          "/ranking/*",
+          "/menu-card/*",
+          "/route/*",
+          "/profile/*",
+          "/feed",
+          "/explore",
+          "/top-rank/*",
+          "/reset-password*"
+        ]
       }
     ]
   }
