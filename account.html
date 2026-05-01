@@ -2,136 +2,143 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>WildHeavy</title>
-    <meta name="description" content="WildHeavy - Order Like a Regular.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Your Account · WildHeavy</title>
+    <meta name="description" content="Your WildHeavy account dashboard.">
+    <meta property="og:title" content="Your Account · WildHeavy">
+    <meta property="og:description" content="Your account dashboard.">
+    <meta property="og:image" content="https://wildheavy.com/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-cream: #ffffff;
-            --text-forest: #1a3d2e;
-            --text-slate: #2d5a45;
-            --success-green: #16a34a;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: var(--bg-cream);
-            min-height: 100dvh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-forest);
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
-            padding: 24px;
-            text-align: center;
-        }
-
-        .container {
-            max-width: 400px;
-            width: 100%;
-        }
-
-        .logo {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 24px;
-            border-radius: 24px;
-        }
-
-        h1 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--text-forest);
-            margin-bottom: 8px;
-        }
-
-        .subtitle {
-            color: var(--text-slate);
-            font-size: 16px;
-            margin-bottom: 32px;
-        }
-
-        .checkmark {
-            width: 64px;
-            height: 64px;
-            background: rgba(22, 163, 74, 0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 24px;
-            font-size: 32px;
-        }
-
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 14px 32px;
-            background-color: var(--text-forest);
-            color: #fff;
-            text-decoration: none;
-            border-radius: 12px;
-            font-family: 'Inter', sans-serif;
-            font-weight: 600;
-            font-size: 16px;
-            text-align: center;
-            transition: opacity 0.2s;
-        }
-
-        .btn:hover { opacity: 0.85; }
-
-        .secondary-link {
-            display: block;
-            margin-top: 16px;
-            color: var(--text-slate);
-            font-size: 14px;
-            text-decoration: underline;
-        }
-
-        .hidden { display: none; }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,30..100;1,9..144,300..700,30..100&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="wh-design.css?v=5">
 </head>
 <body>
-    <div class="container">
-        <img src="/favicon.png" alt="WildHeavy" class="logo">
 
-        <!-- Default view: shown when no tokens (someone just visits /account) -->
-        <div id="defaultView">
-            <h1>Open WildHeavy</h1>
-            <p class="subtitle">Tap the button below to continue in the app. If you don't have it yet, join our TestFlight to get started.</p>
-            <a href="https://testflight.apple.com/join/UUrFyauF" class="btn">Get WildHeavy on TestFlight</a>
-            <a href="/" class="secondary-link">Visit wildheavy.com</a>
+    <div class="main-wrapper">
+
+        <nav class="nav-rail">
+            <a href="/" class="nav-brand" aria-label="WildHeavy home">
+                <img src="Wild Heavy - Logo Branding - Transparent - Edited.png" alt="WildHeavy" style="height:36px;width:auto;display:block;">
+            </a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/about.html">About</a>
+                <a href="/blog.html">Off Menu</a>
+            </div>
+        </nav>
+
+        <section class="doc-masthead">
+            <div class="doc-masthead__kicker">Account</div>
+            <h1>Your <em>Account.</em></h1>
+            <div class="doc-masthead__sub">Manage your profile, preferences, and settings</div>
+        </section>
+
+        <div class="doc">
+
+            <div class="doc__section">
+                <p style="font-family: var(--font-display); font-size: 1.2rem; line-height: 1.45; font-style: italic; font-weight: 300; color: var(--ink); font-variation-settings: 'opsz' 144, 'SOFT' 50;">
+                    Your account is where you manage everything in WildHeavy. Access the full suite of features from the mobile app.
+                </p>
+            </div>
+
+            <div class="doc__section">
+                <h2>01 · What You Can Do <em>Here.</em></h2>
+                <p>Open the WildHeavy app to access your account dashboard and manage:</p>
+                <ul>
+                    <li>Your profile bio, avatar, and public location</li>
+                    <li>Your dining preferences and dietary restrictions</li>
+                    <li>Your ranking history and saved cards</li>
+                    <li>Your followers and following list</li>
+                    <li>Notification preferences</li>
+                    <li>Privacy and account security settings</li>
+                    <li>Verification status (if applicable)</li>
+                </ul>
+            </div>
+
+            <div class="doc__section">
+                <h2>02 · Accessing Your <em>Account.</em></h2>
+                <p>To manage your account:</p>
+                <ol class="step-list">
+                    <li>Open the WildHeavy app on your device</li>
+                    <li>Tap the <strong>Profile</strong> tab at the bottom</li>
+                    <li>Tap the <strong>gear icon</strong> to open Account Settings</li>
+                    <li>Browse and update your preferences</li>
+                </ol>
+
+                <div class="note-box">
+                    <strong>Note:</strong> Most account management features are available exclusively in the mobile app for the best experience. Visit <a href="https://testflight.apple.com/join/UUrFyauF">TestFlight</a> to download WildHeavy.
+                </div>
+            </div>
+
+            <div class="doc__section">
+                <h2>03 · Account <em>Security.</em></h2>
+                <p>Keep your account safe by:</p>
+                <ul>
+                    <li>Using a strong password (at least 10 characters)</li>
+                    <li>Not sharing your credentials with others</li>
+                    <li>Enabling two-factor authentication if available</li>
+                    <li>Logging out of sessions you no longer use</li>
+                </ul>
+
+                <div class="note-box">
+                    <strong>Suspicious activity?</strong> If you notice unauthorized access or suspicious activity on your account, change your password immediately and contact <a href="mailto:security@wildheavy.com">security@wildheavy.com</a>.
+                </div>
+            </div>
+
+            <div class="doc__section">
+                <h2>04 · Your <em>Privacy.</em></h2>
+                <p>Control what's visible to others by managing:</p>
+                <ul>
+                    <li>Your public profile visibility</li>
+                    <li>Who can follow you and see your saves</li>
+                    <li>Your ranking attribution and anonymity preferences</li>
+                    <li>Whether your location is publicly displayed</li>
+                </ul>
+                <p>For a complete overview of how we handle your data, see our <a href="/privacy.html">Privacy Policy</a>.</p>
+            </div>
+
+            <div class="doc__section">
+                <h2>05 · Need to Delete Your <em>Account?</em></h2>
+                <p>You can permanently delete your WildHeavy account at any time. The process is immediate and irreversible. For step-by-step instructions, visit our <a href="/account-deletion.html">Account Deletion</a> page.</p>
+            </div>
+
+            <div class="doc__section">
+                <h2>06 · Help &amp; <em>Support.</em></h2>
+                <p>Have questions about your account or need assistance?</p>
+                <p>Contact us at <a href="mailto:support@wildheavy.com">support@wildheavy.com</a>.</p>
+            </div>
+
         </div>
 
-        <!-- Success view: shown after email change confirmation -->
-        <div id="successView" class="hidden">
-            <div class="checkmark">&#10003;</div>
-            <h1>Email Updated</h1>
-            <p class="subtitle">Your email address has been changed successfully. Open the app to continue.</p>
-            <a href="https://testflight.apple.com/join/UUrFyauF" class="btn">Open WildHeavy</a>
-            <a href="/" class="secondary-link">Visit wildheavy.com</a>
-        </div>
+        <div class="rule-gold rule-gold--bear-happy"></div>
+
+        <section class="close-cta">
+            <p class="close-cta__quote">Go order like a regular.</p>
+            <a href="/" class="btn btn--ghost">Back to Home</a>
+        </section>
+
     </div>
 
-    <script>
-        // Only show success if there are auth tokens in the URL
-        const hash = window.location.hash.substring(1);
-        const query = window.location.search;
-        const hasTokens = hash.includes('access_token') || hash.includes('type=') || query.includes('code=') || query.includes('access_token');
+    <footer class="legal-footer">
+        <div class="legal-footer__monogram"><span>Certified Heavy</span><span>Est. 2019</span></div>
+        <div class="legal-footer__links">
+            <a href="/about.html">About</a>
+            <a href="/blog.html">Off Menu</a>
+            <a href="/guidelines.html">Guidelines</a>
+            <a href="/terms.html">Terms</a>
+            <a href="/privacy.html">Privacy</a>
+            <a href="/account-deletion.html">Delete Account</a>
+            <a href="mailto:support@wildheavy.com">Contact</a>
+        </div>
+        <div class="legal-footer__copy">&copy; 2026 Present Advisory LLC · Est. Chicago</div>
+        <div class="legal-footer__disclaimer">
+            WildHeavy is an independent entity and is not affiliated with, endorsed by, or sponsored by any restaurant or third-party platform listed herein. All trademarks are property of their respective owners.
+        </div>
+    </footer>
 
-        if (hasTokens) {
-            document.getElementById('defaultView').classList.add('hidden');
-            document.getElementById('successView').classList.remove('hidden');
-        }
-    </script>
 </body>
 </html>

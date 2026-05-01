@@ -2,405 +2,326 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>About | WildHeavy</title>
-    <meta name="description" content="Learn about WildHeavy. Dining intel from industry pros and passionate regulars.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>About · WildHeavy</title>
+    <meta name="description" content="WildHeavy is the institutional dining authority. Dining intel from industry pros and passionate regulars.">
 
-    <!-- Open Graph / Social Share -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://wildheavy.com/about.html">
-    <meta property="og:title" content="About | WildHeavy">
-    <meta property="og:description" content="Learn about WildHeavy. Dining intel from industry pros and passionate regulars.">
+    <meta property="og:title" content="About · WildHeavy">
+    <meta property="og:description" content="Dining intel from industry pros and passionate regulars.">
     <meta property="og:image" content="https://wildheavy.com/og-image.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="About | WildHeavy">
-    <meta name="twitter:description" content="Learn about WildHeavy. Dining intel from industry pros and passionate regulars.">
-    <meta name="twitter:image" content="https://wildheavy.com/og-image.png">
 
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&family=Permanent+Marker&family=Special+Elite&family=Space+Grotesk:wght@400;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,30..100;1,9..144,300..700,30..100&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="wh-design.css?v=5">
+
     <style>
-        /* === CORE VARIABLES === */
-        :root {
-            --bg-cream: #ffffff;
-            --bg-darker: #f0f0f0;
-            --text-forest: #1a3d2e;
-            --text-slate: #2d5a45;
-            --glass-white: rgba(255, 255, 255, 0.9);
-            --border-light: rgba(26, 61, 46, 0.2);
-            --tape-blue: #4a8cb5;
+        .page-hero {
+            text-align: center;
+            padding: 8px 0 64px;
+            max-width: 720px;
+            margin: 0 auto;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        html { height: 100%; background-color: #ffffff; }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: #ffffff;
-            min-height: 100dvh;
-            display: flex;
-            flex-direction: column;
-            color: var(--text-forest);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            position: relative;
-            overflow-x: hidden;
+        .page-hero__eyebrow { margin-bottom: 20px; display: inline-block; }
+        .page-hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2.6rem, 5.4vw, 4rem);
+            font-weight: 300;
+            line-height: 1;
+            letter-spacing: -0.022em;
+            color: var(--ink);
+            margin-bottom: 24px;
+            font-variation-settings: "opsz" 144, "SOFT" 30;
         }
-
-        /* Background texture */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background:
-                url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"),
-                radial-gradient(ellipse at center, #ffffff 0%, #f8f8f8 50%, #f0f0f0 100%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* === TYPOGRAPHY === */
-        h1, h2, h3 {
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-forest);
-            font-weight: 800;
-            font-family: 'Space Grotesk', sans-serif;
-        }
-
-        /* === LAYOUT === */
-        .main-wrapper { max-width: 880px; margin: 0 auto; padding: 20px; width: 100%; flex: 1; position: relative; z-index: 1; }
-
-        /* === CHROME SHELF STRIP (nav) === */
-        .nav-rail {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            padding: 22px 0;
-            font-size: 0.72rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-family: 'JetBrains Mono', monospace;
-            position: relative;
-            margin-bottom: 60px;
-        }
-        .nav-rail::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: -20px;
-            right: -20px;
-            height: 4px;
-            background-image: url('chrome.png');
-            background-size: 100% 100%;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        .nav-rail a {
-            text-decoration: none;
-            color: var(--text-slate);
-            opacity: 0.7;
-            transition: all 0.2s;
-            position: relative;
-        }
-        .nav-rail a:hover, .nav-rail a.active { opacity: 1; color: var(--text-forest); }
-        .nav-rail a.active::after {
-            content: '';
-            position: absolute;
-            bottom: -22px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 20px;
-            height: 3px;
-            background: var(--text-forest);
-        }
-
-        /* === HEADER === */
-        .header-section { text-align: center; margin-bottom: 50px; }
-        h1 { font-size: 2.5rem; margin-bottom: 15px; line-height: 1; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
-        .inline-logo {
-            height: 5.5rem;
-            width: auto;
-            vertical-align: baseline;
-            filter: contrast(1.1);
-        }
-        .subtitle {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.1rem;
-            color: #3d3d3d;
+        .page-hero h1 em { font-style: italic; color: var(--gold-soft); font-weight: 400; }
+        .page-hero__lede {
+            font-family: var(--font-display);
             font-style: italic;
-            opacity: 0.9;
+            font-weight: 300;
+            font-size: 1.35rem;
+            line-height: 1.4;
+            color: var(--ink-soft);
+            max-width: 560px;
+            margin: 0 auto;
+            font-variation-settings: "opsz" 72, "SOFT" 50;
         }
 
-        /* === CONTENT CARDS with tape labels === */
-        .content-card {
-            background: rgba(255, 255, 255, 0.65);
-            padding: 40px 30px;
-            margin-bottom: 30px;
-            border: 1px solid rgba(26, 61, 46, 0.08);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            position: relative;
+        .section {
+            max-width: 680px;
+            margin: 0 auto 20px;
+            padding: 0 4px;
+        }
+        .section__kicker {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        .section h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.7rem, 3vw, 2.2rem);
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            color: var(--ink);
+            text-align: center;
+            max-width: 520px;
+            margin: 0 auto 36px;
+            font-variation-settings: "opsz" 144, "SOFT" 30;
+        }
+        .section h2 em { font-style: italic; color: var(--gold-soft); }
+        .section p {
+            font-size: 1.08rem;
+            line-height: 1.7;
+            color: var(--ink-soft);
+            margin-bottom: 1.15em;
+        }
+        .section p strong {
+            color: var(--ink);
+            font-family: var(--font-display);
+            font-weight: 500;
+            font-style: italic;
+            font-variation-settings: "opsz" 36;
         }
 
-        /* Blue tape label on card - real texture */
-        .content-card[data-tape]::before {
-            content: attr(data-tape);
-            position: absolute;
-            top: -12px;
-            left: 22px;
-            background-image: url('tape-horizontal.png');
-            background-size: 100% 100%;
-            background-position: center;
-            color: #111;
-            padding: 5px 18px 6px 18px;
-            font-family: 'Permanent Marker', cursive;
-            font-size: 0.85rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            transform: rotate(-1.2deg);
-            box-shadow: 1px 2px 4px rgba(0,0,0,0.1);
-        }
-
-        /* Alternate tape angle for variety */
-        .content-card:nth-child(even)[data-tape]::before {
-            transform: rotate(0.8deg);
-            left: auto;
-            right: 25px;
-        }
-
-        h2 {
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 20px;
-            color: var(--text-slate);
-            font-family: 'JetBrains Mono', monospace;
-            border-bottom: 1px dashed var(--border-light);
-            padding-bottom: 10px;
-            display: inline-block;
-        }
-
-        p { margin-bottom: 15px; font-size: 1rem; color: #333; }
-        strong { color: var(--text-forest); font-weight: 700; }
-
-        /* How It Works items - styled like a prep list */
+        /* Prep list — numbered method */
         .prep-list {
             list-style: none;
-            padding: 0;
+            counter-reset: prep;
+            display: grid;
+            gap: 28px;
+            margin-top: 8px;
         }
         .prep-list li {
-            padding: 12px 0 12px 0;
-            border-bottom: 1px dashed rgba(26, 61, 46, 0.1);
+            display: grid;
+            grid-template-columns: 64px 1fr;
+            gap: 24px;
+            align-items: start;
+            padding: 22px 0;
+            border-top: 1px solid var(--rule);
+        }
+        .prep-list li:last-child { border-bottom: 1px solid var(--rule); }
+        .prep-list__num {
+            font-family: var(--font-display);
+            font-size: 2.6rem;
+            font-weight: 300;
+            line-height: 1;
+            color: var(--gold-soft);
+            font-variation-settings: "opsz" 144, "SOFT" 50;
+            font-style: italic;
+        }
+        .prep-list__title {
+            font-family: var(--font-display);
+            font-size: 1.35rem;
+            font-weight: 500;
+            color: var(--ink);
+            line-height: 1.15;
+            letter-spacing: -0.01em;
+            margin-bottom: 6px;
+            font-variation-settings: "opsz" 72;
+        }
+        .prep-list__title em { font-style: italic; color: var(--gold-soft); font-weight: 400; }
+        .prep-list__body {
             font-size: 1rem;
-            color: #333;
-            display: flex;
-            gap: 12px;
-            align-items: baseline;
-        }
-        .prep-list li:last-child { border-bottom: none; }
-        .prep-list .prep-marker {
-            font-family: 'Permanent Marker', cursive;
-            color: var(--tape-blue);
-            font-size: 0.75rem;
-            flex-shrink: 0;
-            min-width: 20px;
+            line-height: 1.6;
+            color: var(--ink-soft);
         }
 
-        /* Values section - like labels on bottles */
-        .value-item {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 18px;
-            align-items: flex-start;
+        /* Values */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0;
+            border: 1px solid var(--rule);
+            margin: 32px 0;
         }
-        .value-tag {
-            background: var(--text-forest);
-            color: #fff;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.6rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            padding: 4px 10px;
-            white-space: nowrap;
-            flex-shrink: 0;
-            margin-top: 3px;
-        }
-        .value-desc {
-            font-size: 0.95rem;
-            color: #444;
-            line-height: 1.5;
-        }
+        @media (max-width: 600px) { .values-grid { grid-template-columns: 1fr; } }
 
-        /* Chrome divider */
-        .chrome-divider {
-            width: calc(100% + 40px);
-            margin-left: -20px;
-            height: 4px;
-            background-image: url('chrome.png');
-            background-size: 100% 100%;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-            margin-top: 10px;
-        }
-
-        /* === BOTTOM CTA === */
-        .bottom-cta {
+        .value {
+            padding: 28px 22px;
+            border-right: 1px solid var(--rule);
+            background: var(--paper-bright);
             text-align: center;
-            padding: 50px 0 40px 0;
         }
-        .bottom-cta-link {
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 700;
-            font-size: 0.8rem;
-            color: var(--text-slate);
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            border-bottom: 2px solid var(--text-slate);
-            padding-bottom: 2px;
-            transition: all 0.2s;
-        }
-        .bottom-cta-link:hover {
-            color: var(--text-forest);
-            border-color: var(--text-forest);
-        }
-
-        /* === FOOTER === */
-        .legal-footer {
-            width: 100%;
-            text-align: center;
-            padding: 40px 20px;
-            margin-top: auto;
-            font-size: 0.7rem;
-            color: var(--text-slate);
-            font-family: 'JetBrains Mono', monospace;
-            position: relative;
-            z-index: 1;
-        }
-        .legal-footer::before {
-            content: '';
-            display: block;
-            width: 100%;
-            height: 4px;
-            background-image: url('chrome.png');
-            background-size: 100% 100%;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            margin-bottom: 35px;
-        }
-        .footer-links { margin-bottom: 15px; }
-        .footer-links a { margin: 0 12px; color: inherit; text-decoration: none; font-weight: 700; transition: color 0.2s; }
-        .footer-links a:hover { color: var(--text-forest); }
-        .footer-disclaimer { font-size: 0.6rem; opacity: 0.5; max-width: 600px; margin: 10px auto 0 auto; line-height: 1.4; font-family: 'Inter', sans-serif; }
-
+        .value:last-child { border-right: 0; }
         @media (max-width: 600px) {
-            h1 { font-size: 2rem; }
-            .nav-rail { gap: 20px; margin-bottom: 40px; }
-            .content-card { padding: 30px 20px; }
+            .value { border-right: 0; border-bottom: 1px solid var(--rule); }
+            .value:last-child { border-bottom: 0; }
+        }
+        .value__tag {
+            font-family: var(--font-mono);
+            font-size: 0.62rem;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--oxblood);
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        .value__title {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 400;
+            color: var(--ink);
+            margin-bottom: 8px;
+            font-variation-settings: "opsz" 72, "SOFT" 30;
+        }
+        .value__desc {
+            font-size: 0.92rem;
+            line-height: 1.5;
+            color: var(--ink-soft);
         }
 
-        /* Decorative bear watermark */
-        .page-bear {
-            position: fixed;
-            bottom: 40px;
-            right: -10px;
-            width: 140px;
-            height: auto;
-            opacity: 0.06;
-            pointer-events: none;
-            z-index: 0;
-            filter: grayscale(0.3);
-            transform: rotate(-8deg);
-        }
-        @media (max-width: 900px) {
-            .page-bear { display: none; }
-        }
     </style>
 </head>
 <body>
+
     <div class="main-wrapper">
+
         <nav class="nav-rail">
-            <a href="/">Home</a>
-            <a href="/about.html" class="active">About</a>
-            <a href="/blog.html">Off Menu (Blog)</a>
+            <a href="/" class="nav-brand" aria-label="WildHeavy home">
+                <img src="Wild Heavy - Logo Branding - Transparent - Edited.png" alt="WildHeavy" style="height:36px;width:auto;display:block;">
+            </a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/about.html" class="active">About</a>
+                <a href="/blog.html">Off Menu</a>
+            </div>
         </nav>
 
-        <div class="header-section">
-            <h1>About <img src="Wild Heavy - Logo Branding - Transparent - Edited.png" alt="Wild Heavy" class="inline-logo"></h1>
-            <div class="subtitle">Dining intel from industry pros and passionate regulars.</div>
-        </div>
+        <section class="page-hero">
+            <span class="eyebrow page-hero__eyebrow">Est. 2019 · Chicago</span>
+            <h1>Everyone has a friend who knows <em>what to order.</em></h1>
+            <p class="page-hero__lede">
+                We set the table where regulars trade what they know, the curious pull up a chair, and everyone leaves with a better experience.
+            </p>
+        </section>
 
-        <div class="content-card" data-tape="The Why">
-            <h2>Why We Built This</h2>
-            <p>You know that friend who always knows what to order? The one you text before every reservation? WildHeavy is built for them. And for the sommelier who wants to share the wines nobody's finding on their own. And for the bartender who knows every kitchen in the neighborhood.</p>
-            <p>We built a place where all of that knowledge lives together. Industry pros, food obsessives, and curious regulars sharing the same table. Hospitality voices carry more weight in our rankings because expertise matters. But great taste lives everywhere, and the platform is built to surface it. Welcome to the <strong>Regular's Advantage</strong>.</p>
-        </div>
+        <div class="rule-gold"></div>
 
-        <div class="content-card" data-tape="The System">
-            <h2>How It Works</h2>
-            <ul class="prep-list">
-                <li>
-                    <span class="prep-marker">01</span>
-                    <span><strong>Find the Dish.</strong> Looking for the best burger in the city? <strong>Top Rank</strong> has it. Community rankings weighted by expertise, so the answer comes from industry pros and regulars who've actually done the research. Find the move, then go.</span>
-                </li>
-                <li>
-                    <span class="prep-marker">02</span>
-                    <span><strong>Find the Visit.</strong> Your friend just had dinner at Bavette's. Instead of decoding an Instagram story or texting them "wait what did you order," pull up their <strong>Spec Card</strong>. Every dish, every rating, the full play-by-play. No lost saves, no forgotten recs. It's all there next time you go.</span>
-                </li>
-                <li>
-                    <span class="prep-marker">03</span>
-                    <span><strong>Build the Night.</strong> Not just restaurants. Dinner before the show, cocktails after, late-night spot to close it out. Pull in Google Places, WildHeavy content, or WildHeavy verified restaurants, see the travel time between each stop, and share the whole night in one link. That's a <strong>Hot Route</strong>.</span>
-                </li>
-                <li>
-                    <span class="prep-marker">04</span>
-                    <span><strong>Call Your Shot.</strong> Post a <strong>Signal</strong> when you're looking for company at a rez, or let your regulars know you're on shift tonight.</span>
-                </li>
-            </ul>
-        </div>
+        <section class="section">
+            <div class="section__kicker"><span class="eyebrow">The Why</span></div>
+            <h2>Why we built this.</h2>
+            <p>
+                You know the friend who always <strong>knows what to order.</strong> The one you text before every reservation.
+                WildHeavy is built for them. For the sommelier with a list of wines nobody's finding on their own, and
+                the bartender who can tell you which dish is extraordinarily perfected that night.
+            </p>
+            <p>
+                It's a place where all that knowledge finally lives together. Industry pros, food obsessives, and curious
+                regulars sharing the same table. Hospitality voices carry more weight in our rankings because expertise
+                matters. Great taste lives everywhere, and the platform is built to surface it wherever it shows up.
+                Welcome to the <strong>Regular's Advantage.</strong>
+            </p>
+        </section>
 
-        <div class="content-card" data-tape="DNA">
-            <h2>Our Values</h2>
-            <div class="value-item">
-                <span class="value-tag">Authenticity</span>
-                <span class="value-desc">Real opinions from real people. No paid placements.</span>
+        <div class="rule-gold rule-gold--bear-thinking"></div>
+
+        <section class="section">
+            <div class="section__kicker"><span class="eyebrow">The System</span></div>
+            <h2>How it <em>works.</em></h2>
+
+            <ol class="prep-list">
+                <li>
+                    <span class="prep-list__num">i.</span>
+                    <div>
+                        <div class="prep-list__title">Find <em>the dish.</em></div>
+                        <div class="prep-list__body">
+                            Best burger in the city? <strong>Top Rank</strong> has it. Community rankings weighted by
+                            expertise, so the answer comes from pros and regulars who've actually done the research. Find
+                            the move, then go.
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <span class="prep-list__num">ii.</span>
+                    <div>
+                        <div class="prep-list__title">Find <em>the visit.</em></div>
+                        <div class="prep-list__body">
+                            Your friend had dinner at Bavette's last Tuesday. Instead of decoding an Instagram story or
+                            texting <em>"wait, what did you order,"</em> pull up their <strong>Menu Card</strong>. Every
+                            dish, every rating, the full play-by-play. No lost saves, no forgotten recs.
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <span class="prep-list__num">iii.</span>
+                    <div>
+                        <div class="prep-list__title">Build <em>the night.</em></div>
+                        <div class="prep-list__body">
+                            Not just restaurants. Dinner before the show, cocktails after, the late-night spot to close it
+                            out. Pull in Google Places or WildHeavy-verified restaurants, see the travel between each stop,
+                            and share the whole night in one link. That's a <strong>Hot Route.</strong>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <span class="prep-list__num">iv.</span>
+                    <div>
+                        <div class="prep-list__title">Call <em>your shot.</em></div>
+                        <div class="prep-list__body">
+                            Post a <strong>Signal</strong> when you're looking for company at a rez, or let your regulars
+                            know you're on shift tonight.
+                        </div>
+                    </div>
+                </li>
+            </ol>
+        </section>
+
+        <div class="rule-gold"></div>
+
+        <section class="section">
+            <div class="section__kicker"><span class="eyebrow">DNA</span></div>
+            <h2>Three things we <em>won't budge on.</em></h2>
+
+            <div class="values-grid">
+                <div class="value">
+                    <div class="value__tag">01 · Authenticity</div>
+                    <div class="value__title">Real voices.</div>
+                    <div class="value__desc">Real opinions from real people. No paid placements, no sponsored lists.</div>
+                </div>
+                <div class="value">
+                    <div class="value__tag">02 · Industry</div>
+                    <div class="value__title">Pros count more.</div>
+                    <div class="value__desc">Hospitality workers have elevated influence in our rankings. Because they should.</div>
+                </div>
+                <div class="value">
+                    <div class="value__tag">03 · Community</div>
+                    <div class="value__title">Built for regulars.</div>
+                    <div class="value__desc">Made by people who care deeply about the recs they give - so their friends get the best experiences.</div>
+                </div>
             </div>
-            <div class="value-item">
-                <span class="value-tag">Industry</span>
-                <span class="value-desc">Hospitality pros have elevated influence in our rankings.</span>
-            </div>
-            <div class="value-item">
-                <span class="value-tag">Community</span>
-                <span class="value-desc">Built by people who care about where and what to eat.</span>
-            </div>
-        </div>
-        <div class="bottom-cta">
-            <p style="font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; color: var(--text-forest); font-style: italic; margin-bottom: 18px;">The culinary discovery app that makes everyone a regular.</p>
-            <a href="https://forms.gle/BHrqQrHFHhT3RyYx8" target="_blank" class="bottom-cta-link" style="text-transform: none;">Request iOS Early Access &rarr;</a>
-        </div>
+        </section>
+
+        <div class="rule-gold rule-gold--bear-community"></div>
+
+        <section class="close-cta">
+            <p class="close-cta__quote">"The culinary discovery app that makes everyone a regular."</p>
+            <a href="https://testflight.apple.com/join/UUrFyauF" target="_blank" rel="noopener" class="btn btn--primary">
+                Get the iOS App →
+            </a>
+        </section>
 
     </div>
 
     <footer class="legal-footer">
-        <div class="footer-links">
+        <div class="legal-footer__monogram"><span>Certified Heavy</span><span>Est. 2019</span></div>
+        <div class="legal-footer__links">
+            <a href="/about.html">About</a>
+            <a href="/blog.html">Off Menu</a>
+            <a href="/guidelines.html">Guidelines</a>
             <a href="/terms.html">Terms</a>
             <a href="/privacy.html">Privacy</a>
-            <a href="/guidelines.html">Guidelines</a>
             <a href="/account-deletion.html">Delete Account</a>
             <a href="mailto:support@wildheavy.com">Contact</a>
         </div>
-        <div>&copy; 2026 Present Advisory LLC.</div>
-        <div class="footer-disclaimer">
-            WildHeavy is an independent entity and is not affiliated with, endorsed by, or sponsored by any restaurant or third-party platform listed herein. All trademarks are property of their respective owners.
+        <div class="legal-footer__copy">&copy; 2026 Present Advisory LLC · Est. Chicago</div>
+        <div class="legal-footer__disclaimer">
+            WildHeavy is an independent entity and is not affiliated with, endorsed by, or sponsored by any restaurant
+            or third-party platform listed herein. All trademarks are property of their respective owners.
         </div>
     </footer>
-    <img src="Wild Heavy - Thinking Bear - Transparent - Edited.png" alt="" class="page-bear">
+
 </body>
 </html>

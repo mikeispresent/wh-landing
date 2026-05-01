@@ -2,204 +2,206 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>WildHeavy | Reset Password</title>
-    <meta name="description" content="Reset your WildHeavy password.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Sign In · WildHeavy</title>
+    <meta name="description" content="Sign in to WildHeavy.">
+
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,30..100;1,9..144,300..700,30..100&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="wh-design.css?v=5">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <style>
-        :root {
-            --bg-cream: #ffffff;
-            --text-forest: #1a3d2e;
-            --text-slate: #2d5a45;
-            --border-light: rgba(26, 61, 46, 0.2);
-            --error-red: #dc2626;
-            --success-green: #16a34a;
+        .auth-container {
+            max-width: 500px;
+            margin: 80px auto;
+            padding: 0 24px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: var(--bg-cream);
-            min-height: 100dvh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-forest);
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
-            padding: 24px;
-            text-align: center;
+        .auth-form {
+            background: var(--paper-bright);
+            border: 1px solid var(--rule);
+            border-radius: var(--radius-card);
+            padding: 40px 32px;
+            box-shadow: var(--shadow-press);
         }
 
-        .container {
-            max-width: 400px;
-            width: 100%;
+        .auth-form h2 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 400;
+            color: var(--ink);
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
         }
 
-        .logo {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 24px;
-            border-radius: 24px;
-        }
-
-        h1 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--text-forest);
-            margin-bottom: 8px;
-        }
-
-        .subtitle {
-            color: var(--text-slate);
-            font-size: 16px;
-            margin-bottom: 24px;
+        .auth-form p {
+            font-size: 0.96rem;
+            color: var(--ink-soft);
+            margin-bottom: 28px;
         }
 
         .form-group {
-            text-align: left;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
 
         label {
             display: block;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-forest);
-            margin-bottom: 6px;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--ink-mute);
+            margin-bottom: 8px;
         }
 
+        input[type="email"],
         input[type="password"] {
             width: 100%;
-            padding: 12px 16px;
-            border: 1px solid var(--border-light);
-            border-radius: 10px;
-            font-family: 'Inter', sans-serif;
-            font-size: 16px;
-            color: var(--text-forest);
-            background: #fff;
+            padding: 12px 14px;
+            border: 1px solid var(--rule);
+            border-radius: var(--radius);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--ink);
+            background: white;
             outline: none;
             transition: border-color 0.2s;
         }
 
+        input[type="email"]:focus,
         input[type="password"]:focus {
-            border-color: var(--text-forest);
+            border-color: var(--gold);
         }
-
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 14px 32px;
-            background-color: var(--text-forest);
-            color: #fff;
-            text-decoration: none;
-            border: none;
-            border-radius: 12px;
-            font-family: 'Inter', sans-serif;
-            font-weight: 600;
-            font-size: 16px;
-            cursor: pointer;
-            transition: opacity 0.2s;
-            margin-top: 8px;
-        }
-
-        .btn:hover { opacity: 0.85; }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
         .error {
-            color: var(--error-red);
-            font-size: 13px;
-            margin-top: 6px;
-            text-align: left;
+            color: var(--oxblood);
+            font-size: 0.75rem;
+            margin-top: 4px;
+            display: none;
         }
+
+        .error.show { display: block; }
 
         .message {
             padding: 12px 16px;
-            border-radius: 10px;
-            font-size: 14px;
-            margin-bottom: 16px;
-        }
-
-        .message.success {
-            background: rgba(22, 163, 74, 0.1);
-            color: var(--success-green);
+            border-radius: var(--radius-card);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
         }
 
         .message.error-msg {
-            background: rgba(220, 38, 38, 0.1);
-            color: var(--error-red);
-        }
-
-        .secondary-link {
-            display: block;
-            margin-top: 16px;
-            color: var(--text-slate);
-            font-size: 14px;
-            text-decoration: underline;
+            background: rgba(139, 42, 42, 0.1);
+            color: var(--oxblood);
+            border-left: 3px solid var(--oxblood);
         }
 
         .hidden { display: none; }
 
-        .password-hint {
-            font-size: 12px;
-            color: var(--text-slate);
-            margin-top: 4px;
+        .loading-spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--rule);
+            border-top-color: var(--ink);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-right: 6px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .auth-form a {
+            color: var(--oxblood);
+            text-decoration: underline;
+        }
+
+        .auth-footer-link {
+            display: block;
+            text-align: center;
+            margin-top: 16px;
+            color: var(--ink-soft);
+            text-decoration: underline;
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <img src="/favicon.png" alt="WildHeavy" class="logo">
 
-        <!-- Default view: open in app / get TestFlight -->
-        <div id="defaultView">
-            <h1>Open WildHeavy</h1>
-            <p class="subtitle">Tap the button below to continue in the app. If you don't have it yet, join our TestFlight to get started.</p>
-            <a href="https://testflight.apple.com/join/UUrFyauF" class="btn" style="text-align:center; display:block;">Get WildHeavy on TestFlight</a>
-            <a href="/" class="secondary-link">Visit wildheavy.com</a>
-        </div>
+    <div class="main-wrapper">
 
-        <!-- Password reset form (shown when recovery token detected) -->
-        <div id="resetView" class="hidden">
-            <h1>Reset Your Password</h1>
-            <p class="subtitle">Enter your new password below.</p>
+        <nav class="nav-rail">
+            <a href="/" class="nav-brand" aria-label="WildHeavy home">
+                <img src="Wild Heavy - Logo Branding - Transparent - Edited.png" alt="WildHeavy" style="height:36px;width:auto;display:block;">
+            </a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/about.html">About</a>
+                <a href="/blog.html">Off Menu</a>
+            </div>
+        </nav>
 
-            <div id="resetMessage" class="hidden"></div>
+        <!-- Default view: sign in form -->
+        <div class="auth-container" id="defaultView">
+            <div class="auth-form">
+                <h2>Sign In</h2>
+                <p>Open the WildHeavy app to sign in. If you don't have it yet, join TestFlight below.</p>
 
-            <form id="resetForm">
-                <div class="form-group">
-                    <label for="newPassword">New Password</label>
-                    <input type="password" id="newPassword" placeholder="Enter new password" required minlength="10" autocomplete="new-password">
-                    <p class="password-hint">Must be at least 10 characters</p>
-                </div>
+                <div id="authMessage" class="hidden"></div>
 
-                <div class="form-group">
-                    <label for="confirmPassword">Confirm Password</label>
-                    <input type="password" id="confirmPassword" placeholder="Confirm new password" required minlength="10" autocomplete="new-password">
-                    <p id="matchError" class="error hidden">Passwords do not match</p>
-                </div>
+                <form id="authForm" style="display: none;">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="your@email.com" required autocomplete="email">
+                        <p id="emailError" class="error">Please enter a valid email</p>
+                    </div>
 
-                <button type="submit" class="btn" id="submitBtn">Update Password</button>
-            </form>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="••••••••••" required autocomplete="current-password">
+                        <p id="passwordError" class="error">Password required</p>
+                    </div>
 
-            <a href="/" class="secondary-link">Back to wildheavy.com</a>
+                    <button type="submit" class="btn btn--primary" style="width: 100%; text-align: center; margin-top: 24px;" id="submitBtn">Sign In</button>
+                </form>
+
+                <a href="https://testflight.apple.com/join/UUrFyauF" class="btn btn--primary" style="width: 100%; text-align: center; display: block; margin-top: 24px;">Get WildHeavy on TestFlight</a>
+                <a href="/" class="auth-footer-link">Visit wildheavy.com</a>
+            </div>
         </div>
 
         <!-- Success view -->
-        <div id="successView" class="hidden">
-            <h1>Password Updated</h1>
-            <p class="subtitle">Your password has been reset. Open the app and sign in with your new password.</p>
-            <a href="https://testflight.apple.com/join/UUrFyauF" class="btn" style="text-align:center; display:block;">Open WildHeavy</a>
-            <a href="/" class="secondary-link">Visit wildheavy.com</a>
+        <div class="auth-container hidden" id="successView">
+            <div class="auth-form">
+                <h2>Signed In</h2>
+                <p>You've successfully signed in. Open the app to continue.</p>
+                <a href="https://testflight.apple.com/join/UUrFyauF" class="btn btn--primary" style="width: 100%; text-align: center; display: block; margin-top: 24px;">Open WildHeavy</a>
+                <a href="/" class="auth-footer-link">Visit wildheavy.com</a>
+            </div>
         </div>
+
     </div>
+
+    <footer class="legal-footer">
+        <div class="legal-footer__monogram"><span>Certified Heavy</span><span>Est. 2019</span></div>
+        <div class="legal-footer__links">
+            <a href="/about.html">About</a>
+            <a href="/blog.html">Off Menu</a>
+            <a href="/guidelines.html">Guidelines</a>
+            <a href="/terms.html">Terms</a>
+            <a href="/privacy.html">Privacy</a>
+            <a href="/account-deletion.html">Delete Account</a>
+            <a href="mailto:support@wildheavy.com">Contact</a>
+        </div>
+        <div class="legal-footer__copy">&copy; 2026 Present Advisory LLC · Est. Chicago</div>
+        <div class="legal-footer__disclaimer">
+            WildHeavy is an independent entity and is not affiliated with, endorsed by, or sponsored by any restaurant or third-party platform listed herein. All trademarks are property of their respective owners.
+        </div>
+    </footer>
 
     <script>
         const SUPABASE_URL = 'https://kufhzivrzvqayvzbwrpn.supabase.co';
@@ -215,145 +217,84 @@
         }
 
         const defaultView = document.getElementById('defaultView');
-        const resetView = document.getElementById('resetView');
         const successView = document.getElementById('successView');
-        const resetForm = document.getElementById('resetForm');
-        const resetMessage = document.getElementById('resetMessage');
-        const newPasswordInput = document.getElementById('newPassword');
-        const confirmPasswordInput = document.getElementById('confirmPassword');
-        const matchError = document.getElementById('matchError');
+        const authForm = document.getElementById('authForm');
+        const authMessage = document.getElementById('authMessage');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
         const submitBtn = document.getElementById('submitBtn');
+        const emailError = document.getElementById('emailError');
+        const passwordError = document.getElementById('passwordError');
 
-        // Check if this is a recovery link
-        // Supabase may pass tokens via hash fragment OR query params (PKCE flow)
+        // Check if this is an auth callback
         async function init() {
             const sb = getSupabase();
             if (!sb) {
-                // Supabase JS hasn't loaded yet, retry
                 setTimeout(init, 200);
                 return;
             }
-            // Check hash fragment first (implicit flow)
+
             const hash = window.location.hash.substring(1);
             const hashParams = new URLSearchParams(hash);
+            const type = hashParams.get('type');
 
-            // Also check query parameters (PKCE flow)
-            const queryParams = new URLSearchParams(window.location.search);
-
-            const type = hashParams.get('type') || queryParams.get('type');
-            const accessToken = hashParams.get('access_token') || queryParams.get('access_token');
-            const refreshToken = hashParams.get('refresh_token') || queryParams.get('refresh_token');
-            const code = queryParams.get('code'); // PKCE auth code
-
-            // PKCE flow: exchange the code for a session
-            if (code) {
-                try {
-                    const { error } = await sb.auth.exchangeCodeForSession(code);
-                    if (error) {
-                        showError('This reset link has expired or is invalid. Please request a new one from the app.');
-                        return;
-                    }
-                    // Show the reset form
-                    defaultView.classList.add('hidden');
-                    resetView.classList.remove('hidden');
-                    return;
-                } catch (e) {
-                    showError('Something went wrong. Please request a new reset link from the app.');
-                    return;
-                }
-            }
-
-            // Implicit flow: set session directly from tokens
-            if (type === 'recovery' && accessToken) {
-                try {
-                    const { error } = await sb.auth.setSession({
-                        access_token: accessToken,
-                        refresh_token: refreshToken
-                    });
-
-                    if (error) {
-                        showError('This reset link has expired or is invalid. Please request a new one from the app.');
-                        return;
-                    }
-
-                    // Show the reset form
-                    defaultView.classList.add('hidden');
-                    resetView.classList.remove('hidden');
-                } catch (e) {
-                    showError('Something went wrong. Please request a new reset link from the app.');
-                }
+            if (type === 'signup' || type === 'recovery') {
+                defaultView.classList.add('hidden');
+                successView.classList.remove('hidden');
                 return;
             }
 
-            // Also listen for Supabase auth state changes (catches redirects we might miss)
             sb.auth.onAuthStateChange((event, session) => {
-                if (event === 'PASSWORD_RECOVERY') {
+                if (session) {
                     defaultView.classList.add('hidden');
-                    resetView.classList.remove('hidden');
+                    successView.classList.remove('hidden');
                 }
             });
         }
 
-        // Live validation for password match
-        confirmPasswordInput.addEventListener('input', function() {
-            if (this.value && this.value !== newPasswordInput.value) {
-                matchError.classList.remove('hidden');
-            } else {
-                matchError.classList.add('hidden');
-            }
-        });
-
-        // Handle form submission
-        resetForm.addEventListener('submit', async function(e) {
+        authForm.addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const newPassword = newPasswordInput.value;
-            const confirmPassword = confirmPasswordInput.value;
+            const email = emailInput.value;
+            const password = passwordInput.value;
 
-            // Validate
-            if (newPassword.length < 10) {
-                showError('Password must be at least 10 characters.');
+            if (!email || !password) {
+                showError('Please enter both email and password.');
                 return;
             }
 
-            if (newPassword !== confirmPassword) {
-                matchError.classList.remove('hidden');
-                return;
-            }
-
-            // Disable button while processing
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Updating...';
+            submitBtn.innerHTML = '<span class="loading-spinner"></span>Signing in...';
 
             try {
-                const { error } = await getSupabase().auth.updateUser({
-                    password: newPassword
+                const sb = getSupabase();
+                const { error } = await sb.auth.signInWithPassword({
+                    email: email,
+                    password: password
                 });
 
                 if (error) {
-                    showError(error.message || 'Failed to update password. Please try again.');
+                    showError(error.message || 'Failed to sign in. Please try again.');
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'Update Password';
+                    submitBtn.textContent = 'Sign In';
                     return;
                 }
 
-                // Success — show confirmation
-                resetView.classList.add('hidden');
+                defaultView.classList.add('hidden');
                 successView.classList.remove('hidden');
             } catch (e) {
                 showError('An unexpected error occurred. Please try again.');
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Update Password';
+                submitBtn.textContent = 'Sign In';
             }
         });
 
         function showError(msg) {
-            resetMessage.textContent = msg;
-            resetMessage.className = 'message error-msg';
-            resetMessage.classList.remove('hidden');
+            authMessage.textContent = msg;
+            authMessage.className = 'message error-msg';
+            authMessage.classList.remove('hidden');
         }
 
-        // Initialize on page load
         init();
     </script>
 </body>
