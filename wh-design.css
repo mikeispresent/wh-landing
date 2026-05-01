@@ -1,0 +1,746 @@
+/* ============================================================
+   WILDHEAVY — THE INSTITUTION
+   Shared design system · v1.0 · 2026
+   ------------------------------------------------------------
+   North star: Minetta Tavern meets French Laundry meets Apple
+   precision. The screen is a menu card. The cards are coasters
+   and restaurant checks. Typography carries the voice.
+   ============================================================ */
+
+/* ---- Design Tokens ---- */
+:root {
+    /* The Institution Palette */
+    --paper:        #EDEBE3;   /* warm menu paper */
+    --paper-bright: #F4F2EA;   /* lifted card surface */
+    --paper-dark:   #E3E0D6;   /* deep paper, footer */
+    --ink:          #1A3629;   /* forest green — primary ink */
+    --ink-soft:     #2A4538;   /* secondary ink */
+    --ink-mute:     rgba(26, 54, 41, 0.58);
+
+    --oxblood:      #8B2A2A;   /* stamp, accent, hot */
+    --oxblood-soft: #6E2020;   /* hover / pressed */
+    --gold:         #B8904A;   /* brass rules, ornament, premium */
+    --gold-soft:    #9E7A3B;   /* deeper brass */
+
+    --rule:         rgba(26, 54, 41, 0.18);   /* hairline rule */
+    --rule-bold:    rgba(26, 54, 41, 0.35);   /* divider */
+    --rule-gold:    rgba(184, 144, 74, 0.55); /* brass rule */
+    --shadow-press: 0 1px 0 rgba(255,255,255,0.7), 0 10px 24px -14px rgba(26,54,41,0.22);
+    --shadow-lift:  0 2px 0 rgba(255,255,255,0.6), 0 18px 40px -20px rgba(26,54,41,0.28);
+
+    /* Typography */
+    --font-display: 'Fraunces', 'Cormorant Garamond', Georgia, serif;
+    --font-body:    'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    --font-mono:    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --font-type:    'Special Elite', ui-monospace, monospace; /* typed shift notes */
+
+    /* Measures */
+    --measure: 64ch;
+    --measure-narrow: 48ch;
+    --radius: 2px;       /* print aesthetic — near-square */
+    --radius-card: 4px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { background: var(--paper); color: var(--ink); }
+
+body {
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--ink);
+    background: var(--paper);
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Subtle paper grain — barely-there noise + ambient warmth */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.10   0 0 0 0 0.08   0 0 0 0 0.05  0 0 0 0.28 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+        radial-gradient(ellipse at 50% 0%, #F4F2EA 0%, var(--paper) 45%, #E6E3D8 100%);
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Anything rendered goes above the grain */
+.main-wrapper, nav, footer, header { position: relative; z-index: 1; }
+
+/* ============================================================
+   TYPOGRAPHY
+   Fraunces display · Instrument Sans body · JetBrains Mono data
+   ============================================================ */
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 500;             /* Fraunces looks best at 400-500 for display */
+    color: var(--ink);
+    letter-spacing: -0.015em;
+    line-height: 1.05;
+    font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 0;
+    text-wrap: balance;
+}
+
+h1 { font-size: clamp(2.4rem, 6.2vw, 4.6rem); font-weight: 400; }
+h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); letter-spacing: -0.02em; }
+h3 { font-size: 1.35rem; letter-spacing: -0.01em; font-weight: 500; }
+h4 { font-size: 1.08rem; font-weight: 600; font-family: var(--font-body); letter-spacing: 0; }
+
+p { color: var(--ink-soft); }
+em { font-family: var(--font-display); font-style: italic; font-weight: 400; }
+
+a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--rule-gold); text-underline-offset: 4px; text-decoration-thickness: 1px; transition: color 0.18s, text-decoration-color 0.18s; }
+a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
+
+::selection { background: var(--gold); color: var(--paper-bright); }
+
+/* Mono utility */
+.mono { font-family: var(--font-mono); letter-spacing: 0.04em; }
+.meta {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--ink-mute);
+    font-weight: 600;
+}
+.meta--gold { color: var(--gold-soft); }
+.meta--ox { color: var(--oxblood); }
+
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    text-transform: uppercase;
+    letter-spacing: 0.28em;
+    color: var(--ink-mute);
+    font-weight: 600;
+}
+.eyebrow::before {
+    content: '';
+    width: 18px;
+    height: 1px;
+    background: var(--gold);
+}
+
+/* Drop cap for editorial opens */
+.dropcap::first-letter {
+    font-family: var(--font-display);
+    font-size: 4.4em;
+    font-weight: 400;
+    float: left;
+    line-height: 0.85;
+    padding: 0.08em 0.12em 0 0;
+    color: var(--ink);
+    font-variation-settings: "opsz" 144, "SOFT" 50;
+}
+
+/* ============================================================
+   BRASS RULE — the signature divider
+   The hairline rule meets a WH monogram seal — a small house
+   stamp punched through the rule, the way a maître d's card
+   carries the restaurant's mark. Not a diamond, not a flourish:
+   our crest, set in our paper.
+   ============================================================ */
+.rule-gold {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(184,144,74,0.18) 12%,
+        var(--gold) 50%,
+        rgba(184,144,74,0.18) 88%,
+        transparent 100%);
+    margin: 64px 0;
+    position: relative;
+}
+.rule-gold::before {
+    content: '';
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: 38px; height: 38px;
+    background-image: url("Wild Heavy - Monogram - Transparent - Edited.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: var(--paper);
+    /* Halo of paper so the rule doesn't bisect the seal */
+    box-shadow: 0 0 0 8px var(--paper);
+    border-radius: 2px;
+    /* Slight letterpress depth */
+    filter: drop-shadow(0 1px 0 rgba(255,255,255,0.5));
+}
+
+/* Variant: same rule, no seal — for tighter spacing */
+.rule-gold--clean {
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(184,144,74,0.1) 10%,
+        var(--gold) 50%,
+        rgba(184,144,74,0.1) 90%,
+        transparent 100%);
+}
+.rule-gold--clean::before { display: none; }
+
+/* Bear seal variants — alternate with the monogram down the page,
+   like recurring spot illustrations in a long-form magazine.
+   Bears match the monogram dimensions for a consistent rule rhythm. */
+.rule-gold--bear-hungry::before    { background-image: url("Wild Heavy - Hungry Bear - Transparent - Edited.png"); }
+.rule-gold--bear-happy::before     { background-image: url("Wild Heavy - Happy Bear - Transparent - Edited.png"); }
+.rule-gold--bear-thinking::before  { background-image: url("Wild Heavy - Thinking Bear - Transparent - Edited.png"); }
+.rule-gold--bear-community::before { background-image: url("Wild Heavy Community Bear - Transparent - Edited.png"); }
+
+/* Variant: stamp-style seal with date — institutional close */
+.rule-stamp {
+    width: 100%;
+    text-align: center;
+    margin: 64px 0;
+    position: relative;
+}
+.rule-stamp::before, .rule-stamp::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: calc(50% - 56px);
+    height: 1px;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(184,144,74,0.18) 20%,
+        var(--gold) 100%);
+}
+.rule-stamp::before { left: 0; }
+.rule-stamp::after {
+    right: 0;
+    background: linear-gradient(90deg,
+        var(--gold) 0%,
+        rgba(184,144,74,0.18) 80%,
+        transparent 100%);
+}
+.rule-stamp__seal {
+    display: inline-block;
+    width: 44px;
+    height: 44px;
+    background-image: url("Wild Heavy - Monogram - Transparent - Edited.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: var(--paper);
+    position: relative;
+    z-index: 2;
+}
+
+.rule-thin {
+    width: 100%;
+    height: 1px;
+    background: var(--rule);
+    margin: 32px 0;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.main-wrapper {
+    flex: 1;
+    width: 100%;
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+.main-wrapper--narrow { max-width: 720px; }
+
+/* ============================================================
+   NAV — understated, like a maître d's stand
+   ============================================================ */
+.nav-rail {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 22px 0 20px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 56px;
+    position: relative;
+}
+.nav-rail::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: -1px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold) 50%, transparent);
+    opacity: 0.4;
+}
+
+.nav-brand {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+    text-decoration: none;
+    font-variation-settings: "opsz" 48, "SOFT" 30;
+}
+.nav-brand em { font-style: italic; font-weight: 400; color: var(--gold-soft); }
+
+.nav-links { display: flex; gap: 28px; align-items: center; }
+.nav-links a {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    text-decoration: none;
+    padding: 4px 0;
+    position: relative;
+    transition: color 0.2s;
+}
+.nav-links a:hover, .nav-links a.active { color: var(--ink); }
+.nav-links a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5px; height: 5px;
+    background: var(--gold);
+    border-radius: 50%;
+}
+
+@media (max-width: 640px) {
+    .nav-links { gap: 18px; }
+    .nav-links a { font-size: 0.62rem; letter-spacing: 0.18em; }
+    .nav-brand { font-size: 1.05rem; }
+}
+
+/* ============================================================
+   BUTTONS — restrained, letterpress, institutional
+   ============================================================ */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    padding: 16px 30px;
+    border-radius: var(--radius);
+    text-decoration: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: transform 0.12s ease, background 0.18s, color 0.18s, box-shadow 0.18s;
+}
+
+.btn--primary {
+    background: var(--ink);
+    color: var(--paper-bright);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 8px 20px -10px rgba(26,54,41,0.45);
+}
+.btn--primary:hover { background: #234837; transform: translateY(-1px); box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 12px 24px -10px rgba(26,54,41,0.55); }
+.btn--primary:active { transform: translateY(0); }
+
+.btn--ox {
+    background: var(--oxblood);
+    color: var(--paper-bright);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 8px 20px -10px rgba(139,42,42,0.4);
+}
+.btn--ox:hover { background: var(--oxblood-soft); transform: translateY(-1px); }
+
+.btn--ghost {
+    color: var(--ink);
+    border-color: var(--rule-bold);
+    background: transparent;
+}
+.btn--ghost:hover { border-color: var(--ink); color: var(--ink); }
+
+.btn--stamp {
+    /* Like an oxblood ink stamp */
+    background: transparent;
+    color: var(--oxblood);
+    border: 1.5px solid var(--oxblood);
+    border-radius: var(--radius);
+    transform: rotate(-1.2deg);
+    padding: 14px 26px;
+}
+.btn--stamp:hover { background: var(--oxblood); color: var(--paper-bright); transform: rotate(-1.2deg) translateY(-1px); }
+
+.btn-meta {
+    display: inline-block;
+    margin-top: 14px;
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+}
+
+/* ============================================================
+   MENU CARD — the base surface
+   ============================================================ */
+.menu-card {
+    background: var(--paper-bright);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-press);
+    position: relative;
+    overflow: hidden;
+}
+.menu-card--lift { box-shadow: var(--shadow-lift); }
+
+.menu-card__header {
+    padding: 18px 22px 14px;
+    border-bottom: 1px dashed var(--rule);
+    background: linear-gradient(180deg, var(--paper-bright) 0%, #F1EFE6 100%);
+}
+.menu-card__body { padding: 20px 22px 22px; }
+
+.menu-card__title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    font-variation-settings: "opsz" 72;
+}
+.menu-card__sub {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-top: 4px;
+}
+
+/* ============================================================
+   SHIFT NOTE — the hand-typed kitchen tell
+   ============================================================ */
+.shift-note {
+    font-family: var(--font-type);
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--ink);
+    background: repeating-linear-gradient(
+        transparent, transparent 27px,
+        rgba(26,54,41,0.06) 27px, rgba(26,54,41,0.06) 28px
+    );
+    padding: 16px 18px;
+    border-left: 3px solid var(--oxblood);
+    margin-top: 14px;
+    position: relative;
+}
+.shift-note__label {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    color: var(--oxblood);
+    margin-right: 8px;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.legal-footer {
+    width: 100%;
+    text-align: center;
+    padding: 56px 24px 40px;
+    margin-top: 80px;
+    background: var(--paper-dark);
+    border-top: 1px solid var(--rule);
+    position: relative;
+    z-index: 1;
+}
+.legal-footer::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold) 50%, transparent);
+    opacity: 0.5;
+}
+/* Certified Heavy — the app's mark, ported. Two lines, mono, wide tracking.
+   No box, no rotation, no oxblood stamp. Just the typography. */
+.legal-footer__monogram {
+    margin-bottom: 24px;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+.legal-footer__monogram > span:first-child {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.44em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    /* Visual trick: pull half the right-tracking back so the line doesn't drift right */
+    padding-left: 0.44em;
+}
+.legal-footer__monogram > span:last-child {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    padding-left: 0.32em;
+}
+.legal-footer__links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 0;
+    margin-bottom: 18px;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+}
+.legal-footer__links a {
+    color: var(--ink-mute);
+    text-decoration: none;
+    padding: 0 14px;
+    border-right: 1px solid var(--rule);
+}
+.legal-footer__links a:last-child { border-right: 0; }
+.legal-footer__links a:hover { color: var(--ink); }
+.legal-footer__copy {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--ink-mute);
+    letter-spacing: 0.12em;
+    margin-bottom: 10px;
+}
+.legal-footer__disclaimer {
+    font-size: 0.7rem;
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.5;
+    color: var(--ink-mute);
+    opacity: 0.9;
+}
+
+@media (max-width: 600px) {
+    .legal-footer__links { font-size: 0.6rem; letter-spacing: 0.15em; }
+    .legal-footer__links a { padding: 0 10px; }
+}
+
+/* ============================================================
+   EDITORIAL PROSE (about, blog, legal)
+   ============================================================ */
+.prose {
+    max-width: 640px;
+    margin: 0 auto;
+}
+.prose p { margin-bottom: 1.25em; font-size: 1.075rem; line-height: 1.7; color: var(--ink-soft); }
+.prose p + p { text-indent: 0; }
+.prose h2 { margin-top: 2.4em; margin-bottom: 0.6em; }
+.prose h3 { margin-top: 1.8em; margin-bottom: 0.5em; }
+.prose blockquote {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.45rem;
+    line-height: 1.35;
+    color: var(--ink);
+    border-left: 2px solid var(--gold);
+    padding: 8px 0 8px 24px;
+    margin: 2em 0;
+    font-variation-settings: "opsz" 144, "SOFT" 50;
+}
+.prose ul, .prose ol { margin: 1em 0 1.25em 1.4em; color: var(--ink-soft); }
+.prose li { margin-bottom: 0.5em; line-height: 1.65; }
+
+/* ============================================================
+   DOC PAGE — for legal, guidelines, privacy, terms
+   ============================================================ */
+.doc-masthead {
+    text-align: center;
+    padding: 16px 0 40px;
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+}
+.doc-masthead::after {
+    content: '';
+    position: absolute;
+    left: 50%; bottom: -4px;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+}
+.doc-masthead__kicker {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+    margin-bottom: 18px;
+}
+.doc-masthead h1 {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(2.4rem, 5.2vw, 3.6rem);
+    line-height: 1;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+    font-variation-settings: "opsz" 144, "SOFT" 30;
+}
+.doc-masthead h1 em { font-style: italic; color: var(--gold-soft); font-weight: 400; }
+.doc-masthead__sub {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+}
+
+.doc {
+    max-width: 680px;
+    margin: 0 auto 60px;
+}
+.doc__section {
+    padding: 24px 0 32px;
+    border-bottom: 1px solid var(--rule);
+}
+.doc__section:last-child { border-bottom: 0; }
+.doc__section h2 {
+    font-family: var(--font-display);
+    font-size: 1.7rem;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: -0.015em;
+    margin-bottom: 18px;
+    font-variation-settings: "opsz" 144, "SOFT" 30;
+}
+.doc__section h2 em { font-style: italic; color: var(--gold-soft); }
+.doc__section h3 {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin-top: 1.4em;
+    margin-bottom: 0.5em;
+    font-variation-settings: "opsz" 72;
+}
+.doc__section p {
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    margin-bottom: 1em;
+}
+.doc__section p strong { color: var(--ink); font-weight: 600; }
+.doc__section a { color: var(--oxblood); text-decoration-color: rgba(139,42,42,0.5); }
+.doc__section a:hover { color: var(--oxblood-soft); }
+.doc__section ul, .doc__section ol {
+    margin: 0.6em 0 1em 1.4em;
+    color: var(--ink-soft);
+}
+.doc__section li {
+    margin-bottom: 0.45em;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+.doc__section li strong { color: var(--ink); }
+.doc__section ol.step-list {
+    list-style: none;
+    counter-reset: stp;
+    margin-left: 0;
+}
+.doc__section ol.step-list li {
+    counter-increment: stp;
+    padding: 10px 0 10px 48px;
+    position: relative;
+    border-bottom: 1px dashed var(--rule);
+}
+.doc__section ol.step-list li:last-child { border-bottom: 0; }
+.doc__section ol.step-list li::before {
+    content: counter(stp, upper-roman) ".";
+    position: absolute;
+    left: 0; top: 10px;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-style: italic;
+    color: var(--gold-soft);
+    font-weight: 400;
+    font-variation-settings: "opsz" 72, "SOFT" 50;
+}
+.doc__section .note-box {
+    background: var(--paper-bright);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--oxblood);
+    padding: 16px 20px;
+    margin: 18px 0;
+    font-size: 0.96rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    font-family: var(--font-type);
+}
+.doc__section .note-box strong { color: var(--oxblood); font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; }
+
+/* Unified close-section — used on index, about, blog, and all legal pages.
+   Centered narrow column, left-aligned text inside, italic display quote, then a CTA. */
+.close-cta {
+    text-align: left;
+    padding: 16px 0 32px;
+    max-width: 560px;
+    margin: 0 auto;
+}
+.close-cta__quote {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(1.7rem, 3.2vw, 2.2rem);
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 32px;
+    font-variation-settings: "opsz" 144, "SOFT" 50;
+    letter-spacing: -0.012em;
+    text-wrap: balance;
+    max-width: 18ch;
+}
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+.center { text-align: center; }
+.caps { text-transform: uppercase; letter-spacing: 0.22em; }
+.italic-serif { font-family: var(--font-display); font-style: italic; font-weight: 400; }
+.brass { color: var(--gold-soft); }
+.ink { color: var(--ink); }
+.ox { color: var(--oxblood); }
+
+.stamp {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--oxblood);
+    border: 1.5px solid var(--oxblood);
+    border-radius: var(--radius);
+    padding: 5px 10px 4px;
+    transform: rotate(-2deg);
+    opacity: 0.88;
+}
