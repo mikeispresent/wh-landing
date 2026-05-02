@@ -405,7 +405,7 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
 
 .menu-card__header {
     padding: 18px 22px 14px;
-    border-bottom: 1px dashed var(--rule);
+    border-bottom: 1px solid var(--rule);
     background: linear-gradient(180deg, var(--paper-bright) 0%, #F1EFE6 100%);
 }
 .menu-card__body { padding: 20px 22px 22px; }
@@ -671,7 +671,7 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
     counter-increment: stp;
     padding: 10px 0 10px 48px;
     position: relative;
-    border-bottom: 1px dashed var(--rule);
+    border-bottom: 1px solid var(--rule);
 }
 .doc__section ol.step-list li:last-child { border-bottom: 0; }
 .doc__section ol.step-list li::before {
