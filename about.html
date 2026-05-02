@@ -17,7 +17,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,30..100;1,9..144,300..700,30..100&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="wh-design.css?v=6">
+    <link rel="stylesheet" href="wh-design.css?v=11">
 
     <style>
         .page-hero {
@@ -77,7 +77,13 @@
             line-height: 1.7;
             color: var(--ink-soft);
             margin-bottom: 1.15em;
+            text-align: center;
         }
+        /* Prep-list paragraphs stay left-aligned because they sit in a
+           grid column next to a numeral. */
+        .prep-list p,
+        .prep-list__body { text-align: left; }
+
         .section p strong {
             color: var(--ink);
             font-family: var(--font-display);
@@ -191,10 +197,10 @@
         </nav>
 
         <section class="page-hero">
-            <span class="eyebrow page-hero__eyebrow">Est. 2019 · Chicago</span>
-            <h1>Everyone has a friend who knows <em>what to order.</em></h1>
+            <span class="eyebrow page-hero__eyebrow">Est. 2019 / Chicago</span>
+            <h1>Built for the people who <em>know food.</em></h1>
             <p class="page-hero__lede">
-                We set the table where regulars trade what they know, the curious pull up a chair, and everyone leaves with a better experience.
+                WildHeavy is the table where regulars trade what they know, the curious pull up a chair, and everyone leaves with a better experience.
             </p>
         </section>
 
@@ -205,13 +211,14 @@
             <h2>Why we built this.</h2>
             <p>
                 You know the friend who always <strong>knows what to order.</strong> The one you text before every reservation.
-                WildHeavy is built for them. For the sommelier with a list of wines nobody's finding on their own, and
-                the bartender who can tell you which dish is extraordinarily perfected that night.
+                WildHeavy is built for them, and for those curious to learn and contribute alongside them. For the
+                sommelier with a list of wines nobody's finding on their own, and the bartender who can tell you which
+                dish is extraordinarily perfected that night.
             </p>
             <p>
                 It's a place where all that knowledge finally lives together. Industry pros, food obsessives, and curious
-                regulars sharing the same table. Hospitality voices carry more weight in our rankings because expertise
-                matters. Great taste lives everywhere, and the platform is built to surface it wherever it shows up.
+                regulars sharing the same table. Hospitality voices carry extra weight in what the app surfaces, because expertise matters. Great
+                taste lives everywhere, and the platform is built to surface it wherever it shows up.
                 Welcome to the <strong>Regular's Advantage.</strong>
             </p>
         </section>
@@ -239,9 +246,9 @@
                     <div>
                         <div class="prep-list__title">Find <em>the visit.</em></div>
                         <div class="prep-list__body">
-                            Your friend had dinner at Bavette's last Tuesday. Instead of decoding an Instagram story or
-                            texting <em>"wait, what did you order,"</em> pull up their <strong>Menu Card</strong>. Every
-                            dish, every rating, the full play-by-play. No lost saves, no forgotten recs.
+                            Your friend had dinner at the buzzy new spot last Tuesday. Instead of decoding an Instagram
+                            story or texting <em>"wait, what did you order,"</em> pull up their <strong>Menu Card</strong>.
+                            Every dish, every rating, the full play-by-play. No lost saves, no forgotten recs.
                         </div>
                     </div>
                 </li>
@@ -251,8 +258,8 @@
                         <div class="prep-list__title">Build <em>the night.</em></div>
                         <div class="prep-list__body">
                             Not just restaurants. Dinner before the show, cocktails after, the late-night spot to close it
-                            out. Pull in Google Places or WildHeavy-verified restaurants, see the travel between each stop,
-                            and share the whole night in one link. That's a <strong>Hot Route.</strong>
+                            out. Pull from anywhere on the map alongside WildHeavy-verified spots, see the travel between
+                            each stop, and share the whole night in one link. That's a <strong>Hot Route.</strong>
                         </div>
                     </div>
                 </li>
@@ -277,17 +284,17 @@
 
             <div class="values-grid">
                 <div class="value">
-                    <div class="value__tag">01 · Authenticity</div>
+                    <div class="value__tag">01 / Authenticity</div>
                     <div class="value__title">Real voices.</div>
                     <div class="value__desc">Real opinions from real people. No paid placements, no sponsored lists.</div>
                 </div>
                 <div class="value">
-                    <div class="value__tag">02 · Industry</div>
+                    <div class="value__tag">02 / Industry</div>
                     <div class="value__title">Pros count more.</div>
                     <div class="value__desc">Hospitality workers have elevated influence in our rankings. Because they should.</div>
                 </div>
                 <div class="value">
-                    <div class="value__tag">03 · Community</div>
+                    <div class="value__tag">03 / Community</div>
                     <div class="value__title">Built for regulars.</div>
                     <div class="value__desc">Made by people who care deeply about the recs they give - so their friends get the best experiences.</div>
                 </div>

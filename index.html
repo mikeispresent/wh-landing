@@ -24,7 +24,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,30..100;1,9..144,300..700,30..100&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="wh-design.css?v=6">
+    <link rel="stylesheet" href="wh-design.css?v=11">
 
     <style>
         /* ============================================================
@@ -135,14 +135,14 @@
             font-family: var(--font-display);
             font-style: normal;          /* UPRIGHT, like preview-page titles */
             font-weight: 500;
-            font-size: clamp(2.6rem, 6.4vw, 4.2rem);
-            line-height: 0.98;
+            font-size: clamp(2.2rem, 5.6vw, 3.7rem);
+            line-height: 1.04;
             letter-spacing: -0.022em;
             color: var(--ink);
             font-variation-settings: "opsz" 144, "SOFT" 30;
             margin: 0 0 22px;
             text-wrap: balance;
-            max-width: 16ch;
+            max-width: 22ch;
         }
         .hero__headline em {
             font-style: italic;
@@ -150,17 +150,49 @@
             font-weight: 400;
             font-variation-settings: "opsz" 144, "SOFT" 50;
         }
-        .hero__sub {
-            font-family: var(--font-body);
-            font-size: 1.1rem;
-            line-height: 1.55;
+        /* Italic display lede — the bridge from the hook to the CTA */
+        .hero__lede {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-weight: 300;
+            font-size: 1.35rem;
+            line-height: 1.4;
             color: var(--ink-soft);
-            max-width: 50ch;
+            max-width: 540px;
             margin: 0 0 36px;
+            font-variation-settings: "opsz" 72, "SOFT" 50;
         }
-        .hero__sub strong {
-            color: var(--ink);
-            font-weight: 500;
+
+        /* Rotating phrase in the hero — cycles through what a regular knows.
+           The em styling (italic, gold, weight) inherits from .hero__headline em. */
+        .word-rotator {
+            display: inline-grid;
+            vertical-align: baseline;
+            position: relative;
+        }
+        .word-rotator em {
+            grid-column: 1;
+            grid-row: 1;
+            white-space: nowrap;
+            opacity: 0;
+            transform: translateY(0.18em);
+            animation: wordCycle 14s infinite;
+        }
+        .word-rotator em:nth-child(1) { animation-delay: 0s; }
+        .word-rotator em:nth-child(2) { animation-delay: 3.5s; }
+        .word-rotator em:nth-child(3) { animation-delay: 7s; }
+        .word-rotator em:nth-child(4) { animation-delay: 10.5s; }
+        @keyframes wordCycle {
+            0%   { opacity: 0; transform: translateY(0.18em); }
+            3%   { opacity: 1; transform: translateY(0); }
+            22%  { opacity: 1; transform: translateY(0); }
+            25%  { opacity: 0; transform: translateY(-0.18em); }
+            100% { opacity: 0; transform: translateY(0.18em); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .word-rotator em { animation: none; }
+            .word-rotator em:not(:first-child) { display: none; }
+            .word-rotator em:first-child { opacity: 1; transform: none; }
         }
 
         .cta-stack {
@@ -272,9 +304,27 @@
             color: var(--gold-soft);
             font-weight: 700;
         }
+        /* Section break inside cards — thin gold rule with a centered diamond ornament.
+           Replaces the dashed divider for a more editorial / printer's-mark feel. */
         .artifact-card__divider {
-            border-top: 1px dashed var(--rule);
-            margin: 18px -4px;
+            position: relative;
+            height: 1px;
+            background: linear-gradient(to right, transparent 0%, var(--gold-soft) 18%, var(--gold-soft) 82%, transparent 100%);
+            margin: 24px 8px;
+            opacity: 0.55;
+        }
+        .artifact-card__divider::before {
+            content: '◆';
+            position: absolute;
+            top: -0.62em;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--paper-bright);
+            padding: 0 10px;
+            font-size: 0.55rem;
+            color: var(--gold-soft);
+            line-height: 1;
+            letter-spacing: 0;
         }
         .artifact-card__cta {
             display: inline-flex;
@@ -303,7 +353,7 @@
             grid-template-columns: 56px 1fr auto;
             gap: 14px;
             padding: 12px 0;
-            border-bottom: 1px dashed var(--rule);
+            border-bottom: 1px solid var(--rule);
             align-items: center;
         }
         .menu-rows li:last-child { border-bottom: 0; }
@@ -372,7 +422,7 @@
             grid-template-columns: 32px 1fr 56px;
             gap: 14px;
             padding: 14px 0;
-            border-bottom: 1px dashed var(--rule);
+            border-bottom: 1px solid var(--rule);
             align-items: center;
         }
         .rank-rows li:last-child { border-bottom: 0; }
@@ -432,19 +482,19 @@
             align-items: center;
             position: relative;
         }
+        /* Map-style curved dotted connector — swings out and back like a route line. */
         .route-rows li:not(:last-child)::after {
             content: '';
             position: absolute;
-            left: 22px;
-            top: 50%;
-            width: 2px;
+            left: 14px;
+            top: calc(50% + 14px);
+            width: 16px;
             height: 32px;
-            background: repeating-linear-gradient(
-                to bottom,
-                var(--gold-soft) 0 3px,
-                transparent 3px 6px
-            );
-            opacity: 0.55;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 8 0 Q 16 8 8 16 Q 0 24 8 32' stroke='%23b8904a' stroke-width='1.4' fill='none' stroke-dasharray='2.5 3' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-size: 16px 32px;
+            opacity: 0.7;
+            pointer-events: none;
         }
         .route-rows__num {
             width: 36px;
@@ -540,14 +590,14 @@
             list-style: none;
             margin: 18px 0 0;
             padding: 0;
-            border-top: 1px dashed var(--rule);
+            border-top: 1px solid var(--rule);
         }
         .top-rank-rows li {
             display: grid;
             grid-template-columns: 36px 1fr auto;
             gap: 14px;
             padding: 14px 0;
-            border-bottom: 1px dashed var(--rule);
+            border-bottom: 1px solid var(--rule);
             align-items: center;
         }
         .top-rank-rows li:last-child { border-bottom: 0; }
@@ -605,6 +655,19 @@
             font-size: 0.62rem;
             font-weight: 700;
             color: var(--ink-soft);
+        }
+
+        /* Static-mockup disclaimer inside the Top Rank card */
+        .top-rank-card__footnote {
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--rule);
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--ink-mute);
+            text-align: center;
         }
 
         /* ============================================================
@@ -731,11 +794,8 @@
     <!-- HERO -->
     <section class="hero">
         <div class="hero__label sec-label">The Dining App</div>
-        <h1 class="hero__headline">Your dining file, kept in your pocket.</h1>
-        <p class="hero__sub">
-            <strong>Log restaurants. Rank dishes. Build routes.</strong>
-            Built with the people who run the city's best rooms,<strong> and the regulars who actually eat there</strong>.
-        </p>
+        <h1 class="hero__headline">Everyone has a friend who knows <span class="word-rotator" aria-label="what to order, where to go, how to get in, when to pivot"><em>what to order.</em><em>where to go.</em><em>how to get in.</em><em>when to pivot.</em></span></h1>
+        <p class="hero__lede">WildHeavy is that friend, in your pocket.</p>
 
         <div class="cta-stack">
             <a href="https://testflight.apple.com/join/UUrFyauF" target="_blank" rel="noopener" class="btn btn--primary">
@@ -755,7 +815,7 @@
             <div class="sec-label">The Product</div>
             <h2 class="sec__title">Three ways to keep score.</h2>
             <p class="sec__sub">
-                Every WildHeavy entry becomes a shareable card. Tickets, rankings, routes. These three are real, public, and live on this site.
+                <strong>Log restaurants. Rank dishes. Build routes.</strong> Made with the people who run the city's best rooms, and the regulars who actually eat there. The three below are real examples from the app.
             </p>
         </div>
 
@@ -765,10 +825,10 @@
             <div class="artifact-card__head">
                 <div class="sec-label sec-label--icon">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2v7c0 1.1.9 2 2 2h0a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Z"/><path d="M18 22v-7"/></svg>
-                    Menu Card · 3 Items Logged
+                    Menu Card / 3 Items Logged
                 </div>
                 <h3 class="artifact-card__title">Le Bouchon</h3>
-                <div class="artifact-card__meta">Bucktown · French Bistro · Date Night, Party of 2</div>
+                <div class="artifact-card__meta">Bucktown / French Bistro / Date Night, Party of 2</div>
             </div>
 
             <div class="reso-diff">
@@ -831,7 +891,7 @@
                     Ranking
                 </div>
                 <h3 class="artifact-card__title">My Sweet Potato Rankings, <em>Chicago.</em></h3>
-                <div class="artifact-card__meta">4 Entries · Sweet Potato</div>
+                <div class="artifact-card__meta">4 Entries / Sweet Potato</div>
             </div>
 
             <div class="artifact-card__divider"></div>
@@ -873,7 +933,7 @@
             <div class="artifact-card__head">
                 <div class="sec-label sec-label--icon">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></svg>
-                    Route · 3 Stops
+                    Route / 3 Stops
                 </div>
                 <h3 class="artifact-card__title">Logan Square Elevated Date Night</h3>
                 <div class="artifact-card__meta">Chicago, IL</div>
@@ -924,9 +984,9 @@
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg>
                 Top Rank
             </div>
-            <h2 class="sec__title">Live, weighted by who knows the room.</h2>
+            <h2 class="sec__title">Live rankings, weighted by expertise.</h2>
             <p class="sec__sub">
-                Updated as people log. Dining depth shapes the weight, so the diners who know the room speak louder than the crowd.
+                The leaderboard updates as diners log what they ate. Industry pros and serious regulars count for more, so the top spots show what's actually worth ordering, not just what's loudest online.
             </p>
         </div>
 
@@ -934,7 +994,7 @@
         <article class="top-rank-card">
             <div class="top-rank-card__head">
                 <div>
-                    <div class="sec-label sec-label--live"><span>Burger · Chicago<span class="live-dot" aria-hidden="true"></span><span class="live-word">Live</span></span></div>
+                    <div class="sec-label sec-label--live"><span>Burger / Chicago<span class="live-dot" aria-hidden="true"></span><span class="live-word">Live</span></span></div>
                     <h3 class="top-rank-card__title">What's leading right now.</h3>
                     <div class="top-rank-card__sub">Updated 2 hr ago</div>
                 </div>
@@ -1016,6 +1076,7 @@
                     </div>
                 </li>
             </ul>
+            <div class="top-rank-card__footnote">Static example. Live rankings update inside the app.</div>
         </article>
     </section>
 
