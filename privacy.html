@@ -34,7 +34,7 @@
         <section class="doc-masthead">
             <div class="doc-masthead__kicker">The Fine Print</div>
             <h1>Privacy <em>Policy.</em></h1>
-            <div class="doc-masthead__sub">Effective Feb. 1, 2026 · Last Updated April 2, 2026</div>
+            <div class="doc-masthead__sub">Effective Feb. 1, 2026 · Last Updated May 5, 2026</div>
         </section>
 
         <div class="doc">
@@ -79,13 +79,13 @@
                     <li><strong>Onboarding Analytics:</strong> Progress through our setup flow to improve user experience.</li>
                     <li><strong>AI Interaction Logs:</strong> When you use AI-powered features, we log usage for quality assurance and cost management.</li>
                     <li><strong>Security Logs:</strong> Authentication attempts (including the email address used), rate limit events, and potential security incidents. When repeated failed login attempts trigger an account block, the associated email address is included in internal admin alerts to facilitate support and abuse investigation.</li>
-                    <li><strong>Posts &amp; Coordination Data:</strong> When you create dining coordination posts, we collect the restaurant name, event date, post type, and any visibility preferences you set. Other users' "interested" responses to your posts are visible to you as the post creator.</li>
+                    <li><strong>Signals &amp; Coordination Data:</strong> When you create dining coordination signals, we collect the restaurant name, event date, signal type, and any visibility preferences you set. Other users' "interested" responses to your signals are visible to you as the signal creator.</li>
                 </ul>
 
                 <h3>2.3 Mobile Permissions</h3>
                 <p>We may request access to certain features on your mobile device, including:</p>
                 <ul>
-                    <li><strong>Camera &amp; Photo Gallery:</strong> To allow you to upload a Profile Photo. (Note: Dish and menu photo uploads are not currently enabled for user submission).</li>
+                    <li><strong>Camera &amp; Photo Gallery:</strong> To allow you to upload a Profile Photo. (Note: Dish and menu photo uploads are not currently enabled for user submission.)</li>
                     <li><strong>Push Notifications:</strong> To send you alerts about account activity or service updates.</li>
                     <li><strong>Location Services (Optional):</strong> If you opt in to Smart Restaurant Reminders, we request "Always Allow" location access so the app can detect when you leave a restaurant while running in the background. This uses Apple's low-power visit detection (cell tower and Wi-Fi positioning), not continuous GPS. Your location data is processed on-device only and is never sent to our servers. You can revoke this permission at any time in your device's Settings app under Privacy &amp; Security → Location Services → WildHeavy.</li>
                 </ul>
@@ -106,9 +106,13 @@
 
                 <h3>2.6 Cookies and Local Storage</h3>
                 <p>WildHeavy is a "privacy-first" platform. We do not use third-party advertising cookies or tracking pixels. We use storage strictly for functionality:</p>
+                <p><strong>Cookies (Web Only):</strong> We use a single functional cookie to remember your sidebar preference (expanded/collapsed). This expires after 7 days.</p>
+                <p><strong>Local Storage (App &amp; Web):</strong></p>
                 <ul>
-                    <li><strong>Cookies (Web Only):</strong> We use a single functional cookie to remember your sidebar preference (expanded/collapsed). This expires after 7 days.</li>
-                    <li><strong>Local Storage (App &amp; Web):</strong> Includes authentication tokens (Supabase), theme preference, onboarding state, and temporary performance cache (feed, rankings, routes).</li>
+                    <li><strong>Authentication:</strong> Supabase stores a secure session token to keep you logged in.</li>
+                    <li><strong>Theme Preference:</strong> Saves your light/dark mode selection.</li>
+                    <li><strong>Onboarding State:</strong> Remembers if you have dismissed welcome messages.</li>
+                    <li><strong>Performance Cache:</strong> Temporarily stores app content (feed, rankings, menu cards, routes, profiles) to improve speed and enable offline access. This cache expires automatically between 30 minutes and 24 hours.</li>
                 </ul>
                 <p><strong>Managing Data:</strong></p>
                 <ul>
@@ -124,7 +128,7 @@
                 <ul>
                     <li><strong>Provide the Service:</strong> Create your account, facilitate rankings, and display restaurant data.</li>
                     <li><strong>Improve Our Algorithms:</strong> We use aggregated, anonymized ranking data to calculate "Dish Scores" and "Reservation Difficulty" metrics.</li>
-                    <li><strong>Train AI Models:</strong> We may use your anonymized reviews and text inputs to train our AI (Large Language Models) to provide better dining recommendations.</li>
+                    <li><strong>AI-Powered Features:</strong> To generate dining recommendations and provide AI-assisted features such as dish-name normalization and content summarization, we send certain inputs (such as dish notes, reviews, and dining preferences) to third-party AI providers (currently Anthropic). WildHeavy does not train its own AI models on your data. Per our commercial agreements with these providers, the data we send is processed solely to return a response to our request and is not used by the provider to train their underlying AI models. The third-party provider's processing of your data is also subject to their own privacy policies.</li>
                     <li><strong>Provide Verified Status:</strong> Verify employment or professional credentials for Industry Professional or Tastemaker badges.</li>
                     <li><strong>Communication:</strong> Send you administrative emails (password resets) and, if you opt-in, marketing emails.</li>
                     <li><strong>Security:</strong> Detect and prevent fraudulent activity, spam, and "review bombing." We log authentication attempts, including your email address, to detect and prevent unauthorized access. When an account is temporarily blocked due to excessive failed attempts, your email address is included in internal administrator alerts so we can assist you or investigate potential abuse.</li>
@@ -253,16 +257,29 @@
                 <h2>11 · Regional Privacy <em>Rights.</em></h2>
 
                 <h3>11.1 California Residents (CCPA/CPRA)</h3>
-                <p>If you are a California resident, you have specific rights under the California Consumer Privacy Act:</p>
+                <p>If you are a California resident, you have specific rights under the California Consumer Privacy Act, as amended by the California Privacy Rights Act:</p>
                 <ul>
-                    <li><strong>Right to Know:</strong> You may request details about the categories of personal information we collect and how it is used.</li>
+                    <li><strong>Right to Know:</strong> You may request details about the categories and specific pieces of personal information we collect, the sources, the business purpose, and the third parties with whom we share it.</li>
+                    <li><strong>Right to Correct:</strong> You may request that we correct inaccurate personal information we maintain about you.</li>
                     <li><strong>Right to Delete:</strong> You may request the deletion of your personal data (subject to our retention of anonymized ranking data as disclosed above).</li>
-                    <li><strong>Right to Opt-Out of Sale:</strong> WildHeavy does not sell your personal information to third parties.</li>
+                    <li><strong>Right to Opt-Out of Sale or Sharing:</strong> WildHeavy does not sell your personal information and does not share it for cross-context behavioral advertising. We have no "sale" or "sharing" to opt out of.</li>
+                    <li><strong>Right to Limit Use of Sensitive Personal Information:</strong> We do not collect or process Sensitive Personal Information as defined under the CPRA, so there is no use to limit.</li>
                     <li><strong>Non-Discrimination:</strong> We will not discriminate against you for exercising these rights.</li>
                 </ul>
-                <p>To exercise these rights, contact <a href="mailto:support@wildheavy.com">support@wildheavy.com</a>.</p>
+                <p>To exercise these rights, contact <a href="mailto:support@wildheavy.com">support@wildheavy.com</a>. We will respond within 45 days.</p>
 
-                <h3>11.2 European Users (GDPR)</h3>
+                <h3>11.2 Other US State Residents</h3>
+                <p>If you reside in Virginia, Colorado, Connecticut, Utah, Texas, Oregon, Montana, Florida, Delaware, Iowa, New Hampshire, New Jersey, Tennessee, Indiana, Maryland, Minnesota, or another US state with a comprehensive consumer privacy law, you may have rights similar to those provided to California residents, which may include:</p>
+                <ul>
+                    <li>The right to confirm whether we process your personal data and to access that data</li>
+                    <li>The right to correct inaccuracies in your personal data</li>
+                    <li>The right to delete personal data you provided or that we obtained</li>
+                    <li>The right to obtain a portable copy of your personal data</li>
+                    <li>The right to opt out of the processing of personal data for purposes of targeted advertising, the sale of personal data, or profiling that produces legal or similarly significant effects</li>
+                </ul>
+                <p>WildHeavy does not engage in targeted advertising, sell personal data, or conduct profiling that produces legal or similarly significant effects. To exercise applicable rights, contact <a href="mailto:support@wildheavy.com">support@wildheavy.com</a>. If we deny your request, you may have the right to appeal by replying to our denial; if your appeal is denied, you may contact your state Attorney General.</p>
+
+                <h3>11.3 European Users (GDPR)</h3>
                 <p>If you access the Service from the European Economic Area or United Kingdom:</p>
                 <ul>
                     <li><strong>Legal Basis:</strong> We process data based on Contract (to provide the Service), Legitimate Interest (fraud prevention, ranking integrity), and Consent (where applicable).</li>
