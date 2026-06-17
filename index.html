@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>WildHeavy // Your dining file, for every table.</title>
-    <meta name="description" content="Log restaurants. Rank dishes. Build routes. The dining app for diners and the people who run the rooms. What the kitchen knows.">
+    <title>WildHeavy // We're all regulars here.</title>
+    <meta name="description" content="The dining app that makes everyone a regular. Log what you love, rank the best dishes, and follow the people who actually know.">
 
     <!-- Open Graph / Social Share -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://wildheavy.com/">
-    <meta property="og:title" content="WildHeavy // Your dining file, for every table.">
-    <meta property="og:description" content="Log restaurants. Rank dishes. Build routes. What the kitchen knows.">
+    <meta property="og:title" content="WildHeavy // We're all regulars here.">
+    <meta property="og:description" content="The dining app that makes everyone a regular.">
     <meta property="og:image" content="https://wildheavy.com/og-image.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="WildHeavy // Your dining file, for every table.">
-    <meta name="twitter:description" content="Log restaurants. Rank dishes. Build routes.">
+    <meta name="twitter:title" content="WildHeavy // We're all regulars here.">
+    <meta name="twitter:description" content="The dining app that makes everyone a regular.">
     <meta name="twitter:image" content="https://wildheavy.com/og-image.png">
 
     <link rel="icon" type="image/png" href="/favicon.png">
@@ -259,6 +259,53 @@
             line-height: 1.55;
             color: var(--ink-soft);
             max-width: 56ch;
+        }
+
+        /* ============================================================
+           WHY YOU'LL BE A REGULAR — three value beats, numeral motif
+           ============================================================ */
+        .why-rows { list-style: none; margin: 0; padding: 0; }
+        .why-rows li {
+            display: grid;
+            grid-template-columns: 40px 1fr;
+            gap: 18px;
+            padding: 22px 0;
+            border-bottom: 1px solid var(--rule);
+            align-items: start;
+        }
+        .why-rows li:last-child { border-bottom: 0; }
+        .why-rows__numeral {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-weight: 400;
+            font-size: 1.5rem;
+            color: var(--gold-soft);
+            line-height: 1;
+            text-align: center;
+            font-variation-settings: "opsz" 72, "SOFT" 50;
+            padding-top: 3px;
+        }
+        .why-rows__head {
+            font-family: var(--font-display);
+            font-weight: 500;
+            font-size: 1.32rem;
+            line-height: 1.1;
+            letter-spacing: -0.01em;
+            color: var(--ink);
+            font-variation-settings: "opsz" 96, "SOFT" 30;
+            margin-bottom: 6px;
+        }
+        .why-rows__body {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            line-height: 1.5;
+            color: var(--ink-soft);
+            margin: 0;
+            max-width: 52ch;
+        }
+        @media (max-width: 520px) {
+            .why-rows li { grid-template-columns: 30px 1fr; gap: 14px; padding: 18px 0; }
+            .why-rows__head { font-size: 1.18rem; }
         }
 
         /* ============================================================
@@ -788,7 +835,11 @@
         <a href="/" class="site-header__brand" aria-label="WildHeavy home">
             <img src="Wild Heavy - Logo Branding - Transparent - Edited.png" alt="WildHeavy">
         </a>
-        <a href="/about.html" class="site-header__tagline" style="text-decoration: none; color: inherit;">what the kitchen knows.</a>
+        <nav class="nav-links">
+            <a href="/about.html">About</a>
+            <a href="/blog.html">Off Menu</a>
+            <a href="https://testflight.apple.com/join/UUrFyauF" target="_blank" rel="noopener">Get the App</a>
+        </nav>
     </header>
 
     <!-- HERO -->
@@ -804,6 +855,37 @@
             <span class="cta-stack__meta">Opens in TestFlight (free)</span>
             <a href="https://wildheavy.app" target="_blank" rel="noopener" class="cta-stack__secondary">or use it on the web →</a>
         </div>
+    </section>
+
+    <!-- WHY YOU'LL BE A REGULAR — the value beats -->
+    <section class="sec" id="why">
+        <div class="sec__head">
+            <div class="sec-label">Worth The Weight</div>
+            <h2 class="sec__title">Why you'll be a <em>regular.</em></h2>
+        </div>
+        <ul class="why-rows">
+            <li>
+                <span class="why-rows__numeral">i</span>
+                <div>
+                    <div class="why-rows__head">Be the friend with the answers.</div>
+                    <p class="why-rows__body">Your people follow you and see what you loved, so you stop fielding the same "where should we go" texts.</p>
+                </div>
+            </li>
+            <li>
+                <span class="why-rows__numeral">ii</span>
+                <div>
+                    <div class="why-rows__head">Never lose a great bite.</div>
+                    <p class="why-rows__body">Everything you rank stays put and searchable, not buried in your camera roll or a group chat.</p>
+                </div>
+            </li>
+            <li>
+                <span class="why-rows__numeral">iii</span>
+                <div>
+                    <div class="why-rows__head">It learns what you love.</div>
+                    <p class="why-rows__body">The more you add, the better it knows what to send you next.</p>
+                </div>
+            </li>
+        </ul>
     </section>
 
     <!-- Diamond rule -->
@@ -967,7 +1049,7 @@
 
             <div class="shift-note home-shift-note">
                 <span class="shift-note__label">Shift Note</span>
-                Time between stops &amp; notes from the table live in the app.
+                Map view, time between stops, and notes from the table live in the app.
             </div>
 
             <span class="artifact-card__cta">Build your own Route → Try WildHeavy</span>
@@ -1085,7 +1167,7 @@
 
     <!-- CLOSING CTA -->
     <section class="close-cta">
-        <p class="close-cta__quote">"The antidote to menu anxiety."</p>
+        <p class="close-cta__quote">"We're all regulars here."</p>
         <div class="cta-stack">
             <a href="https://testflight.apple.com/join/UUrFyauF" target="_blank" rel="noopener" class="btn btn--primary">
                 Get the iOS App →

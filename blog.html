@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Off Menu · WildHeavy</title>
-    <meta name="description" content="Shift Notes, editorials, and updates from WildHeavy. The institutional dining authority.">
+    <meta name="description" content="Shift Notes, editorials, and updates from WildHeavy. The dining app that makes everyone a regular.">
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://wildheavy.com/blog.html">
@@ -32,21 +32,22 @@
         .masthead::before {
             content: '';
             position: absolute;
-            top: 18%;
-            left: 50%;
-            transform: translateX(-50%) rotate(-7deg);
+            top: 50%;
+            right: -40px;            /* mark lives in the right margin, bleeding off-edge */
+            left: auto;
+            transform: translateY(-50%) rotate(-8deg);
             width: 200px;
             height: 200px;
             background-image: url("logo-coaster.png");
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
-            opacity: 0.06;
+            opacity: 0.07;
             pointer-events: none;
             z-index: -1;
         }
         @media (max-width: 520px) {
-            .masthead::before { width: 140px; height: 140px; opacity: 0.05; }
+            .masthead::before { width: 128px; height: 128px; right: -64px; opacity: 0.06; }
         }
         .masthead::after {
             content: '';
@@ -217,9 +218,9 @@
                 <img src="Wild Heavy - Logo Branding - Transparent - Edited.png" alt="WildHeavy" style="height:36px;width:auto;display:block;">
             </a>
             <div class="nav-links">
-                <a href="/">Home</a>
                 <a href="/about.html">About</a>
                 <a href="/blog.html" class="active">Off Menu</a>
+                <a href="https://testflight.apple.com/join/UUrFyauF" target="_blank" rel="noopener">Get the App</a>
             </div>
         </nav>
 
