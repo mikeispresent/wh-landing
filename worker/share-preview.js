@@ -126,9 +126,13 @@ function previewState(data, slug, ctx = {}) {
   // route
   const t = data.route;
   const appUrl = buildAppUrl('route', t.id);
+  // Backward compat: payloads without `kind` (pre-Spots edge fn) are ordered.
+  const isSpots = t.kind === 'spots';
   return {
     status: 'ok',
-    ogTitle: `${t.title} \u2014 a route by ${creatorName}`,
+    ogTitle: isSpots
+      ? `${t.title} \u2014 Spots${t.city ? ` in ${t.city}` : ` by ${creatorName}`}`
+      : `${t.title} \u2014 a route by ${creatorName}`,
     ogDescription: buildRouteDescription(t),
     ogImage: pickRouteOgImage(t),
     appUrl,
@@ -365,7 +369,69 @@ function reservationManifest(m) {
     </aside>`;
 }
 
+// Inline intent-tag icons (Food / Drinks). Mirrors INTENT_TAG_CONFIG in the
+// app's src/types/routes.ts — extend both together when tags are added.
+function intentIconSvg(tag, size = 12) {
+  const attrs = `width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-1px"`;
+  if (tag === 'food') {
+    return `<svg ${attrs}><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Z"/><path d="M21 15v7"/></svg>`;
+  }
+  if (tag === 'drinks') {
+    return `<svg ${attrs}><path d="M8 22h8"/><path d="M7 10h10"/><path d="M12 15v7"/><path d="M12 15a5 5 0 0 0 5-5c0-2-.5-4-2-8H9c-1.5 4-2 6-2 8a5 5 0 0 0 5 5Z"/></svg>`;
+  }
+  return '';
+}
+
+// Small trailing intent marker on a stop/place name row.
+function intentNameSuffix(tag) {
+  const icon = intentIconSvg(tag);
+  return icon
+    ? `<span style="margin-left:6px;opacity:.65;color:var(--gold)">${icon}</span>`
+    : '';
+}
+
+function spotsBody({ t, creator, appUrl, ctx }) {
+  // Unordered collection: pin nodes only. No Start/End labels, no meander
+  // connector, no durations — nothing that implies a sequence.
+  const stops = Array.isArray(t.stops) ? t.stops : [];
+  const total = t.total_stop_count || stops.length;
+
+  const rows = stops
+    .map((s) => {
+      const nodeIcon = intentIconSvg(s.intent_tag, 11);
+      return `
+      <li class="timeline__row">
+        <div class="timeline__rail" aria-hidden="true">
+          <span class="timeline__node">${nodeIcon || '•'}</span>
+        </div>
+        <div class="timeline__body">
+          <div class="timeline__name">${esc(s.name || 'Unnamed place')}</div>
+        </div>
+      </li>`;
+    })
+    .join('');
+
+  const eyebrowMeta = total > 0
+    ? `${total} ${total === 1 ? 'Place' : 'Places'}`
+    : null;
+
+  return `
+    <article class="card">
+      ${cardEyebrow('Spots', eyebrowMeta)}
+      <h1 class="card__title">${esc(t.title || 'Untitled Spots')}</h1>
+      ${t.city ? `<p class="card__sub">${esc(t.city)}</p>` : ''}
+      ${creatorBlock(creator)}
+      <ol class="timeline">${rows || '<li class="rank__empty">No places on this list yet.</li>'}</ol>
+      <div class="rule-gold"></div>
+      <div class="shift-note">
+        <span class="shift-note__label">Shift Note —</span>Notes from the table live in the app.
+      </div>
+      ${signupCta('See all the spots', appUrl, ctx)}
+    </article>`;
+}
+
 function routeBody({ t, creator, appUrl, ctx }) {
+  if (t.kind === 'spots') return spotsBody({ t, creator, appUrl, ctx });
   // Edge function returns ALL place stops as `t.stops` (notes are filtered
   // out server-side). Per-leg duration_minutes and step notes are gatekept —
   // those only show up inside the app.
@@ -419,7 +485,7 @@ function routeBody({ t, creator, appUrl, ctx }) {
         </div>
         <div class="timeline__body">
           <div class="timeline__label">${esc(label)}</div>
-          <div class="timeline__name">${esc(s.name || 'Unnamed stop')}</div>
+          <div class="timeline__name">${esc(s.name || 'Unnamed stop')}${intentNameSuffix(s.intent_tag)}</div>
         </div>
       </li>`;
     })
@@ -548,6 +614,14 @@ function buildMenuCardDescription(m) {
 
 function buildRouteDescription(t) {
   const stops = Array.isArray(t.stops) ? t.stops : [];
+  if (t.kind === 'spots') {
+    // Unordered: no start\u2192end arc (it would imply a sequence). Names + count.
+    const names = stops.slice(0, 3).map((s) => s?.name).filter(Boolean).join(' \u00b7 ');
+    const count = t.total_stop_count
+      ? `${t.total_stop_count} ${t.total_stop_count === 1 ? 'place' : 'places'}`
+      : '';
+    return trim([names, count].filter(Boolean).join(' \u2014 '));
+  }
   const start = stops[0]?.name;
   const end = stops.length > 1 ? stops[stops.length - 1]?.name : null;
   const arc = start && end ? `${start} \u2192 ${end}` : start || '';
