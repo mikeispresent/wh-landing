@@ -1,0 +1,14 @@
+# WildHeavy — og-image Worker
+# Renders 1200x630 PNG share cards at wildheavy.com/og/{r|m|t}/{slug}.png
+#
+# Deploy:  npx wrangler deploy   (from this directory; `npm install` first)
+# NOTE: Satori rendering needs more than the free tier's 10ms CPU cap —
+# requires the Workers Paid plan ($5/mo) on the account.
+
+name = "wildheavy-og-image"
+main = "src/index.js"
+compatibility_date = "2026-07-01"
+
+routes = [
+  { pattern = "wildheavy.com/og/*", zone_name = "wildheavy.com" }
+]
