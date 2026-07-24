@@ -103,7 +103,7 @@ function previewState(data, slug, ctx = {}) {
       status: 'ok',
       ogTitle: `${r.title} \u2014 by ${creatorName}`,
       ogDescription: buildRankingDescription(r),
-      ogImage: pickRankingOgImage(r),
+      ogImage: dynamicOgImage('ranking', slug),
       appUrl,
       bodyHtml: rankingBody({ r, creator: { name: creatorName, handle: creatorHandle, avatar }, remaining, appUrl, ctx }),
     };
@@ -117,7 +117,7 @@ function previewState(data, slug, ctx = {}) {
       status: 'ok',
       ogTitle: `${m.restaurant_name} \u2014 a menu card by ${creatorName}`,
       ogDescription: buildMenuCardDescription(m),
-      ogImage: pickMenuCardOgImage(m),
+      ogImage: dynamicOgImage('menu_card', slug),
       appUrl,
       bodyHtml: menuCardBody({ m, creator: { name: creatorName, handle: creatorHandle, avatar }, remaining, appUrl, ctx }),
     };
@@ -134,7 +134,7 @@ function previewState(data, slug, ctx = {}) {
       ? `${t.title} \u2014 Spots${t.city ? ` in ${t.city}` : ` by ${creatorName}`}`
       : `${t.title} \u2014 a route by ${creatorName}`,
     ogDescription: buildRouteDescription(t),
-    ogImage: pickRouteOgImage(t),
+    ogImage: dynamicOgImage('route', slug),
     appUrl,
     bodyHtml: routeBody({ t, creator: { name: creatorName, handle: creatorHandle, avatar }, appUrl, ctx }),
   };
@@ -631,19 +631,18 @@ function buildRouteDescription(t) {
   return trim([arc, count].filter(Boolean).join(' \u2014 '));
 }
 
-// ---------- OG image pickers (fall back to site default) ----------
-function pickRankingOgImage(r) {
-  const withPhoto = (r.items_preview || []).find((d) => d.image_url);
-  return withPhoto?.image_url || 'https://wildheavy.com/og-image.png';
-}
-function pickMenuCardOgImage(m) {
-  const withPhoto = (m.dishes_preview || []).find((d) => d.image_url);
-  return withPhoto?.image_url || 'https://wildheavy.com/og-image.png';
-}
-function pickRouteOgImage(t) {
-  const stops = Array.isArray(t.stops) ? t.stops : [];
-  const withPhoto = stops.find((s) => s && s.image_url);
-  return withPhoto?.image_url || 'https://wildheavy.com/og-image.png';
+// ---------- OG image (dynamic card, rendered by the og-image Worker) ----------
+// The wildheavy-og-image Worker (worker/og-image/) renders a 1200x630 PNG of
+// the actual content — top items, ratings, stops — at /og/{prefix}/{slug}.png.
+// It falls back to the static og-image.png internally on any failure, so this
+// URL is always safe to emit.
+const TYPE_TO_PREFIX = { ranking: 'r', menu_card: 'm', route: 't' };
+
+function dynamicOgImage(contentType, slug) {
+  const p = TYPE_TO_PREFIX[contentType];
+  return p && slug
+    ? `https://wildheavy.com/og/${p}/${encodeURIComponent(slug)}.png`
+    : 'https://wildheavy.com/og-image.png';
 }
 
 // ---------- Helpers ----------
@@ -793,6 +792,9 @@ ${smartBanner}
 <meta property="og:title" content="${esc(state.ogTitle)}">
 <meta property="og:description" content="${esc(state.ogDescription)}">
 <meta property="og:image" content="${esc(state.ogImage)}">
+${state.status === 'ok' ? `<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">` : ''}
 <meta property="og:site_name" content="WildHeavy">
 
 <meta name="twitter:card" content="summary_large_image">

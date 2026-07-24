@@ -1,0 +1,17 @@
+{
+  "name": "wildheavy-og-image",
+  "version": "1.0.0",
+  "private": true,
+  "description": "WildHeavy dynamic OG image Worker — renders share-card PNGs for rankings, menu cards, and spots/routes.",
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev"
+  },
+  "dependencies": {
+    "workers-og": "^0.0.25"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
