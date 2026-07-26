@@ -247,7 +247,9 @@ function menuCardBody(m, C) {
 
   return (
     header(C, {
-      eyebrow: `MENU CARD${total ? ` · ${total} ${total === 1 ? 'DISH' : 'DISHES'}` : ''}`,
+      // "7 DISHES" is a lie once a cocktail is one of the rows shown. Only
+      // say DISHES when the card genuinely has no drinks logged.
+      eyebrow: `MENU CARD${total ? ` · ${total} ${itemNoun(total, m.total_drink_count)}` : ''}`,
       title: m.restaurant_name || 'Restaurant',
       // Date · service · party size only. `is_go_to` ships in the payload but
       // isn't surfaced anywhere in the app, so a story card is the wrong
@@ -262,6 +264,12 @@ function menuCardBody(m, C) {
     rowsBox(C, rows, 'Nothing logged yet.') +
     foot(C, remaining > 0 ? `+${remaining} MORE · EVERY NOTE IN THE APP` : 'EVERY NOTE IN THE APP')
   );
+}
+
+function itemNoun(total, drinkCount) {
+  const hasDrinks = typeof drinkCount === 'number' && drinkCount > 0;
+  if (hasDrinks) return total === 1 ? 'ITEM' : 'ITEMS';
+  return total === 1 ? 'DISH' : 'DISHES';
 }
 
 // Mirrors MEAL_SERVICE_CONFIG in src/components/menu-cards/OccasionIcon.tsx.
