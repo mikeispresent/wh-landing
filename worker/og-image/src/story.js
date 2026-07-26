@@ -221,7 +221,10 @@ function rankingBody(r, C) {
 // ---------- Menu card ----------
 function menuCardBody(m, C) {
   if (!m) return null;
-  const total = m.total_dish_count || (m.dishes_preview || []).length;
+  // `dishes_preview` pools menu_card_dishes + menu_card_drinks, so the
+  // counter has to cover both or the card contradicts itself. Falls back to
+  // total_dish_count for payloads served before that field existed.
+  const total = m.total_item_count ?? m.total_dish_count ?? (m.dishes_preview || []).length;
   const dishes = (m.dishes_preview || []).slice(0, MAX_ROWS);
   const remaining = Math.max(0, total - dishes.length);
 
