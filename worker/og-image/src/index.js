@@ -113,10 +113,32 @@ export default {
 // Worker cannot reproduce the client's photo list. Passing the URL removes
 // the dual-ordering contract entirely. The allowlist in story.js is what
 // stops this being an open image-proxy.
+// The app fetches these with fetch() from a Capacitor WebView, whose origin
+// is capacitor://localhost — cross-origin to wildheavy.com. Without an
+// Access-Control-Allow-Origin header the fetch fails even though the <img>
+// preview loads fine (img tags aren't CORS-gated for display), which looks
+// exactly like a render failure. The images are public content already, so
+// a wildcard is correct here.
+const STORY_CORS = { 'Access-Control-Allow-Origin': '*' };
+
 async function handleStory(request, ctx, match, url) {
+  if (request.method === 'OPTIONS') {
+    return new Response(null, {
+      status: 204,
+      headers: { ...STORY_CORS, 'Access-Control-Allow-Methods': 'GET, OPTIONS', 'Access-Control-Max-Age': '86400' },
+    });
+  }
+
   const cache = caches.default;
   const cached = await cache.match(request);
-  if (cached) return cached;
+  if (cached) {
+    // Edge cache entries survive deploys, so anything stored before CORS was
+    // added would keep failing the app's fetch for the full TTL. Re-apply the
+    // headers on the way out rather than making anyone wait it out.
+    const hit = new Response(cached.body, cached);
+    for (const [k, v] of Object.entries(STORY_CORS)) hit.headers.set(k, v);
+    return hit;
+  }
 
   const [, prefix, slug] = match;
   const type = PREFIX_TO_TYPE[prefix];
@@ -153,6 +175,7 @@ async function handleStory(request, ctx, match, url) {
 
     const response = new Response(buf, {
       headers: {
+        ...STORY_CORS,
         'Content-Type': 'image/png',
         // Shorter than the OG cards: a user tweaking variants wants to see
         // edits, and these aren't scraped by messaging apps.
@@ -169,7 +192,7 @@ async function handleStory(request, ctx, match, url) {
 function jsonErr(status, code) {
   return new Response(JSON.stringify({ error: code }), {
     status,
-    headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
+    headers: { ...STORY_CORS, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
   });
 }
 

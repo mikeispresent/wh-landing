@@ -47,6 +47,7 @@ const CLEAN = {
   goldSoft: '#9E7A3B',
   oxblood: '#8B2A2A',
   rule: 'rgba(26,54,41,0.18)',
+  neutralDot: 'rgba(26,54,41,0.40)',
   wordmark: WORDMARK_FOREST,
   urlColor: 'rgba(26,54,41,0.70)',
 };
@@ -61,6 +62,7 @@ const PHOTO = {
   goldSoft: '#D8B072',
   oxblood: '#E9C6C6',
   rule: 'rgba(244,242,234,0.22)',
+  neutralDot: 'rgba(244,242,234,0.50)',
   wordmark: WORDMARK_CREAM,
   urlColor: 'rgba(244,242,234,0.70)',
 };
@@ -280,7 +282,7 @@ function routeBody(t, C) {
       const dot = intentColor(s && s.intent_tag, C);
       const marker = isSpots
         ? `<div style="display:flex;width:26px;height:26px;border-radius:13px;background:${dot};"></div>`
-        : `<div style="display:flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:28px;background:${dot};font-family:'JetBrains Mono';font-weight:700;font-size:24px;color:#F4F2EA;">${i + 1}</div>`;
+        : `<div style="display:flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:28px;background:${dot};font-family:'JetBrains Mono';font-weight:700;font-size:24px;color:${onIntent(s && s.intent_tag)};">${i + 1}</div>`;
       return `
       <div style="display:flex;align-items:center;background:${C.rowBg};border:1px solid ${C.rule};border-radius:6px;padding:20px 24px;">
         <div style="display:flex;width:72px;justify-content:center;">${marker}</div>
@@ -312,12 +314,25 @@ function routeBody(t, C) {
   );
 }
 
-// Marker colour by intent. Mirrors INTENT_TAG_CONFIG in src/types/routes.ts.
+// Marker colour by intent. MUST mirror src/lib/intentColors.ts in the app —
+// food = burnt sienna, drinks = gold, both = solid copper (same value the
+// route static map uses). These are deliberately variant-independent: the
+// app renders the same dots on light and dark surfaces, and a story card
+// that recolours them stops matching what the user just saw in the feed.
+const INTENT_FILL = {
+  food: '#8B2A2A',   // --burnt-sienna
+  drinks: '#BC8E49', // --gold
+  both: '#B87333',   // INTENT_BOTH_COPPER
+};
+
 function intentColor(tag, C) {
-  if (tag === 'food') return '#8B2A2A';
-  if (tag === 'drinks') return '#6B8156';
-  if (tag === 'both') return C.gold;
-  return C.goldSoft;
+  return INTENT_FILL[tag] || C.neutralDot;
+}
+
+// Numerals sit inside the marker on ordered Routes. Cream on sienna, forest
+// on the two brass tones — gold-on-cream is unreadable at 24px.
+function onIntent(tag) {
+  return tag === 'drinks' || tag === 'both' ? '#1A3629' : '#F4F2EA';
 }
 
 // ---------- Helpers ----------
