@@ -10,5 +10,6 @@ main = "src/index.js"
 compatibility_date = "2026-07-01"
 
 routes = [
-  { pattern = "wildheavy.com/og/*", zone_name = "wildheavy.com" }
+  { pattern = "wildheavy.com/og/*", zone_name = "wildheavy.com" },
+  { pattern = "wildheavy.com/story/*", zone_name = "wildheavy.com" }
 ]

@@ -18,6 +18,8 @@
  */
 
 import { ImageResponse } from 'workers-og';
+import { WORDMARK_FOREST } from './brand.js';
+import { buildStory, isAllowedPhotoUrl, STORY_W, STORY_H } from './story.js';
 
 const EDGE_FN = 'https://kufhzivrzvqayvzbwrpn.supabase.co/functions/v1/share-preview';
 const PREFIX_TO_TYPE = { r: 'ranking', m: 'menu_card', t: 'route' };
@@ -45,6 +47,10 @@ const MAX_ROWS = 3; // items shown on the card; spots/routes show up to 4
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
+
+    const storyMatch = url.pathname.match(/^\/story\/([rmt])\/([A-Za-z0-9_-]{8,32})\.png$/);
+    if (storyMatch) return handleStory(request, ctx, storyMatch, url);
+
     const match = url.pathname.match(/^\/og\/([rmt])\/([A-Za-z0-9_-]{8,32})\.png$/);
     if (!match) return Response.redirect(FALLBACK_IMG, 302);
 
@@ -92,6 +98,80 @@ export default {
     }
   },
 };
+
+// ---------- Story (1080x1920) ----------
+//
+// GET /story/{r|m|t}/{slug}.png?variant=photo|clean&photo=<storage url>
+//
+// Unlike the OG path this does NOT fall back to a static image on failure.
+// A 1200x630 landscape PNG dropped into a 9:16 slot looks broken, and the
+// app already has an inline error + Retry state. Honest status codes let it
+// do its job: 404 unknown slug, 410 private, 502 upstream, 500 render.
+//
+// The photo comes in as a URL rather than an index: share-preview only
+// returns the top three previews and never returns hero_photo_url, so the
+// Worker cannot reproduce the client's photo list. Passing the URL removes
+// the dual-ordering contract entirely. The allowlist in story.js is what
+// stops this being an open image-proxy.
+async function handleStory(request, ctx, match, url) {
+  const cache = caches.default;
+  const cached = await cache.match(request);
+  if (cached) return cached;
+
+  const [, prefix, slug] = match;
+  const type = PREFIX_TO_TYPE[prefix];
+  const variant = url.searchParams.get('variant') === 'clean' ? 'clean' : 'photo';
+  const photoParam = url.searchParams.get('photo');
+
+  let data;
+  try {
+    const res = await fetch(`${EDGE_FN}?type=${type}&slug=${slug}`, {
+      headers: { Accept: 'application/json' },
+    });
+    if (res.status === 404) return jsonErr(404, 'not_found');
+    if (res.status === 410) return jsonErr(410, 'unavailable');
+    if (!res.ok) return jsonErr(502, 'upstream_error');
+    data = await res.json();
+  } catch {
+    return jsonErr(502, 'upstream_error');
+  }
+
+  // A rejected photo (wrong host, wrong format, too slow) silently degrades
+  // to the clean card rather than failing the whole render.
+  let photoUri = null;
+  if (variant === 'photo' && isAllowedPhotoUrl(photoParam)) {
+    photoUri = await fetchThumb(photoParam);
+  }
+
+  try {
+    const html = buildStory(data, photoUri ? 'photo' : 'clean', photoUri);
+    if (!html) return jsonErr(500, 'render_failed');
+
+    const fonts = await loadFonts();
+    const img = new ImageResponse(html, { width: STORY_W, height: STORY_H, fonts, format: 'png' });
+    const buf = await img.arrayBuffer();
+
+    const response = new Response(buf, {
+      headers: {
+        'Content-Type': 'image/png',
+        // Shorter than the OG cards: a user tweaking variants wants to see
+        // edits, and these aren't scraped by messaging apps.
+        'Cache-Control': 'public, max-age=300, s-maxage=3600',
+      },
+    });
+    ctx.waitUntil(cache.put(request, response.clone()));
+    return response;
+  } catch {
+    return jsonErr(500, 'render_failed');
+  }
+}
+
+function jsonErr(status, code) {
+  return new Response(JSON.stringify({ error: code }), {
+    status,
+    headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
+  });
+}
 
 // ---------- Card dispatch ----------
 function buildCard(data) {
@@ -223,7 +303,7 @@ function shell({ eyebrow, title, sub, rows, foot, rowsGap = 12 }) {
           <div style="display:flex;width:26px;height:2px;background:${C.gold};margin-right:14px;"></div>
           <div style="display:flex;font-family:'JetBrains Mono';font-weight:700;font-size:18px;letter-spacing:5px;color:${C.goldSoft};">${esc(eyebrow)}</div>
         </div>
-        <div style="display:flex;font-family:'JetBrains Mono';font-weight:700;font-size:18px;letter-spacing:5px;color:${C.ink};">WILDHEAVY</div>
+        ${wordmark(40)}
       </div>
 
       <div style="display:flex;font-family:Fraunces;font-weight:500;font-size:${titleSize}px;line-height:1.05;color:${C.ink};margin-top:14px;max-width:1080px;">${esc(t)}</div>
@@ -252,6 +332,14 @@ function row(left, middle, right) {
     <div style="display:flex;flex:1;min-width:0;margin-left:16px;margin-right:16px;">${middle}</div>
     ${right}
   </div>`;
+}
+
+// The wordmark is ARTWORK, never typeset. This used to be the string
+// "WILDHEAVY" set in letterspaced JetBrains Mono, which meant the link
+// preview and the app disagreed about what the brand looks like.
+function wordmark(h) {
+  const w = Math.round((WORDMARK_FOREST.w / WORDMARK_FOREST.h) * h);
+  return `<div style="display:flex;width:${w}px;height:${h}px;"><img src="${WORDMARK_FOREST.uri}" width="${w}" height="${h}" style="width:${w}px;height:${h}px;" /></div>`;
 }
 
 function thumb(dataUri) {
@@ -343,6 +431,7 @@ async function resolveImages(items) {
 const FONT_SPECS = [
   { name: 'Fraunces', weight: 500, css: 'Fraunces:opsz,wght@144,500' },
   { name: 'JetBrains Mono', weight: 700, css: 'JetBrains+Mono:wght@700' },
+  { name: 'Instrument Sans', weight: 600, css: 'Instrument+Sans:wght@600' },
 ];
 let fontCache = null;
 
