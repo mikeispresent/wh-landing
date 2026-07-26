@@ -79,7 +79,7 @@ const LIMITS = {
 };
 
 // ---------- Entry ----------
-export function buildStory(data, variant, photoUri) {
+export function buildStory(data, variant, photoUri, avatarUri) {
   const usePhoto = variant === 'photo' && !!photoUri;
   const C = usePhoto ? PHOTO : CLEAN;
 
@@ -96,11 +96,11 @@ export function buildStory(data, variant, photoUri) {
   else if (data.content_type === 'route') body = routeBody(data.route, C);
   if (!body) return null;
 
-  return shell({ C, body, handle, usePhoto, photoUri });
+  return shell({ C, body, handle, usePhoto, photoUri, avatarUri });
 }
 
 // ---------- Shell ----------
-function shell({ C, body, handle, usePhoto, photoUri }) {
+function shell({ C, body, handle, usePhoto, photoUri, avatarUri }) {
   const inner = `
     <div style="display:flex;flex-direction:column;width:${STORY_W}px;height:${STORY_H}px;padding:250px 60px 310px;${
       usePhoto
@@ -110,7 +110,7 @@ function shell({ C, body, handle, usePhoto, photoUri }) {
       <div style="display:flex;flex-direction:column;flex:1;min-height:0;">
         ${body}
       </div>
-      ${footer(C, handle)}
+      ${footer(C, handle, avatarUri)}
     </div>`;
 
   if (!usePhoto) {
@@ -125,20 +125,31 @@ function shell({ C, body, handle, usePhoto, photoUri }) {
 // The lockup. Identical on every template and both variants — same asset,
 // same size, same order, same position. The variant toggle changes the card
 // above it and never touches this block. Recognition is repetition.
-function footer(C, handle) {
+function footer(C, handle, avatarUri) {
   const mark = C.wordmark;
   const markW = 240;
   const markH = Math.round((mark.h / mark.w) * markW);
+
+  // Avatar + handle as one row. The face does most of the recognition work
+  // for very little vertical space — people know their friends before they
+  // read a username.
+  const AV = 72;
+  const identity = handle
+    ? `<div style="display:flex;align-items:center;justify-content:center;margin-bottom:22px;">
+         ${
+           avatarUri
+             ? `<div style="display:flex;width:${AV}px;height:${AV}px;border-radius:${AV / 2}px;overflow:hidden;border:2px solid ${C.rule};margin-right:18px;"><img src="${avatarUri}" width="${AV}" height="${AV}" style="width:${AV}px;height:${AV}px;object-fit:cover;" /></div>`
+             : ''
+         }
+         <div style="display:flex;font-family:'Instrument Sans';font-weight:600;font-size:46px;color:${C.ink};">${esc(handle)}</div>
+       </div>`
+    : '';
 
   // The 64px gap matters: without it the content's "+N more" line reads as
   // part of the lockup instead of as the end of the card.
   return `
   <div style="display:flex;flex-direction:column;align-items:center;margin-top:64px;">
-    ${
-      handle
-        ? `<div style="display:flex;font-family:'Instrument Sans';font-weight:600;font-size:40px;color:${C.ink};margin-bottom:18px;">${esc(handle)}</div>`
-        : ''
-    }
+    ${identity}
     <div style="display:flex;width:${markW}px;height:${markH}px;">
       <img src="${mark.uri}" width="${markW}" height="${markH}" style="width:${markW}px;height:${markH}px;" />
     </div>
@@ -224,15 +235,71 @@ function menuCardBody(m, C) {
     )
     .join('');
 
+  // Visit context: date · service · party size · go-to. All already in the
+  // share-preview teaser payload; the gatekept prose stays in the app.
+  const party =
+    typeof m.party_size === 'number' && m.party_size > 0
+      ? `PARTY OF ${m.party_size}`
+      : null;
+
   return (
     header(C, {
       eyebrow: `MENU CARD${total ? ` · ${total} ${total === 1 ? 'DISH' : 'DISHES'}` : ''}`,
       title: m.restaurant_name || 'Restaurant',
-      sub: subLine(m.visit_date ? formatDate(m.visit_date) : null, m.is_go_to ? 'A GO-TO' : null),
+      // Date · service · party size only. `is_go_to` ships in the payload but
+      // isn't surfaced anywhere in the app, so a story card is the wrong
+      // place for it to debut.
+      sub: subLine(
+        m.visit_date ? formatDate(m.visit_date) : null,
+        mealServiceLabel(m.meal_service),
+        party,
+      ),
     }) +
+    accessMeter(m.reservation_difficulty, C) +
     rowsBox(C, rows, 'Nothing logged yet.') +
-    foot(C, remaining > 0 ? `+ ${remaining} MORE DISHES — IN THE APP` : 'EVERY NOTE IN THE APP')
+    foot(C, remaining > 0 ? `+${remaining} MORE · EVERY NOTE IN THE APP` : 'EVERY NOTE IN THE APP')
   );
+}
+
+// Mirrors MEAL_SERVICE_CONFIG in src/components/menu-cards/OccasionIcon.tsx.
+// Values are stored snake_case, so raw uppercasing would print "HAPPY_HOUR".
+const MEAL_SERVICE_LABELS = {
+  brunch: 'Brunch',
+  lunch: 'Lunch',
+  dinner: 'Dinner',
+  happy_hour: 'Happy Hour',
+  just_drinks: 'Just Drinks',
+};
+
+function mealServiceLabel(v) {
+  if (!v) return null;
+  return MEAL_SERVICE_LABELS[v] || String(v).replace(/_/g, ' ');
+}
+
+// The reservation friction meter — the thing no other food app shows. Scale
+// and labels mirror getReservationDifficultyLabel() in ratingDefinitions.ts.
+// 0 is a real value ("Walk-In Friendly"), so only null/undefined skips this.
+function accessMeter(difficulty, C) {
+  if (difficulty == null || Number.isNaN(Number(difficulty))) return '';
+  const n = Math.max(0, Math.min(5, Math.round(Number(difficulty))));
+  const LABELS = [
+    'WALK-IN FRIENDLY',
+    'EASY BOOKING',
+    'PLAN AHEAD',
+    'HIGH DEMAND',
+    'TOUGH TICKET',
+    'INSIDER ONLY',
+  ];
+  let segs = '';
+  for (let i = 1; i <= 5; i++) {
+    segs += `<div style="display:flex;width:44px;height:10px;border-radius:3px;background:${C.oxblood};opacity:${i <= n ? 1 : 0.2};margin-right:8px;"></div>`;
+  }
+  return `
+    <div style="display:flex;align-items:center;margin-top:26px;">
+      <div style="display:flex;font-family:'JetBrains Mono';font-weight:700;font-size:17px;letter-spacing:4px;color:${C.mute};margin-right:18px;">ACCESS</div>
+      <div style="display:flex;align-items:center;">${segs}</div>
+      <div style="display:flex;font-family:'JetBrains Mono';font-weight:700;font-size:17px;letter-spacing:3px;color:${C.oxblood};margin-left:10px;">${esc(LABELS[n])}</div>
+    </div>`;
 }
 
 function ratingRow(n, C) {
@@ -278,7 +345,9 @@ function routeBody(t, C) {
   const rows = shown
     .map((s, i) => {
       const isTrueEnd = i === lastIdx && remaining === 0 && stops.length > 1;
-      const label = isSpots ? '' : i === 0 ? 'START' : isTrueEnd ? 'END' : `STOP ${i + 1}`;
+      const posLabel = isSpots ? '' : i === 0 ? 'START' : isTrueEnd ? 'END' : `STOP ${i + 1}`;
+      const intent = intentLabel(s && s.intent_tag);
+      const label = [posLabel, intent].filter(Boolean).join(' · ');
       const dot = intentColor(s && s.intent_tag, C);
       const marker = isSpots
         ? `<div style="display:flex;width:26px;height:26px;border-radius:13px;background:${dot};"></div>`
@@ -305,11 +374,17 @@ function routeBody(t, C) {
       sub: subLine(t.city),
     }) +
     rowsBox(C, rows, isSpots ? 'No places yet.' : 'No stops yet.') +
+    // Name what's behind the tap. "In the app" alone doesn't tell anyone
+    // what they'd get; travel times and the map are the Route payoff, and
+    // Spots have neither, so the two modes promise different things.
     foot(
       C,
-      remaining > 0
-        ? `+ ${remaining} MORE — IN THE APP`
-        : isSpots ? 'ALL THE SPOTS IN THE APP' : 'THE WHOLE ROUTE IN THE APP'
+      [
+        remaining > 0 ? `+${remaining} MORE` : '',
+        isSpots ? 'NOTES + MAP IN THE APP' : 'TRAVEL TIMES + MAP IN THE APP',
+      ]
+        .filter(Boolean)
+        .join(' · ')
     )
   );
 }
@@ -329,6 +404,16 @@ function intentColor(tag, C) {
   return INTENT_FILL[tag] || C.neutralDot;
 }
 
+// Mirrors intentLabel() in src/lib/intentColors.ts. Colour alone doesn't
+// survive out of context — someone seeing a WildHeavy card for the first
+// time has no key for what gold vs sienna means.
+function intentLabel(tag) {
+  if (tag === 'food') return 'FOOD';
+  if (tag === 'drinks') return 'DRINKS';
+  if (tag === 'both') return 'FOOD & DRINKS';
+  return '';
+}
+
 // Numerals sit inside the marker on ordered Routes. Cream on sienna, forest
 // on the two brass tones — gold-on-cream is unreadable at 24px.
 function onIntent(tag) {
@@ -341,7 +426,9 @@ function subLine(...parts) {
     .filter(Boolean)
     .map((p) => String(p).toUpperCase())
     .join(' · ');
-  return s ? clip(s, 46) : '';
+  // 54 fits the full "DATE · SERVICE · PARTY OF N · A GO-TO" chain at 22px
+  // mono with 3px tracking inside the 960px content width.
+  return s ? clip(s, 54) : '';
 }
 
 function formatDate(iso) {
