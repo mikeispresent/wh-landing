@@ -125,7 +125,7 @@ const STORY_CORS = { 'Access-Control-Allow-Origin': '*' };
 // deploys and are keyed by URL, so without this a design fix stays invisible
 // for the full TTL. Content edits are handled separately by the client
 // passing ?v=<updated_at>.
-const STORY_CACHE_VERSION = '3';
+const STORY_CACHE_VERSION = '4';
 
 async function handleStory(request, ctx, match, url) {
   if (request.method === 'OPTIONS') {
@@ -252,7 +252,7 @@ function rankingCard(r, creatorName, handle) {
 
 // ---------- Menu card ----------
 function menuCardCard(m, creatorName, handle) {
-  const total = m.total_dish_count || (m.dishes_preview || []).length;
+  const total = m.total_item_count ?? m.total_dish_count ?? (m.dishes_preview || []).length;
   const dishes = (m.dishes_preview || []).slice(0, MAX_ROWS);
   const remaining = Math.max(0, total - dishes.length);
 
