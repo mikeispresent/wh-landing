@@ -121,6 +121,12 @@ export default {
 // a wildcard is correct here.
 const STORY_CORS = { 'Access-Control-Allow-Origin': '*' };
 
+// Bump on any change to story.js or brand.js. Edge cache entries survive
+// deploys and are keyed by URL, so without this a design fix stays invisible
+// for the full TTL. Content edits are handled separately by the client
+// passing ?v=<updated_at>.
+const STORY_CACHE_VERSION = '3';
+
 async function handleStory(request, ctx, match, url) {
   if (request.method === 'OPTIONS') {
     return new Response(null, {
@@ -129,8 +135,12 @@ async function handleStory(request, ctx, match, url) {
     });
   }
 
+  const cacheUrl = new URL(url);
+  cacheUrl.searchParams.set('_v', STORY_CACHE_VERSION);
+  const cacheKey = new Request(cacheUrl.toString(), { method: 'GET' });
+
   const cache = caches.default;
-  const cached = await cache.match(request);
+  const cached = await cache.match(cacheKey);
   if (cached) {
     // Edge cache entries survive deploys, so anything stored before CORS was
     // added would keep failing the app's fetch for the full TTL. Re-apply the
@@ -165,8 +175,12 @@ async function handleStory(request, ctx, match, url) {
     photoUri = await fetchThumb(photoParam);
   }
 
+  // Creator avatar for the identity row. Best-effort — a missing or slow
+  // avatar drops back to the handle alone rather than failing the render.
+  const avatarUri = data?.creator?.avatar_url ? await fetchThumb(data.creator.avatar_url) : null;
+
   try {
-    const html = buildStory(data, photoUri ? 'photo' : 'clean', photoUri);
+    const html = buildStory(data, photoUri ? 'photo' : 'clean', photoUri, avatarUri);
     if (!html) return jsonErr(500, 'render_failed');
 
     const fonts = await loadFonts();
@@ -179,10 +193,12 @@ async function handleStory(request, ctx, match, url) {
         'Content-Type': 'image/png',
         // Shorter than the OG cards: a user tweaking variants wants to see
         // edits, and these aren't scraped by messaging apps.
-        'Cache-Control': 'public, max-age=300, s-maxage=3600',
+        // Short on purpose. Users tweak variants and re-edit content, and
+        // these aren't scraped by messaging apps, so freshness beats hits.
+        'Cache-Control': 'public, max-age=60, s-maxage=300',
       },
     });
-    ctx.waitUntil(cache.put(request, response.clone()));
+    ctx.waitUntil(cache.put(cacheKey, response.clone()));
     return response;
   } catch {
     return jsonErr(500, 'render_failed');
