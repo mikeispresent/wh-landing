@@ -20,7 +20,7 @@
  *        wildheavy.com/t/*   ->  share-preview
  */
 
-const EDGE_FN = 'https://kufhzivrzvqayvzbwrpn.supabase.co/functions/v1/share-preview';
+const EDGE_FN = 'https://dxwjkuqsncatvovjwrzv.supabase.co/functions/v1/share-preview';
 const PREFIX_TO_TYPE = { r: 'ranking', m: 'menu_card', t: 'route' };
 
 // Roman numerals for top-N positions (preview shows ≤3, supports up to 10).
@@ -1587,7 +1587,7 @@ body::before {
       <a class="brand__logo" href="https://wildheavy.com" aria-label="WildHeavy">
         <img src="https://wildheavy.com/Wild%20Heavy%20-%20Logo%20Branding%20-%20Transparent%20-%20Edited.png" alt="WildHeavy">
       </a>
-      <span class="brand__tag">what the kitchen knows.</span>
+      <span class="brand__tag">We're all regulars here.</span>
     </header>
     ${state.bodyHtml}
     <p class="foot">Shared from <a href="https://wildheavy.com">WildHeavy</a></p>
