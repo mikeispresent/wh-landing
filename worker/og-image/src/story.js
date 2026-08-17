@@ -29,7 +29,9 @@ const ROMAN = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x'];
 // Only user-uploaded content photos may back a Story image. Restaurant
 // imagery from Google Places is excluded by policy (Places attribution
 // terms) and by this allowlist — the storage host is the only source.
-const PHOTO_HOST = /^https:\/\/kufhzivrzvqayvzbwrpn\.supabase\.co\/storage\/v1\/object\/public\//;
+// wildheavy-prod storage (old Lovable Cloud host removed in the 2026-08
+// backend migration — photos now live on dxwjkuqsncatvovjwrzv).
+const PHOTO_HOST = /^https:\/\/dxwjkuqsncatvovjwrzv\.supabase\.co\/storage\/v1\/object\/public\//;
 
 export function isAllowedPhotoUrl(u) {
   return typeof u === 'string' && PHOTO_HOST.test(u);

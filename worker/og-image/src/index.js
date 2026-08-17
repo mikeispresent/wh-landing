@@ -21,7 +21,10 @@ import { ImageResponse } from 'workers-og';
 import { WORDMARK_FOREST } from './brand.js';
 import { buildStory, isAllowedPhotoUrl, STORY_W, STORY_H } from './story.js';
 
-const EDGE_FN = 'https://kufhzivrzvqayvzbwrpn.supabase.co/functions/v1/share-preview';
+// wildheavy-prod. The old Lovable Cloud project (kufhzivrzvqayvzbwrpn) was
+// decommissioned in the 2026-08 backend migration — its DNS no longer
+// resolves, which broke every /og/* and /story/* render until 2026-08-17.
+const EDGE_FN = 'https://dxwjkuqsncatvovjwrzv.supabase.co/functions/v1/share-preview';
 const PREFIX_TO_TYPE = { r: 'ranking', m: 'menu_card', t: 'route' };
 const FALLBACK_IMG = 'https://wildheavy.com/og-image.png';
 const ROMAN = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x'];
