@@ -303,9 +303,25 @@
             margin: 0;
             max-width: 52ch;
         }
+        .why-rows__kicker {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-weight: 400;
+            font-size: 1.08rem;
+            line-height: 1.45;
+            color: var(--ink-soft);
+            font-variation-settings: "opsz" 72, "SOFT" 40;
+            max-width: 52ch;
+            margin: 0;
+            padding-top: 24px;
+            border-top: 1px solid var(--rule);
+        }
+        /* Stacked three-sentence section headline: let the explicit breaks rule. */
+        .sec__title--stack { max-width: none; }
         @media (max-width: 520px) {
             .why-rows li { grid-template-columns: 30px 1fr; gap: 14px; padding: 18px 0; }
             .why-rows__head { font-size: 1.18rem; }
+            .why-rows__kicker { font-size: 1rem; }
         }
 
         /* ============================================================
@@ -861,35 +877,35 @@
         </div>
     </section>
 
-    <!-- WHY YOU'LL BE A REGULAR — the value beats -->
+    <!-- THE VALUE BEATS -->
     <section class="sec" id="why">
         <div class="sec__head">
-            <div class="sec-label">Worth The Weight</div>
-            <h2 class="sec__title">Why you'll be a <em>regular.</em></h2>
+            <h2 class="sec__title sec__title--stack">Better knowledge.<br>Better dining.<br>Better <em>connection.</em></h2>
         </div>
         <ul class="why-rows">
             <li>
                 <span class="why-rows__numeral">i</span>
                 <div>
-                    <div class="why-rows__head">Be the friend with the answers.</div>
-                    <p class="why-rows__body">Your people follow you and see what you loved, so you stop fielding the same "where should we go" texts.</p>
+                    <div class="why-rows__head">Your taste, on call when you aren't.</div>
+                    <p class="why-rows__body">A good recommendation takes real work. You think about the occasion, the party size, who's eating. Do it once here and your people get the answer without waiting on your reply.</p>
                 </div>
             </li>
             <li>
                 <span class="why-rows__numeral">ii</span>
                 <div>
-                    <div class="why-rows__head">Never lose a great bite.</div>
-                    <p class="why-rows__body">Everything you rank stays put and searchable, not buried in your camera roll or a group chat.</p>
+                    <div class="why-rows__head">Keep it. Find it. Send it.</div>
+                    <p class="why-rows__body">Scan the check and the dishes fill themselves in, so your time goes to the photos and the ratings. And every dish you rate moves your city's live rankings.</p>
                 </div>
             </li>
             <li>
                 <span class="why-rows__numeral">iii</span>
                 <div>
-                    <div class="why-rows__head">It learns what you love.</div>
-                    <p class="why-rows__body">The more you add, the better it knows what to send you next.</p>
+                    <div class="why-rows__head">Walk in already knowing.</div>
+                    <p class="why-rows__body">What to order, what to skip, what regulars know, and how hard the table is to get. All before you sit down.</p>
                 </div>
             </li>
         </ul>
+        <p class="why-rows__kicker">Every card makes the next dinner better. Yours, your friends', and everyone's going next.</p>
     </section>
 
     <!-- Diamond rule -->
