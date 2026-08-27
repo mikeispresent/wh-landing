@@ -167,14 +167,14 @@ function header(C, { eyebrow, title, sub }) {
       <div style="display:flex;width:34px;height:3px;background:${C.gold};margin-right:16px;"></div>
       <div style="display:flex;font-family:'JetBrains Mono';font-weight:700;font-size:22px;letter-spacing:6px;color:${C.goldSoft};">${esc(clip(eyebrow, LIMITS.eyebrow + 20))}</div>
     </div>
-    <div style="display:flex;font-family:Fraunces;font-weight:500;font-size:${size}px;line-height:1.06;color:${C.ink};margin-top:22px;">${esc(t)}</div>
+    <div style="display:flex;font-family:Bitter;font-weight:700;font-size:${size}px;line-height:1.06;color:${C.ink};margin-top:22px;">${esc(t)}</div>
     ${sub ? `<div style="display:flex;font-family:'JetBrains Mono';font-size:22px;letter-spacing:3px;color:${C.mute};margin-top:16px;">${esc(sub)}</div>` : ''}`;
 }
 
 function rowsBox(C, rows, empty) {
   return `
     <div style="display:flex;flex-direction:column;flex:1;min-height:0;justify-content:center;gap:14px;margin-top:34px;">
-      ${rows || `<div style="display:flex;font-family:Fraunces;font-size:38px;color:${C.mute};">${esc(empty)}</div>`}
+      ${rows || `<div style="display:flex;font-family:Bitter;font-weight:700;font-size:38px;color:${C.mute};">${esc(empty)}</div>`}
     </div>`;
 }
 
@@ -199,9 +199,9 @@ function rankingBody(r, C) {
     .map(
       (d, i) => `
       <div style="display:flex;align-items:center;background:${C.rowBg};border:1px solid ${C.rule};border-radius:6px;padding:20px 24px;">
-        <div style="display:flex;width:78px;justify-content:center;font-family:Fraunces;font-weight:500;font-size:50px;color:${C.gold};">${esc(ROMAN[i] || String(i + 1))}</div>
+        <div style="display:flex;width:78px;justify-content:center;font-family:Bitter;font-weight:700;font-size:50px;color:${C.gold};">${esc(ROMAN[i] || String(i + 1))}</div>
         <div style="display:flex;flex-direction:column;flex:1;min-width:0;margin-left:20px;">
-          <div style="display:flex;font-family:Fraunces;font-weight:500;font-size:40px;color:${C.ink};">${esc(clip(d.name || 'Unnamed', LIMITS.dish))}</div>
+          <div style="display:flex;font-family:Bitter;font-weight:700;font-size:40px;color:${C.ink};">${esc(clip(d.name || 'Unnamed', LIMITS.dish))}</div>
           ${
             d.restaurant_name
               ? `<div style="display:flex;font-family:'JetBrains Mono';font-size:20px;letter-spacing:3px;color:${C.mute};margin-top:8px;">${esc(clip(String(d.restaurant_name).toUpperCase(), LIMITS.restaurant))}</div>`
@@ -234,7 +234,7 @@ function menuCardBody(m, C) {
     .map(
       (d) => `
       <div style="display:flex;flex-direction:column;background:${C.rowBg};border:1px solid ${C.rule};border-radius:6px;padding:20px 24px;">
-        <div style="display:flex;font-family:Fraunces;font-weight:500;font-size:40px;color:${C.ink};">${esc(clip(d.name || 'Unnamed dish', LIMITS.dish))}</div>
+        <div style="display:flex;font-family:Bitter;font-weight:700;font-size:40px;color:${C.ink};">${esc(clip(d.name || 'Unnamed dish', LIMITS.dish))}</div>
         ${d.rating != null ? ratingRow(d.rating, C) : ''}
       </div>`
     )
@@ -370,7 +370,7 @@ function routeBody(t, C) {
         <div style="display:flex;width:72px;justify-content:center;">${marker}</div>
         <div style="display:flex;flex-direction:column;flex:1;min-width:0;margin-left:16px;">
           ${label ? `<div style="display:flex;font-family:'JetBrains Mono';font-size:19px;letter-spacing:4px;color:${C.goldSoft};margin-bottom:6px;">${esc(label)}</div>` : ''}
-          <div style="display:flex;font-family:Fraunces;font-weight:500;font-size:40px;color:${C.ink};">${esc(clip((s && s.name) || 'Unnamed', LIMITS.place))}</div>
+          <div style="display:flex;font-family:Bitter;font-weight:700;font-size:40px;color:${C.ink};">${esc(clip((s && s.name) || 'Unnamed', LIMITS.place))}</div>
         </div>
       </div>`;
     })
