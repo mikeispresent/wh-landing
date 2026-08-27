@@ -29,7 +29,7 @@
     --shadow-lift:  0 2px 0 rgba(255,255,255,0.6), 0 18px 40px -20px rgba(26,54,41,0.28);
 
     /* Typography */
-    --font-display: 'Fraunces', 'Cormorant Garamond', Georgia, serif;
+    --font-display: 'Bitter', 'Clarendon', Georgia, serif;
     --font-body:    'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
     --font-mono:    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
     --font-type:    'Special Elite', ui-monospace, monospace; /* typed shift notes */
@@ -79,26 +79,26 @@ body::before {
 
 /* ============================================================
    TYPOGRAPHY
-   Fraunces display · Instrument Sans body · JetBrains Mono data
+   Bitter display (Clarendon slab, descends from the HEAVY wordmark)
+   Instrument Sans body · JetBrains Mono data
    ============================================================ */
 
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    font-weight: 500;             /* Fraunces looks best at 400-500 for display */
+    font-weight: 600;             /* Bitter carries display weight better at 600-700 */
     color: var(--ink);
-    letter-spacing: -0.015em;
+    letter-spacing: -0.022em;
     line-height: 1.05;
-    font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 0;
     text-wrap: balance;
 }
 
-h1 { font-size: clamp(2.4rem, 6.2vw, 4.6rem); font-weight: 400; }
-h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); letter-spacing: -0.02em; }
+h1 { font-size: clamp(2.4rem, 6.2vw, 4.6rem); font-weight: 700; }
+h2 { font-size: clamp(1.8rem, 3.6vw, 2.6rem); letter-spacing: -0.028em; }
 h3 { font-size: 1.35rem; letter-spacing: -0.01em; font-weight: 500; }
 h4 { font-size: 1.08rem; font-weight: 600; font-family: var(--font-body); letter-spacing: 0; }
 
 p { color: var(--ink-soft); }
-em { font-family: var(--font-display); font-style: italic; font-weight: 400; }
+em { font-family: var(--font-display); font-style: italic; font-weight: 500; }
 
 a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--rule-gold); text-underline-offset: 4px; text-decoration-thickness: 1px; transition: color 0.18s, text-decoration-color 0.18s; }
 a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
@@ -108,10 +108,10 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
 /* Mono utility */
 .mono { font-family: var(--font-mono); letter-spacing: 0.04em; }
 .meta {
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
+    font-family: var(--font-body);
+    font-size: 0.721rem;
     text-transform: uppercase;
-    letter-spacing: 0.22em;
+    letter-spacing: 0.12em;
     color: var(--ink-mute);
     font-weight: 600;
 }
@@ -122,18 +122,34 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
+    font-family: var(--font-body);
+    font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: 0.28em;
+    letter-spacing: 0.14em;
     color: var(--ink-mute);
     font-weight: 600;
 }
-.eyebrow::before {
-    content: '';
-    width: 18px;
-    height: 1px;
-    background: var(--gold);
+/* Taped label — washi texture, typed hand, torn ends, pinned at a slight angle.
+   The one place on the page a human hand shows. Use sparingly: one per page. */
+.taped {
+    display: inline-block;
+    position: relative;
+    font-family: var(--font-type);
+    font-size: 0.92rem;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    padding: 8px 26px 7px;
+    background:
+        repeating-linear-gradient(45deg,
+            rgba(184, 144, 74, 0) 0 6px,
+            rgba(184, 144, 74, 0.10) 6px 8px),
+        rgba(232, 222, 198, 0.92);
+    filter: drop-shadow(0 1px 2px rgba(26, 54, 41, 0.13));
+    transform: rotate(-1.4deg);
+    transform-origin: left center;
+    clip-path: polygon(
+        0% 6%, 2.2% 0%, 100% 2%, 98.4% 34%, 100% 66%, 98.8% 100%,
+        2% 97%, 0.4% 62%, 1.6% 30%);
 }
 
 /* Drop cap for editorial opens */
@@ -145,7 +161,6 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
     line-height: 0.85;
     padding: 0.08em 0.12em 0 0;
     color: var(--ink);
-    font-variation-settings: "opsz" 144, "SOFT" 50;
 }
 
 /* ============================================================
@@ -291,16 +306,15 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
     letter-spacing: 0.04em;
     color: var(--ink);
     text-decoration: none;
-    font-variation-settings: "opsz" 48, "SOFT" 30;
 }
 .nav-brand em { font-style: italic; font-weight: 400; color: var(--gold-soft); }
 
 .nav-links { display: flex; gap: 28px; align-items: center; }
 .nav-links a {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
+    font-family: var(--font-body);
+    font-size: 0.742rem;
     font-weight: 600;
-    letter-spacing: 0.22em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--ink-mute);
     text-decoration: none;
@@ -334,10 +348,10 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
     align-items: center;
     justify-content: center;
     gap: 10px;
-    font-family: var(--font-mono);
+    font-family: var(--font-body);
     font-weight: 700;
-    font-size: 0.78rem;
-    letter-spacing: 0.24em;
+    font-size: 0.827rem;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     padding: 16px 30px;
     border-radius: var(--radius);
@@ -383,11 +397,12 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
 .btn-meta {
     display: inline-block;
     margin-top: 14px;
-    font-family: var(--font-mono);
-    font-size: 0.64rem;
-    letter-spacing: 0.2em;
+    font-family: var(--font-body);
+    font-size: 0.678rem;
+    letter-spacing: 0.10em;
     text-transform: uppercase;
     color: var(--ink-mute);
+    font-weight: 600;
 }
 
 /* ============================================================
@@ -416,15 +431,15 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
     font-weight: 500;
     letter-spacing: -0.01em;
     color: var(--ink);
-    font-variation-settings: "opsz" 72;
 }
 .menu-card__sub {
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
-    letter-spacing: 0.18em;
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    letter-spacing: 0.10em;
     text-transform: uppercase;
     color: var(--ink-mute);
     margin-top: 4px;
+    font-weight: 600;
 }
 
 /* ============================================================
@@ -509,10 +524,11 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
     justify-content: center;
     gap: 8px 0;
     margin-bottom: 18px;
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    letter-spacing: 0.2em;
+    font-family: var(--font-body);
+    font-size: 0.721rem;
+    letter-spacing: 0.10em;
     text-transform: uppercase;
+    font-weight: 600;
 }
 .legal-footer__links a {
     color: var(--ink-mute);
@@ -523,11 +539,12 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
 .legal-footer__links a:last-child { border-right: 0; }
 .legal-footer__links a:hover { color: var(--ink); }
 .legal-footer__copy {
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
+    font-family: var(--font-body);
+    font-size: 0.689rem;
     color: var(--ink-mute);
-    letter-spacing: 0.12em;
+    letter-spacing: 0.03em;
     margin-bottom: 10px;
+    font-weight: 600;
 }
 .legal-footer__disclaimer {
     font-size: 0.7rem;
@@ -564,7 +581,6 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
     border-left: 2px solid var(--gold);
     padding: 8px 0 8px 24px;
     margin: 2em 0;
-    font-variation-settings: "opsz" 144, "SOFT" 50;
 }
 .prose ul, .prose ol { margin: 1em 0 1.25em 1.4em; color: var(--ink-soft); }
 .prose li { margin-bottom: 0.5em; line-height: 1.65; }
@@ -589,30 +605,31 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
     background: var(--gold);
 }
 .doc-masthead__kicker {
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.3em;
+    font-family: var(--font-body);
+    font-size: 0.657rem;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--gold-soft);
     margin-bottom: 18px;
+    font-weight: 600;
 }
 .doc-masthead h1 {
     font-family: var(--font-display);
-    font-weight: 300;
+    font-weight: 600;
     font-size: clamp(2.4rem, 5.2vw, 3.6rem);
     line-height: 1;
     color: var(--ink);
     letter-spacing: -0.02em;
     margin-bottom: 16px;
-    font-variation-settings: "opsz" 144, "SOFT" 30;
 }
 .doc-masthead h1 em { font-style: italic; color: var(--gold-soft); font-weight: 400; }
 .doc-masthead__sub {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.24em;
+    font-family: var(--font-body);
+    font-size: 0.742rem;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--ink-mute);
+    font-weight: 600;
 }
 
 .doc {
@@ -631,7 +648,6 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
     color: var(--ink);
     letter-spacing: -0.015em;
     margin-bottom: 18px;
-    font-variation-settings: "opsz" 144, "SOFT" 30;
 }
 .doc__section h2 em { font-style: italic; color: var(--gold-soft); }
 .doc__section h3 {
@@ -641,7 +657,6 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
     color: var(--ink);
     margin-top: 1.4em;
     margin-bottom: 0.5em;
-    font-variation-settings: "opsz" 72;
 }
 .doc__section p {
     font-size: 1rem;
@@ -683,7 +698,6 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
     font-style: italic;
     color: var(--gold-soft);
     font-weight: 400;
-    font-variation-settings: "opsz" 72, "SOFT" 50;
 }
 .doc__section .note-box {
     background: var(--paper-bright);
@@ -714,7 +728,6 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
     line-height: 1.15;
     color: var(--ink);
     margin: 0 auto 32px;
-    font-variation-settings: "opsz" 144, "SOFT" 50;
     letter-spacing: -0.012em;
     text-wrap: balance;
     max-width: 22ch;

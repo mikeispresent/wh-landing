@@ -237,9 +237,9 @@ function rankingCard(r, creatorName, handle) {
     .map((d, i) => {
       const pos = ROMAN[i] || String(i + 1);
       return row(
-        `<div style="display:flex;width:56px;justify-content:center;font-family:Fraunces;font-size:36px;color:${C.gold};">${esc(pos)}</div>`,
+        `<div style="display:flex;width:56px;justify-content:center;font-family:Bitter;font-weight:700;font-size:36px;color:${C.gold};">${esc(pos)}</div>`,
         `<div style="display:flex;flex-direction:column;flex:1;min-width:0;">
-           <div style="display:flex;font-family:Fraunces;font-weight:500;font-size:28px;color:${C.ink};max-width:760px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(clip(d.name || 'Unnamed', 48))}</div>
+           <div style="display:flex;font-family:Bitter;font-weight:700;font-size:28px;color:${C.ink};max-width:760px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(clip(d.name || 'Unnamed', 48))}</div>
            ${d.restaurant_name ? `<div style="display:flex;font-family:'JetBrains Mono';font-size:14px;letter-spacing:2px;color:${C.mute};margin-top:3px;">${esc(clip(d.restaurant_name.toUpperCase(), 46))}</div>` : ''}
          </div>`,
         thumb(d.image_url)
@@ -265,7 +265,7 @@ function menuCardCard(m, creatorName, handle) {
       return row(
         thumb(d.image_url),
         `<div style="display:flex;flex-direction:column;flex:1;min-width:0;">
-           <div style="display:flex;font-family:Fraunces;font-weight:500;font-size:28px;color:${C.ink};max-width:800px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(clip(d.name || 'Unnamed dish', 48))}</div>
+           <div style="display:flex;font-family:Bitter;font-weight:700;font-size:28px;color:${C.ink};max-width:800px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(clip(d.name || 'Unnamed dish', 48))}</div>
            ${d.rating != null
              ? `<div style="display:flex;align-items:center;margin-top:6px;">
                   ${ratingBars(d.rating)}
@@ -311,7 +311,7 @@ function routeCard(t, creatorName, handle) {
           <div style="display:flex;width:64px;justify-content:center;">${marker}</div>
           <div style="display:flex;flex-direction:column;flex:1;min-width:0;margin-left:16px;">
             ${label ? `<div style="display:flex;font-family:'JetBrains Mono';font-size:13px;letter-spacing:3px;color:${C.goldSoft};margin-bottom:2px;">${esc(label)}</div>` : ''}
-            <div style="display:flex;font-family:Fraunces;font-weight:500;font-size:30px;color:${C.ink};max-width:900px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(clip(s?.name || 'Unnamed', 52))}</div>
+            <div style="display:flex;font-family:Bitter;font-weight:700;font-size:30px;color:${C.ink};max-width:900px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(clip(s?.name || 'Unnamed', 52))}</div>
           </div>
         </div>`;
     })
@@ -348,11 +348,11 @@ function shell({ eyebrow, title, sub, rows, foot, rowsGap = 12 }) {
         ${wordmark(40)}
       </div>
 
-      <div style="display:flex;font-family:Fraunces;font-weight:500;font-size:${titleSize}px;line-height:1.05;color:${C.ink};margin-top:14px;max-width:1080px;">${esc(t)}</div>
+      <div style="display:flex;font-family:Bitter;font-weight:700;font-size:${titleSize}px;line-height:1.05;color:${C.ink};margin-top:14px;max-width:1080px;">${esc(t)}</div>
       ${sub ? `<div style="display:flex;font-family:'JetBrains Mono';font-size:16px;letter-spacing:2px;color:${C.mute};margin-top:10px;">${esc(sub)}</div>` : ''}
 
       <div style="display:flex;flex-direction:column;flex:1;justify-content:center;margin-top:14px;overflow:hidden;${rowsGap ? `gap:${rowsGap}px;` : ''}">
-        ${rows || `<div style="display:flex;font-family:Fraunces;font-size:28px;color:${C.mute};">Nothing plated yet.</div>`}
+        ${rows || `<div style="display:flex;font-family:Bitter;font-weight:700;font-size:28px;color:${C.mute};">Nothing plated yet.</div>`}
       </div>
 
       <div style="display:flex;align-items:center;margin-top:14px;">
@@ -471,7 +471,7 @@ async function resolveImages(items) {
 // instances in those formats when the request UA predates woff2 support.
 // Cached at module level so warm isolates skip the fetch entirely.
 const FONT_SPECS = [
-  { name: 'Fraunces', weight: 500, css: 'Fraunces:opsz,wght@144,500' },
+  { name: 'Bitter',   weight: 700, css: 'Bitter:wght@700' },
   { name: 'JetBrains Mono', weight: 700, css: 'JetBrains+Mono:wght@700' },
   { name: 'Instrument Sans', weight: 600, css: 'Instrument+Sans:wght@600' },
 ];

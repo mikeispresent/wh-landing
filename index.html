@@ -22,9 +22,9 @@
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,30..100;1,9..144,300..700,30..100&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,300..800;1,300..700&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="wh-design.css?v=12">
+    <link rel="stylesheet" href="wh-design.css?v=13">
 
     <style>
         /* ============================================================
@@ -65,7 +65,6 @@
             font-weight: 400;
             font-size: 1.05rem;
             color: var(--ink-soft);
-            font-variation-settings: "opsz" 72, "SOFT" 50;
             letter-spacing: -0.01em;
         }
         @media (max-width: 520px) {
@@ -91,27 +90,20 @@
         }
 
         /* ============================================================
-           SECTION LABELS — "— LABEL · DETAIL"
+           SECTION LABELS — "LABEL · DETAIL"
            ============================================================ */
         .sec-label {
             display: inline-flex;
             align-items: center;
             gap: 12px;
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
+            font-family: var(--font-body);
+            font-size: 0.742rem;
             font-weight: 700;
-            letter-spacing: 0.26em;
+            letter-spacing: 0.14em;
             text-transform: uppercase;
             color: var(--gold-soft);
         }
-        .sec-label::before {
-            content: '';
-            width: 22px;
-            height: 1px;
-            background: var(--gold-soft);
-        }
-        /* Variant: Lucide icon replaces the gold dash for artifact card eyebrows */
-        .sec-label--icon::before { display: none; }
+        /* Variant: Lucide icon marks artifact card eyebrows */
         .sec-label--icon svg {
             width: 14px;
             height: 14px;
@@ -124,7 +116,7 @@
         }
 
         /* ============================================================
-           HERO — upright Fraunces statement, then dual CTA
+           HERO — upright slab statement, then dual CTA
            ============================================================ */
         .hero {
             padding: 8px 0 64px;
@@ -134,12 +126,11 @@
         .hero__headline {
             font-family: var(--font-display);
             font-style: normal;          /* UPRIGHT, like preview-page titles */
-            font-weight: 500;
+            font-weight: 700;
             font-size: clamp(2.2rem, 5.6vw, 3.7rem);
             line-height: 1.04;
             letter-spacing: -0.022em;
             color: var(--ink);
-            font-variation-settings: "opsz" 144, "SOFT" 30;
             margin: 0 0 22px;
             text-wrap: balance;
             max-width: 22ch;
@@ -148,19 +139,17 @@
             font-style: italic;
             color: var(--gold-soft);
             font-weight: 400;
-            font-variation-settings: "opsz" 144, "SOFT" 50;
         }
         /* Italic display lede — the bridge from the hook to the CTA */
         .hero__lede {
             font-family: var(--font-display);
             font-style: italic;
-            font-weight: 300;
+            font-weight: 400;
             font-size: 1.35rem;
             line-height: 1.4;
             color: var(--ink-soft);
             max-width: 540px;
             margin: 0 0 36px;
-            font-variation-settings: "opsz" 72, "SOFT" 50;
         }
 
         /* Rotating phrase in the hero — cycles through what a regular knows.
@@ -206,12 +195,13 @@
         }
         .cta-stack__meta {
             margin-top: 12px;
-            font-family: var(--font-mono);
-            font-size: 0.6rem;
-            letter-spacing: 0.22em;
+            font-family: var(--font-body);
+            font-size: 0.636rem;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
             color: var(--ink-mute);
-        }
+    font-weight: 600;
+}
         .cta-stack__secondary {
             display: inline-block;
             margin-top: 14px;
@@ -242,12 +232,11 @@
         .sec__title {
             font-family: var(--font-display);
             font-style: normal;
-            font-weight: 500;
+            font-weight: 700;
             font-size: clamp(1.9rem, 4vw, 2.6rem);
             line-height: 1.05;
             letter-spacing: -0.018em;
             color: var(--ink);
-            font-variation-settings: "opsz" 144, "SOFT" 30;
             margin: 0 0 12px;
             max-width: 22ch;
             text-wrap: balance;
@@ -282,7 +271,6 @@
             color: var(--gold-soft);
             line-height: 1;
             text-align: center;
-            font-variation-settings: "opsz" 72, "SOFT" 50;
             padding-top: 3px;
         }
         .why-rows__head {
@@ -292,7 +280,6 @@
             line-height: 1.1;
             letter-spacing: -0.01em;
             color: var(--ink);
-            font-variation-settings: "opsz" 96, "SOFT" 30;
             margin-bottom: 6px;
         }
         .why-rows__body {
@@ -310,7 +297,6 @@
             font-size: 1.08rem;
             line-height: 1.45;
             color: var(--ink-soft);
-            font-variation-settings: "opsz" 72, "SOFT" 40;
             max-width: 52ch;
             margin: 0;
             padding-top: 24px;
@@ -356,13 +342,12 @@
             line-height: 1.05;
             letter-spacing: -0.015em;
             color: var(--ink);
-            font-variation-settings: "opsz" 144, "SOFT" 30;
             margin: 10px 0 6px;
         }
         .artifact-card__meta {
-            font-family: var(--font-mono);
-            font-size: 0.62rem;
-            letter-spacing: 0.22em;
+            font-family: var(--font-body);
+            font-size: 0.657rem;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
             color: var(--gold-soft);
             font-weight: 700;
@@ -393,10 +378,10 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            font-family: var(--font-mono);
-            font-size: 0.66rem;
+            font-family: var(--font-body);
+            font-size: 0.7rem;
             font-weight: 700;
-            letter-spacing: 0.24em;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
             color: var(--ink);
             margin-top: 18px;
@@ -432,7 +417,6 @@
             font-family: var(--font-display);
             font-size: 1.4rem;
             color: var(--gold-soft);
-            font-variation-settings: "opsz" 72;
         }
         .menu-rows__name {
             font-family: var(--font-display);
@@ -440,7 +424,6 @@
             font-size: 1.02rem;
             line-height: 1.15;
             color: var(--ink);
-            font-variation-settings: "opsz" 72;
         }
         .menu-rows__rating {
             text-align: right;
@@ -497,24 +480,23 @@
             color: var(--gold-soft);
             line-height: 1;
             text-align: center;
-            font-variation-settings: "opsz" 72, "SOFT" 50;
         }
         .rank-rows__rest {
             font-family: var(--font-display);
             font-weight: 500;
             font-size: 1rem;
             color: var(--ink);
-            font-variation-settings: "opsz" 72;
             line-height: 1.15;
         }
         .rank-rows__loc {
-            font-family: var(--font-mono);
-            font-size: 0.58rem;
-            letter-spacing: 0.18em;
+            font-family: var(--font-body);
+            font-size: 0.615rem;
+            letter-spacing: 0.10em;
             text-transform: uppercase;
             color: var(--ink-mute);
             margin-top: 3px;
-        }
+    font-weight: 600;
+}
         .rank-rows__thumb {
             width: 56px;
             height: 56px;
@@ -527,7 +509,6 @@
             font-family: var(--font-display);
             font-size: 1.2rem;
             color: var(--gold-soft);
-            font-variation-settings: "opsz" 72;
         }
 
         /* Hot Route — numbered medallions in a vertical timeline */
@@ -573,7 +554,6 @@
             font-size: 1rem;
             font-weight: 400;
             color: var(--gold-soft);
-            font-variation-settings: "opsz" 72, "SOFT" 50;
             position: relative;
             z-index: 1;
         }
@@ -582,9 +562,9 @@
             color: var(--oxblood);
         }
         .route-rows__stop-label {
-            font-family: var(--font-mono);
-            font-size: 0.6rem;
-            letter-spacing: 0.22em;
+            font-family: var(--font-body);
+            font-size: 0.636rem;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
             color: var(--gold-soft);
             font-weight: 700;
@@ -595,7 +575,6 @@
             font-weight: 500;
             font-size: 1.1rem;
             color: var(--ink);
-            font-variation-settings: "opsz" 72;
             line-height: 1.1;
         }
 
@@ -624,22 +603,22 @@
             font-size: 1.6rem;
             line-height: 1.05;
             color: var(--ink);
-            font-variation-settings: "opsz" 144, "SOFT" 30;
             margin: 8px 0 4px;
         }
         .top-rank-card__title em { font-style: italic; color: var(--gold-soft); font-weight: 400; }
         .top-rank-card__sub {
-            font-family: var(--font-mono);
-            font-size: 0.62rem;
-            letter-spacing: 0.22em;
+            font-family: var(--font-body);
+            font-size: 0.657rem;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
             color: var(--ink-mute);
-        }
+    font-weight: 600;
+}
         .top-rank-card__weight {
             text-align: right;
-            font-family: var(--font-mono);
-            font-size: 0.6rem;
-            letter-spacing: 0.22em;
+            font-family: var(--font-body);
+            font-size: 0.636rem;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
             color: var(--gold-soft);
             font-weight: 700;
@@ -681,7 +660,6 @@
             font-weight: 500;
             font-size: 0.95rem;
             color: var(--ink-soft);
-            font-variation-settings: "opsz" 72;
         }
         .top-rank-rows__num--1 {
             background: var(--gold);
@@ -694,7 +672,6 @@
             font-weight: 500;
             font-size: 1.02rem;
             color: var(--ink);
-            font-variation-settings: "opsz" 72;
             line-height: 1.1;
         }
         .top-rank-rows__dish {
@@ -729,13 +706,14 @@
             margin-top: 16px;
             padding-top: 14px;
             border-top: 1px solid var(--rule);
-            font-family: var(--font-mono);
-            font-size: 0.6rem;
-            letter-spacing: 0.2em;
+            font-family: var(--font-body);
+            font-size: 0.636rem;
+            letter-spacing: 0.10em;
             text-transform: uppercase;
             color: var(--ink-mute);
             text-align: center;
-        }
+    font-weight: 600;
+}
 
         /* ============================================================
            CLOSING CTA
@@ -864,7 +842,7 @@
 
     <!-- HERO -->
     <section class="hero">
-        <div class="hero__label sec-label">The Dining App</div>
+        <div class="hero__label"><span class="taped">the community dining app</span></div>
         <h1 class="hero__headline">Everyone has a friend who knows <span class="word-rotator" aria-label="what to order, where to go, how to get in, when to pivot"><em>what to order.</em><em>where to go.</em><em>how to get in.</em><em>when to pivot.</em></span></h1>
         <p class="hero__lede">WildHeavy is that friend, for every table.</p>
 

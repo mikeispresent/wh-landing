@@ -16,8 +16,8 @@
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..700,30..100;1,9..144,300..700,30..100&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="wh-design.css?v=12">
+    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,300..800;1,300..700&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="wh-design.css?v=13">
 
     <style>
         .page-hero {
@@ -30,24 +30,22 @@
         .page-hero h1 {
             font-family: var(--font-display);
             font-size: clamp(2.6rem, 5.4vw, 4rem);
-            font-weight: 300;
+            font-weight: 600;
             line-height: 1;
             letter-spacing: -0.022em;
             color: var(--ink);
             margin-bottom: 24px;
-            font-variation-settings: "opsz" 144, "SOFT" 30;
         }
         .page-hero h1 em { font-style: italic; color: var(--gold-soft); font-weight: 400; }
         .page-hero__lede {
             font-family: var(--font-display);
             font-style: italic;
-            font-weight: 300;
+            font-weight: 400;
             font-size: 1.35rem;
             line-height: 1.4;
             color: var(--ink-soft);
             max-width: 560px;
             margin: 0 auto;
-            font-variation-settings: "opsz" 72, "SOFT" 50;
         }
 
         .section {
@@ -62,14 +60,13 @@
         .section h2 {
             font-family: var(--font-display);
             font-size: clamp(1.7rem, 3vw, 2.2rem);
-            font-weight: 400;
+            font-weight: 600;
             letter-spacing: -0.02em;
             line-height: 1.15;
             color: var(--ink);
             text-align: center;
             max-width: 520px;
             margin: 0 auto 36px;
-            font-variation-settings: "opsz" 144, "SOFT" 30;
         }
         .section h2 em { font-style: italic; color: var(--gold-soft); }
         .section p {
@@ -89,7 +86,6 @@
             font-family: var(--font-display);
             font-weight: 500;
             font-style: italic;
-            font-variation-settings: "opsz" 36;
         }
 
         /* Prep list — numbered method */
@@ -115,7 +111,6 @@
             font-weight: 300;
             line-height: 1;
             color: var(--gold-soft);
-            font-variation-settings: "opsz" 144, "SOFT" 50;
             font-style: italic;
         }
         .prep-list__title {
@@ -126,7 +121,6 @@
             line-height: 1.15;
             letter-spacing: -0.01em;
             margin-bottom: 6px;
-            font-variation-settings: "opsz" 72;
         }
         .prep-list__title em { font-style: italic; color: var(--gold-soft); font-weight: 400; }
         .prep-list__body {
@@ -157,9 +151,9 @@
             .value:last-child { border-bottom: 0; }
         }
         .value__tag {
-            font-family: var(--font-mono);
-            font-size: 0.62rem;
-            letter-spacing: 0.28em;
+            font-family: var(--font-body);
+            font-size: 0.657rem;
+            letter-spacing: 0.14em;
             text-transform: uppercase;
             color: var(--oxblood);
             font-weight: 700;
@@ -171,7 +165,6 @@
             font-weight: 400;
             color: var(--ink);
             margin-bottom: 8px;
-            font-variation-settings: "opsz" 72, "SOFT" 30;
         }
         .value__desc {
             font-size: 0.92rem;
