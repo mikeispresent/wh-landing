@@ -194,7 +194,7 @@ function errorState(msg) {
 function stateHtml({ kicker, title, sub, ctaLabel, ctaHref }) {
   return `
     <section class="state">
-      <div class="eyebrow"><span class="eyebrow__dash"></span><span>${esc(kicker)}</span></div>
+      <div class="eyebrow"><span>${esc(kicker)}</span></div>
       <h1 class="state__title">${esc(title)}</h1>
       <p class="state__sub">${esc(sub)}</p>
       <a class="btn btn--primary" href="${esc(ctaHref)}">${esc(ctaLabel)} \u2192</a>
@@ -519,7 +519,6 @@ function cardEyebrow(label, meta) {
   const right = meta ? ` \u00b7 ${meta}` : '';
   return `
     <div class="eyebrow">
-      <span class="eyebrow__dash"></span>
       <span>${esc(label)}${esc(right)}</span>
     </div>`;
 }
@@ -806,8 +805,8 @@ ${state.status === 'ok' ? `<meta property="og:image:width" content="1200">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;600;700&family=Special+Elite&display=swap">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,300..800;1,300..700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;600;700&family=Special+Elite&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,300..800;1,300..700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
 
 <style>
 :root {
@@ -826,7 +825,7 @@ ${state.status === 'ok' ? `<meta property="og:image:width" content="1200">
   --rule-gold: rgba(184, 144, 74, 0.55);
   --shadow-press: 0 1px 0 rgba(255,255,255,0.7), 0 10px 24px -14px rgba(26,54,41,0.22);
   --shadow-lift: 0 2px 0 rgba(255,255,255,0.6), 0 18px 40px -20px rgba(26,54,41,0.28);
-  --font-display: 'Fraunces', 'Cormorant Garamond', Georgia, serif;
+  --font-display: 'Bitter', 'Clarendon', Georgia, serif;
   --font-body: 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-type: 'Special Elite', ui-monospace, monospace;
@@ -904,10 +903,9 @@ body::before {
   text-align: right;
   font-family: var(--font-display);
   font-style: italic;
-  font-weight: 400;
+  font-weight: 600;
   font-size: 14px;
   color: var(--ink-mute);
-  font-variation-settings: "opsz" 72, "SOFT" 50;
   letter-spacing: -0.005em;
 }
 @media (max-width: 480px) {
@@ -952,22 +950,14 @@ body::before {
   color: var(--gold-soft);
   margin: 0 0 10px;
 }
-.eyebrow__dash {
-  width: 18px;
-  height: 1px;
-  background: var(--gold);
-  display: inline-block;
-}
-
 .card__title {
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 600;
   font-size: clamp(1.85rem, 5.4vw, 2.5rem);
   line-height: 1.0;
   letter-spacing: -0.02em;
   color: var(--ink);
   margin: 0 0 8px;
-  font-variation-settings: "opsz" 144, "SOFT" 30;
   text-wrap: balance;
 }
 .card__sub {
@@ -1000,20 +990,18 @@ body::before {
   justify-content: center;
   font-family: var(--font-display);
   font-style: italic;
-  font-weight: 400;
+  font-weight: 600;
   font-size: 22px;
   color: var(--ink);
-  font-variation-settings: "opsz" 72, "SOFT" 50;
   flex-shrink: 0;
 }
 .byline__text { flex: 1; min-width: 0; }
 .byline__name {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 700;
   font-size: 16px;
   color: var(--ink);
   letter-spacing: -0.01em;
-  font-variation-settings: "opsz" 72;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1108,21 +1096,19 @@ body::before {
 }
 .manifest__tier {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 700;
   font-size: 18px;
   color: var(--ink);
   letter-spacing: -0.005em;
-  font-variation-settings: "opsz" 72;
   line-height: 1.15;
   margin-bottom: 6px;
 }
 .manifest__line {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 700;
   font-size: 16px;
   color: var(--ink);
   letter-spacing: -0.005em;
-  font-variation-settings: "opsz" 72;
   line-height: 1.2;
   overflow-wrap: anywhere;
 }
@@ -1198,21 +1184,19 @@ body::before {
 .rank__pos {
   font-family: var(--font-display);
   font-style: italic;
-  font-weight: 400;
+  font-weight: 600;
   font-size: 24px;
   color: var(--gold);
   text-align: center;
   line-height: 1;
-  font-variation-settings: "opsz" 72, "SOFT" 50;
 }
 .rank__body { min-width: 0; }
 .rank__name {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 700;
   font-size: 16px;
   color: var(--ink);
   letter-spacing: -0.005em;
-  font-variation-settings: "opsz" 72;
   overflow-wrap: anywhere;
   line-height: 1.2;
 }
@@ -1248,7 +1232,6 @@ body::before {
   font-style: italic;
   padding: 14px;
   text-align: center;
-  font-variation-settings: "opsz" 72, "SOFT" 50;
 }
 
 /* ---- Menu card dishes ---- */
@@ -1281,10 +1264,9 @@ body::before {
 }
 .dish__name {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 700;
   font-size: 16px;
   color: var(--ink);
-  font-variation-settings: "opsz" 72;
   overflow-wrap: anywhere;
   line-height: 1.2;
 }
@@ -1341,18 +1323,16 @@ body::before {
 .more__plus {
   font-family: var(--font-display);
   font-style: italic;
-  font-weight: 400;
+  font-weight: 600;
   font-size: 22px;
   color: var(--gold);
-  font-variation-settings: "opsz" 72, "SOFT" 50;
   line-height: 1;
 }
 .more__count {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 700;
   font-size: 18px;
   color: var(--ink);
-  font-variation-settings: "opsz" 72;
   letter-spacing: -0.005em;
   line-height: 1;
 }
@@ -1442,11 +1422,10 @@ body::before {
 }
 .timeline__name {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 700;
   font-size: 17px;
   color: var(--ink);
   letter-spacing: -0.005em;
-  font-variation-settings: "opsz" 72;
   line-height: 1.2;
   overflow-wrap: anywhere;
 }
@@ -1532,13 +1511,12 @@ body::before {
 .state .eyebrow { justify-content: center; margin-bottom: 16px; }
 .state__title {
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 600;
   font-size: clamp(1.55rem, 4.6vw, 2rem);
   color: var(--ink);
   margin: 0 0 14px;
   letter-spacing: -0.02em;
   line-height: 1.05;
-  font-variation-settings: "opsz" 144, "SOFT" 30;
   text-wrap: balance;
 }
 .state__sub {
@@ -1557,10 +1535,9 @@ body::before {
   padding-top: 22px;
   font-family: var(--font-display);
   font-style: italic;
-  font-weight: 400;
+  font-weight: 600;
   font-size: 14px;
   color: var(--ink-mute);
-  font-variation-settings: "opsz" 72, "SOFT" 50;
 }
 .foot::before {
   content: '';

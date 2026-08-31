@@ -24,7 +24,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,300..800;1,300..700&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="wh-design.css?v=13">
+    <link rel="stylesheet" href="wh-design.css?v=14">
 
     <style>
         /* ============================================================
@@ -32,61 +32,12 @@
            ============================================================ */
 
         body { background: var(--paper); }
-        body::before { opacity: 0.55; }
 
         .page {
             max-width: 720px;
             margin: 0 auto;
             padding: 0 22px;
             position: relative;
-        }
-
-        /* ============================================================
-           HEADER — wordmark left, tagline right, thin rule below
-           Matches preview pages exactly
-           ============================================================ */
-        .site-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 28px 0 22px;
-            border-bottom: 1px solid var(--rule);
-            position: relative;
-            margin-bottom: 56px;
-        }
-        .site-header__brand img {
-            display: block;
-            height: 46px;
-            width: auto;
-        }
-        .site-header__tagline {
-            font-family: var(--font-display);
-            font-style: italic;
-            font-weight: 400;
-            font-size: 1.05rem;
-            color: var(--ink-soft);
-            letter-spacing: -0.01em;
-        }
-        @media (max-width: 520px) {
-            .site-header { padding: 22px 0 16px; margin-bottom: 36px; }
-            .site-header__brand img { height: 36px; }
-            .site-header__tagline { font-size: 0.85rem; }
-        }
-
-        /* Washi tape — small ornament that visually pins each card */
-        .washi {
-            width: 110px;
-            height: 18px;
-            background:
-                repeating-linear-gradient(45deg,
-                    rgba(184,144,74,0.0) 0 6px,
-                    rgba(184,144,74,0.08) 6px 8px),
-                rgba(232, 222, 198, 0.85);
-            margin: 0 auto -10px;
-            box-shadow: 0 1px 2px rgba(26,54,41,0.08);
-            position: relative;
-            z-index: 2;
-            border-radius: 1px;
         }
 
         /* ============================================================
@@ -103,18 +54,6 @@
             text-transform: uppercase;
             color: var(--gold-soft);
         }
-        /* Variant: Lucide icon marks artifact card eyebrows */
-        .sec-label--icon svg {
-            width: 14px;
-            height: 14px;
-            stroke: var(--gold-soft);
-            stroke-width: 1.75;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            fill: none;
-            flex-shrink: 0;
-        }
-
         /* ============================================================
            HERO — upright slab statement, then dual CTA
            ============================================================ */
@@ -227,8 +166,11 @@
         .sec {
             padding: 8px 0 0;
         }
+        /* The seal used to space these. The section head does the labelling
+           now, so the break is spacing alone. */
+        .sec + .sec { padding-top: 72px; }
+        @media (max-width: 640px) { .sec + .sec { padding-top: 52px; } }
         .sec__head { margin-bottom: 32px; }
-        .sec__head .sec-label { margin-bottom: 14px; }
         .sec__title {
             font-family: var(--font-display);
             font-style: normal;
@@ -314,24 +256,17 @@
            ARTIFACT CARDS — the three-card showcase
            Each mirrors the preview-page card chrome
            ============================================================ */
+        /* No fill, no border, no shadow. The rule label opens it, a hairline
+           closes it, and the paper runs straight through underneath. */
         .artifact-card {
-            background: var(--paper-bright);
-            border: 1px solid var(--rule);
-            border-radius: 6px;
-            box-shadow: var(--shadow-press);
-            padding: 26px 26px 22px;
-            margin-bottom: 18px;
-            position: relative;
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            display: block;
+            padding: 0 0 28px;
+            margin-bottom: 46px;
+            border-bottom: 1px solid var(--rule);
             text-decoration: none;
             color: inherit;
-            display: block;
         }
-        .artifact-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-lift);
-            text-decoration: none;
-        }
+        .artifact-card:hover { text-decoration: none; }
 
         .artifact-card__head { margin-bottom: 16px; }
         .artifact-card__title {
@@ -344,36 +279,22 @@
             color: var(--ink);
             margin: 10px 0 6px;
         }
+        /* One mono fact line, middot separated. Never a grid of labelled cells. */
         .artifact-card__meta {
-            font-family: var(--font-body);
-            font-size: 0.657rem;
-            letter-spacing: 0.12em;
+            font-family: var(--font-mono);
+            font-size: 0.64rem;
+            letter-spacing: 0.14em;
             text-transform: uppercase;
-            color: var(--gold-soft);
-            font-weight: 700;
+            color: var(--ink-mute);
         }
         /* Section break inside cards — thin gold rule with a centered diamond ornament.
            Replaces the dashed divider for a more editorial / printer's-mark feel. */
         .artifact-card__divider {
-            position: relative;
             height: 1px;
-            background: linear-gradient(to right, transparent 0%, var(--gold-soft) 18%, var(--gold-soft) 82%, transparent 100%);
-            margin: 24px 8px;
-            opacity: 0.55;
+            background: var(--rule);
+            margin: 24px 0;
         }
-        .artifact-card__divider::before {
-            content: '◆';
-            position: absolute;
-            top: -0.62em;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--paper-bright);
-            padding: 0 10px;
-            font-size: 0.55rem;
-            color: var(--gold-soft);
-            line-height: 1;
-            letter-spacing: 0;
-        }
+        
         .artifact-card__cta {
             display: inline-flex;
             align-items: center;
@@ -396,13 +317,28 @@
             margin: 0;
             padding: 0;
         }
+        /* LEADER DOTS — round dots from a repeating radial-gradient. A dotted
+           border renders as squares on iOS, so never use one here. */
+        .lead-line { display: flex; align-items: baseline; min-width: 0; }
+        .lead {
+            flex: 1 1 0;
+            min-width: 14px;
+            height: 6px;
+            align-self: flex-end;
+            margin: 0 9px 4px;
+            background-image: radial-gradient(circle, var(--ink-mute) 0.9px, transparent 1px);
+            background-size: 5px 6px;
+            background-position: 0 100%;
+            background-repeat: repeat-x;
+            opacity: 0.5;
+        }
         .menu-rows li {
             display: grid;
-            grid-template-columns: 56px 1fr auto;
+            grid-template-columns: 56px 1fr;
             gap: 14px;
-            padding: 12px 0;
+            padding: 13px 0;
             border-bottom: 1px solid var(--rule);
-            align-items: center;
+            align-items: start;
         }
         .menu-rows li:last-child { border-bottom: 0; }
         .menu-rows__thumb {
@@ -426,23 +362,41 @@
             color: var(--ink);
         }
         .menu-rows__rating {
-            text-align: right;
-            font-family: var(--font-mono);
-            font-size: 0.56rem;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-            color: var(--oxblood);
-            font-weight: 700;
-            line-height: 1.4;
-        }
-        .menu-rows__rating .stars {
-            display: block;
+            flex: 0 0 auto;
+            white-space: nowrap;
             color: var(--gold-soft);
+            font-family: var(--font-body);
             font-size: 0.78rem;
             letter-spacing: 1px;
-            margin-bottom: 1px;
-            font-family: var(--font-body);
         }
+        .menu-rows__byline {
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+            margin-top: 3px;
+        }
+        .menu-rows__desc {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-size: 0.9rem;
+            line-height: 1.3;
+            color: var(--ink-soft);
+            min-width: 0;
+        }
+        /* Two inks in a row, never three: the verdict is brass on a must and
+           plain ink otherwise, so it never competes with the stars. */
+        .menu-rows__verdict {
+            margin-left: auto;
+            flex: 0 0 auto;
+            font-family: var(--font-mono);
+            font-size: 0.58rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--ink-mute);
+            white-space: nowrap;
+        }
+        .menu-rows__verdict--must { color: var(--gold-soft); }
         .menu-rows__more {
             font-family: var(--font-mono);
             font-size: 0.6rem;
@@ -465,7 +419,7 @@
         }
         .rank-rows li {
             display: grid;
-            grid-template-columns: 32px 1fr 56px;
+            grid-template-columns: 32px 56px 1fr;
             gap: 14px;
             padding: 14px 0;
             border-bottom: 1px solid var(--rule);
@@ -489,14 +443,15 @@
             line-height: 1.15;
         }
         .rank-rows__loc {
-            font-family: var(--font-body);
+            flex: 0 0 auto;
+            font-family: var(--font-mono);
             font-size: 0.615rem;
-            letter-spacing: 0.10em;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
             color: var(--ink-mute);
-            margin-top: 3px;
-    font-weight: 600;
-}
+            white-space: nowrap;
+            font-weight: 700;
+        }
         .rank-rows__thumb {
             width: 56px;
             height: 56px;
@@ -582,12 +537,8 @@
            TOP RANK — community leaderboard, paper aesthetic
            ============================================================ */
         .top-rank-card {
-            background: var(--paper-bright);
-            border: 1px solid var(--rule);
-            border-radius: 6px;
-            box-shadow: var(--shadow-press);
-            padding: 26px 26px 22px;
-            position: relative;
+            display: block;
+            padding: 0 0 4px;
         }
         .top-rank-card__head {
             margin-bottom: 14px;
@@ -640,33 +591,26 @@
         }
         .top-rank-rows li {
             display: grid;
-            grid-template-columns: 36px 1fr auto;
+            grid-template-columns: 40px 1fr;
             gap: 14px;
             padding: 14px 0;
             border-bottom: 1px solid var(--rule);
-            align-items: center;
+            align-items: start;
         }
         .top-rank-rows li:last-child { border-bottom: 0; }
+        /* Superior figures, not a filled disc. Top Rank is the one screen
+           where brass may carry the position as well as the count. */
         .top-rank-rows__num {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 1.5px solid var(--rule-bold);
-            background: transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: var(--font-display);
-            font-weight: 500;
-            font-size: 0.95rem;
-            color: var(--ink-soft);
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 0.86rem;
+            line-height: 1.5;
+            color: var(--ink-mute);
+            text-align: right;
+            font-variant-numeric: tabular-nums;
         }
-        .top-rank-rows__num--1 {
-            background: var(--gold);
-            color: var(--paper-bright);
-            border-color: var(--gold);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
-        }
+        .top-rank-rows__num sup { font-size: 0.62em; vertical-align: 0.42em; }
+        .top-rank-rows__num--1 { color: var(--gold-soft); }
         .top-rank-rows__rest {
             font-family: var(--font-display);
             font-weight: 500;
@@ -675,25 +619,14 @@
             line-height: 1.1;
         }
         .top-rank-rows__dish {
-            font-family: var(--font-body);
+            font-family: var(--font-display);
             font-style: italic;
             font-size: 0.84rem;
             color: var(--ink-mute);
             margin-top: 2px;
         }
-        .top-rank-rows__people {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .top-rank-rows__chips { display: flex; }
-        .top-rank-rows__chip {
-            width: 22px; height: 22px;
-            border-radius: 50%;
-            border: 2px solid var(--paper-bright);
-            margin-left: -6px;
-        }
-        .top-rank-rows__chip:first-child { margin-left: 0; }
+        /* The avatar chips are gone: three arbitrary off-palette circles were
+           the only place on the page outside forest, brass and oxblood. */
         .top-rank-rows__count {
             font-family: var(--font-mono);
             font-size: 0.62rem;
@@ -764,12 +697,14 @@
             background: var(--gold-soft);
             border-color: var(--gold);
         }
+        /* Two inks in a row: the gauge is already brass, so the verdict is
+           plain ink. Oxblood is reserved for live state. */
         .reso-diff__verdict {
             font-family: var(--font-mono);
             font-size: 0.62rem;
             letter-spacing: 0.22em;
             text-transform: uppercase;
-            color: var(--oxblood);
+            color: var(--ink-mute);
             font-weight: 700;
         }
 
@@ -829,14 +764,15 @@
 <div class="page">
 
     <!-- HEADER — mirrors the preview-page header pattern -->
-    <header class="site-header">
-        <a href="/" class="site-header__brand" aria-label="WildHeavy home">
+    <header class="site-masthead">
+        <a href="/" class="site-masthead__brand" aria-label="WildHeavy home">
             <img src="Wild Heavy - Logo Branding - Transparent - Edited.png" alt="WildHeavy">
         </a>
-        <nav class="nav-links">
-            <a href="/about.html">About</a>
-            <a href="/blog.html">Off Menu</a>
-            <a href="https://testflight.apple.com/join/UUrFyauF" target="_blank" rel="noopener">Get the App</a>
+        <div class="site-masthead__line">We’re all regulars here.</div>
+        <nav class="site-masthead__nav">
+            <span class="seg"><a href="/about.html">About</a></span>
+            <span class="seg"><a href="/blog.html">Off Menu</a></span>
+            <span class="seg"><a href="https://testflight.apple.com/join/UUrFyauF" target="_blank" rel="noopener">Get the App</a></span>
         </nav>
     </header>
 
@@ -887,12 +823,12 @@
     </section>
 
     <!-- Diamond rule -->
-    <div class="rule-gold"></div>
 
     <!-- THE PRODUCT — three artifact showcase -->
     <section class="sec" id="product">
         <div class="sec__head">
-            <div class="sec-label">The Product</div>
+            <div class="rule-head">The Product</div>
+            <div class="rule-dbl"></div>
             <h2 class="sec__title">Three ways to keep score.</h2>
             <p class="sec__sub">
                 <strong>Log restaurants. Rank dishes. Build Spreads.</strong> Made with the people who run the city's best rooms, and the regulars who actually eat there. The three below are real examples from the app.
@@ -900,15 +836,11 @@
         </div>
 
         <!-- Artifact 1: Menu Card -->
-        <div class="washi"></div>
         <a class="artifact-card" href="https://testflight.apple.com/join/UUrFyauF" target="_blank" rel="noopener">
             <div class="artifact-card__head">
-                <div class="sec-label sec-label--icon">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2v7c0 1.1.9 2 2 2h0a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Z"/><path d="M18 22v-7"/></svg>
-                    Menu Card / 3 Items Logged
-                </div>
+                <div class="rule-label"><span>Menu Card · 3 dishes · <b>2 must</b></span></div>
                 <h3 class="artifact-card__title">Le Bouchon</h3>
-                <div class="artifact-card__meta">Bucktown / French Bistro / Date Night, Party of 2</div>
+                <div class="artifact-card__meta">Bucktown · French bistro · Date night, party of 2</div>
             </div>
 
             <div class="reso-diff">
@@ -930,26 +862,44 @@
             <ul class="menu-rows">
                 <li>
                     <div class="menu-rows__thumb"><img src="photos/dishes/le-bouchon-steak-frites.jpg" alt="Steak Frites at Le Bouchon" loading="lazy"></div>
-                    <div class="menu-rows__name">Steak Frites<br><span style="font-weight:400;color:var(--ink-mute);font-size:0.92em;">Au poivre, shoestring frites</span></div>
-                    <div class="menu-rows__rating">
-                        <span class="stars">★★★★★</span>
-                        Top Rank Worthy
+                    <div>
+                        <div class="lead-line">
+                            <span class="menu-rows__name">Steak Frites</span>
+                            <span class="lead" aria-hidden="true"></span>
+                            <span class="menu-rows__rating">★★★★★</span>
+                        </div>
+                        <div class="menu-rows__byline">
+                            <span class="menu-rows__desc">Au poivre, shoestring frites</span>
+                            <span class="menu-rows__verdict menu-rows__verdict--must">must</span>
+                        </div>
                     </div>
                 </li>
                 <li>
                     <div class="menu-rows__thumb"><img src="photos/dishes/le-bouchon-onion-tarte.jpg" alt="Onion Tarte at Le Bouchon" loading="lazy"></div>
-                    <div class="menu-rows__name">Onion Tarte<br><span style="font-weight:400;color:var(--ink-mute);font-size:0.92em;">Caramelized onion, gruyère</span></div>
-                    <div class="menu-rows__rating">
-                        <span class="stars">★★★★<span style="opacity:0.22;">★</span></span>
-                        Can't Miss
+                    <div>
+                        <div class="lead-line">
+                            <span class="menu-rows__name">Onion Tarte</span>
+                            <span class="lead" aria-hidden="true"></span>
+                            <span class="menu-rows__rating">★★★★<span style="opacity:0.22;">★</span></span>
+                        </div>
+                        <div class="menu-rows__byline">
+                            <span class="menu-rows__desc">Caramelized onion, gruyère</span>
+                            <span class="menu-rows__verdict menu-rows__verdict--must">must</span>
+                        </div>
                     </div>
                 </li>
                 <li>
                     <div class="menu-rows__thumb"><img src="photos/dishes/le-bouchon-martini.jpg" alt="Martini at Le Bouchon" loading="lazy"></div>
-                    <div class="menu-rows__name">Martini<br><span style="font-weight:400;color:var(--ink-mute);font-size:0.92em;">Up, dirty, olive</span></div>
-                    <div class="menu-rows__rating">
-                        <span class="stars">★★★<span style="opacity:0.22;">★★</span></span>
-                        Solid
+                    <div>
+                        <div class="lead-line">
+                            <span class="menu-rows__name">Martini</span>
+                            <span class="lead" aria-hidden="true"></span>
+                            <span class="menu-rows__rating">★★★<span style="opacity:0.22;">★★</span></span>
+                        </div>
+                        <div class="menu-rows__byline">
+                            <span class="menu-rows__desc">Up, dirty, olive</span>
+                            <span class="menu-rows__verdict">solid</span>
+                        </div>
                     </div>
                 </li>
             </ul>
@@ -963,15 +913,11 @@
         </a>
 
         <!-- Artifact 2: Personal Ranking -->
-        <div class="washi" style="margin-top: 26px;"></div>
         <a class="artifact-card" href="https://testflight.apple.com/join/UUrFyauF" target="_blank" rel="noopener">
             <div class="artifact-card__head">
-                <div class="sec-label sec-label--icon">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg>
-                    Ranking
-                </div>
+                <div class="rule-label"><span>Ranking · 4 entries</span></div>
                 <h3 class="artifact-card__title">My Sweet Potato Rankings, <em>Chicago.</em></h3>
-                <div class="artifact-card__meta">4 Entries / Sweet Potato</div>
+                <div class="artifact-card__meta">Sweet potato · 4 entries</div>
             </div>
 
             <div class="artifact-card__divider"></div>
@@ -979,27 +925,30 @@
             <ul class="rank-rows">
                 <li>
                     <div class="rank-rows__numeral">i</div>
-                    <div>
-                        <div class="rank-rows__rest">Sweet Potato</div>
-                        <div class="rank-rows__loc">John's Food and Wine</div>
-                    </div>
                     <div class="rank-rows__thumb"><img src="photos/dishes/sweet-potato-johns.jpg" alt="Sweet Potato at John's Food and Wine" loading="lazy"></div>
+                    <div class="lead-line">
+                        <span class="rank-rows__rest">Sweet Potato</span>
+                        <span class="lead" aria-hidden="true"></span>
+                        <span class="rank-rows__loc">John's Food and Wine</span>
+                    </div>
                 </li>
                 <li>
                     <div class="rank-rows__numeral">ii</div>
-                    <div>
-                        <div class="rank-rows__rest">Japanese Sweet Potato (green curry)</div>
-                        <div class="rank-rows__loc">Maxwells Trading</div>
-                    </div>
                     <div class="rank-rows__thumb"><img src="photos/dishes/sweet-potato-maxwells.jpg" alt="Japanese Sweet Potato at Maxwells Trading" loading="lazy"></div>
+                    <div class="lead-line">
+                        <span class="rank-rows__rest">Japanese Sweet Potato (green curry)</span>
+                        <span class="lead" aria-hidden="true"></span>
+                        <span class="rank-rows__loc">Maxwells Trading</span>
+                    </div>
                 </li>
                 <li>
                     <div class="rank-rows__numeral">iii</div>
-                    <div>
-                        <div class="rank-rows__rest">Sweet Potato</div>
-                        <div class="rank-rows__loc">Brasero</div>
-                    </div>
                     <div class="rank-rows__thumb"><img src="photos/dishes/sweet-potato-brasero.jpg" alt="Sweet Potato at Brasero" loading="lazy"></div>
+                    <div class="lead-line">
+                        <span class="rank-rows__rest">Sweet Potato</span>
+                        <span class="lead" aria-hidden="true"></span>
+                        <span class="rank-rows__loc">Brasero</span>
+                    </div>
                 </li>
             </ul>
             <div class="menu-rows__more">+ <strong>1</strong> more ranked</div>
@@ -1008,15 +957,11 @@
         </a>
 
         <!-- Artifact 3: Hot Route -->
-        <div class="washi" style="margin-top: 26px;"></div>
         <a class="artifact-card" href="https://testflight.apple.com/join/UUrFyauF" target="_blank" rel="noopener">
             <div class="artifact-card__head">
-                <div class="sec-label sec-label--icon">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/></svg>
-                    Route / 3 Stops
-                </div>
+                <div class="rule-label"><span>Route · 3 stops</span></div>
                 <h3 class="artifact-card__title">Logan Square Elevated Date Night</h3>
-                <div class="artifact-card__meta">Chicago, IL</div>
+                <div class="artifact-card__meta">Logan Square · Chicago</div>
             </div>
 
             <div class="artifact-card__divider"></div>
@@ -1055,22 +1000,18 @@
     </section>
 
     <!-- Hungry Bear rule -->
-    <div class="rule-gold rule-gold--bear-hungry"></div>
 
     <!-- TOP RANK — live, weighted community aggregation -->
     <section class="sec" id="top-rank">
         <div class="sec__head">
-            <div class="sec-label sec-label--icon">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg>
-                Top Rank
-            </div>
+            <div class="rule-head">Top Rank</div>
+            <div class="rule-dbl"></div>
             <h2 class="sec__title">Live rankings, weighted by expertise.</h2>
             <p class="sec__sub">
                 The leaderboard updates as diners log what they ate. Industry pros and serious regulars count for more, so the top spots show what's actually worth ordering, not just what's loudest online.
             </p>
         </div>
 
-        <div class="washi"></div>
         <article class="top-rank-card">
             <div class="top-rank-card__head">
                 <div>
@@ -1086,73 +1027,58 @@
 
             <ul class="top-rank-rows">
                 <li>
-                    <div class="top-rank-rows__num top-rank-rows__num--1">1</div>
+                    <div class="top-rank-rows__num top-rank-rows__num--1">1<sup>st</sup></div>
                     <div>
-                        <div class="top-rank-rows__rest">Au Cheval</div>
+                        <div class="lead-line">
+                            <span class="top-rank-rows__rest">Au Cheval</span>
+                            <span class="lead" aria-hidden="true"></span>
+                            <span class="top-rank-rows__count">+18</span>
+                        </div>
                         <div class="top-rank-rows__dish">Single Cheeseburger</div>
                     </div>
-                    <div class="top-rank-rows__people">
-                        <div class="top-rank-rows__chips">
-                            <div class="top-rank-rows__chip" style="background:#6b5b95;"></div>
-                            <div class="top-rank-rows__chip" style="background:#a84545;"></div>
-                            <div class="top-rank-rows__chip" style="background:#4d6b4d;"></div>
-                        </div>
-                        <div class="top-rank-rows__count">+18</div>
-                    </div>
                 </li>
                 <li>
-                    <div class="top-rank-rows__num">2</div>
+                    <div class="top-rank-rows__num">2<sup>nd</sup></div>
                     <div>
-                        <div class="top-rank-rows__rest">Mott St</div>
+                        <div class="lead-line">
+                            <span class="top-rank-rows__rest">Mott St</span>
+                            <span class="lead" aria-hidden="true"></span>
+                            <span class="top-rank-rows__count">+11</span>
+                        </div>
                         <div class="top-rank-rows__dish">Mott Burger</div>
                     </div>
-                    <div class="top-rank-rows__people">
-                        <div class="top-rank-rows__chips">
-                            <div class="top-rank-rows__chip" style="background:#b07840;"></div>
-                            <div class="top-rank-rows__chip" style="background:#a84545;"></div>
-                        </div>
-                        <div class="top-rank-rows__count">+11</div>
-                    </div>
                 </li>
                 <li>
-                    <div class="top-rank-rows__num">3</div>
+                    <div class="top-rank-rows__num">3<sup>rd</sup></div>
                     <div>
-                        <div class="top-rank-rows__rest">The Loyalist</div>
+                        <div class="lead-line">
+                            <span class="top-rank-rows__rest">The Loyalist</span>
+                            <span class="lead" aria-hidden="true"></span>
+                            <span class="top-rank-rows__count">+9</span>
+                        </div>
                         <div class="top-rank-rows__dish">Loyalist Burger</div>
                     </div>
-                    <div class="top-rank-rows__people">
-                        <div class="top-rank-rows__chips">
-                            <div class="top-rank-rows__chip" style="background:#6b5b95;"></div>
-                            <div class="top-rank-rows__chip" style="background:#4d6b4d;"></div>
-                        </div>
-                        <div class="top-rank-rows__count">+9</div>
-                    </div>
                 </li>
                 <li>
-                    <div class="top-rank-rows__num">4</div>
+                    <div class="top-rank-rows__num">4<sup>th</sup></div>
                     <div>
-                        <div class="top-rank-rows__rest">Izakaya at Momotaro</div>
+                        <div class="lead-line">
+                            <span class="top-rank-rows__rest">Izakaya at Momotaro</span>
+                            <span class="lead" aria-hidden="true"></span>
+                            <span class="top-rank-rows__count">+6</span>
+                        </div>
                         <div class="top-rank-rows__dish">Momo Royale</div>
                     </div>
-                    <div class="top-rank-rows__people">
-                        <div class="top-rank-rows__chips">
-                            <div class="top-rank-rows__chip" style="background:#a84545;"></div>
-                            <div class="top-rank-rows__chip" style="background:#6b5b95;"></div>
-                        </div>
-                        <div class="top-rank-rows__count">+6</div>
-                    </div>
                 </li>
                 <li>
-                    <div class="top-rank-rows__num">5</div>
+                    <div class="top-rank-rows__num">5<sup>th</sup></div>
                     <div>
-                        <div class="top-rank-rows__rest">Leavitt Street Inn</div>
-                        <div class="top-rank-rows__dish">L St. Smash</div>
-                    </div>
-                    <div class="top-rank-rows__people">
-                        <div class="top-rank-rows__chips">
-                            <div class="top-rank-rows__chip" style="background:#4d6b4d;"></div>
+                        <div class="lead-line">
+                            <span class="top-rank-rows__rest">Leavitt Street Inn</span>
+                            <span class="lead" aria-hidden="true"></span>
+                            <span class="top-rank-rows__count">+5</span>
                         </div>
-                        <div class="top-rank-rows__count">+5</div>
+                        <div class="top-rank-rows__dish">L St. Smash</div>
                     </div>
                 </li>
             </ul>

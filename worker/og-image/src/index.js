@@ -342,7 +342,6 @@ function shell({ eyebrow, title, sub, rows, foot, rowsGap = 12 }) {
 
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <div style="display:flex;align-items:center;">
-          <div style="display:flex;width:26px;height:2px;background:${C.gold};margin-right:14px;"></div>
           <div style="display:flex;font-family:'JetBrains Mono';font-weight:700;font-size:18px;letter-spacing:5px;color:${C.goldSoft};">${esc(eyebrow)}</div>
         </div>
         ${wordmark(40)}

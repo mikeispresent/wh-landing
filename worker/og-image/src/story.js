@@ -164,7 +164,6 @@ function header(C, { eyebrow, title, sub }) {
   const size = t.length > 24 ? 62 : 76;
   return `
     <div style="display:flex;align-items:center;">
-      <div style="display:flex;width:34px;height:3px;background:${C.gold};margin-right:16px;"></div>
       <div style="display:flex;font-family:'JetBrains Mono';font-weight:700;font-size:22px;letter-spacing:6px;color:${C.goldSoft};">${esc(clip(eyebrow, LIMITS.eyebrow + 20))}</div>
     </div>
     <div style="display:flex;font-family:Bitter;font-weight:700;font-size:${size}px;line-height:1.06;color:${C.ink};margin-top:22px;">${esc(t)}</div>
