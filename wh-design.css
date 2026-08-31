@@ -19,8 +19,12 @@
 
     --oxblood:      #8B2A2A;   /* stamp, accent, hot */
     --oxblood-soft: #6E2020;   /* hover / pressed */
-    --gold:         #B8904A;   /* brass rules, ornament, premium */
-    --gold-soft:    #9E7A3B;   /* deeper brass */
+    --gold:         #B8904A;   /* brass — HARDWARE ONLY: rules, seal, gauge,
+                                  underlines, ::selection. Never a word: it
+                                  measures 2.45:1 on the paper. */
+    --leather:      #8A5A34;   /* the warm ink you read — small caps, italic
+                                  display accents, numerals, must-counts.
+                                  4.85:1 on the paper, passes AA. */
 
     --rule:         rgba(26, 54, 41, 0.18);   /* hairline rule */
     --rule-bold:    rgba(26, 54, 41, 0.35);   /* divider */
@@ -116,7 +120,7 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
     color: var(--ink-mute);
     font-weight: 600;
 }
-.meta--gold { color: var(--gold-soft); }
+.meta--gold { color: var(--leather); }
 .meta--ox { color: var(--oxblood); }
 
 .eyebrow {
@@ -309,14 +313,13 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
     margin-bottom: 10px;
 }
 /* Brass is the signal, so only the must-count takes it. */
-.rule-label b { color: var(--gold-soft); font-weight: 700; }
+.rule-label b { color: var(--leather); font-weight: 700; }
 .rule-label::after {
     content: '';
     flex: 1 1 0;
     height: 0;
     border-top: 1px solid var(--rule);
 }
-.rule-label--brass { color: var(--gold-soft); }
 
 /* ============================================================
    LAYOUT
@@ -669,7 +672,7 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
     font-size: 0.657rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--gold-soft);
+    color: var(--leather);
     margin-bottom: 18px;
     font-weight: 600;
 }
@@ -682,7 +685,7 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
     letter-spacing: -0.02em;
     margin-bottom: 16px;
 }
-.doc-masthead h1 em { font-style: italic; color: var(--gold-soft); font-weight: 400; }
+.doc-masthead h1 em { font-style: italic; color: var(--leather); font-weight: 400; }
 .doc-masthead__sub {
     font-family: var(--font-body);
     font-size: 0.742rem;
@@ -709,7 +712,7 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
     letter-spacing: -0.015em;
     margin-bottom: 18px;
 }
-.doc__section h2 em { font-style: italic; color: var(--gold-soft); }
+.doc__section h2 em { font-style: italic; color: var(--leather); }
 .doc__section h3 {
     font-family: var(--font-display);
     font-size: 1.15rem;
@@ -756,7 +759,7 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
     font-family: var(--font-display);
     font-size: 1.05rem;
     font-style: italic;
-    color: var(--gold-soft);
+    color: var(--leather);
     font-weight: 400;
 }
 .doc__section .note-box {
@@ -801,7 +804,7 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
 .center { text-align: center; }
 .caps { text-transform: uppercase; letter-spacing: 0.22em; }
 .italic-serif { font-family: var(--font-display); font-style: italic; font-weight: 400; }
-.brass { color: var(--gold-soft); }
+.brass { color: var(--leather); }
 .ink { color: var(--ink); }
 .ox { color: var(--oxblood); }
 
