@@ -341,7 +341,11 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
 .site-masthead {
     text-align: center;
     padding: 30px 0 0;
-    margin-bottom: 52px;
+    /* Own measure, so the running head is the same width on every page
+       regardless of whether its parent is .page (720) or .main-wrapper
+       (1040). The rule should never be wider than the column it heads. */
+    max-width: 676px;
+    margin: 0 auto 52px;
 }
 .site-masthead__brand { display: inline-block; text-decoration: none; }
 .site-masthead__brand img { display: block; height: 62px; width: auto; margin: 0 auto; }
