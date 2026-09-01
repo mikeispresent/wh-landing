@@ -107,6 +107,14 @@
             letter-spacing: -0.01em;
             white-space: nowrap;
         }
+        /* "House Philosophy" nowrap at 1.65rem is wider than a 320px column,
+           so the label plus the meta pushed past the wrapper. The rule can
+           shrink to nothing; the two text runs could not. */
+        @media (max-width: 420px) {
+            .sheet-title { gap: 12px; flex-wrap: wrap; margin: 44px 0 24px; }
+            .sheet-title__label { white-space: normal; font-size: 1.4rem; }
+            .sheet-title::after { min-width: 24px; }
+        }
         .sheet-title::after {
             content: '';
             flex: 1;
