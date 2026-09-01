@@ -344,7 +344,7 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
     margin-bottom: 52px;
 }
 .site-masthead__brand { display: inline-block; text-decoration: none; }
-.site-masthead__brand img { display: block; height: 46px; width: auto; margin: 0 auto; }
+.site-masthead__brand img { display: block; height: 62px; width: auto; margin: 0 auto; }
 .site-masthead__line {
     font-family: var(--font-display);
     font-style: italic;
@@ -352,7 +352,7 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
     font-size: 1.02rem;
     letter-spacing: -0.01em;
     color: var(--ink-soft);
-    margin-top: 10px;
+    margin-top: 14px;
 }
 
 /* Equal columns so every option is centred in its own third and
@@ -399,8 +399,8 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
 
 @media (max-width: 640px) {
     .site-masthead { padding-top: 22px; margin-bottom: 34px; }
-    .site-masthead__brand img { height: 36px; }
-    .site-masthead__line { font-size: 0.88rem; }
+    .site-masthead__brand img { height: 48px; }
+    .site-masthead__line { font-size: 0.88rem; margin-top: 10px; }
     .site-masthead__nav { margin-top: 16px; }
     .site-masthead__nav .seg { gap: 8px; }
     .site-masthead__nav a { font-size: 0.56rem; letter-spacing: 0.13em; }
