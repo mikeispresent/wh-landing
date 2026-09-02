@@ -861,9 +861,7 @@ html.js body{ }
 .wh-hero h1 .ln{display:block;overflow:hidden;}
 .wh-hero h1 .ln>span{display:block;}
 html.js .wh-hero h1 .ln>span{transform:translateY(106%);}
-.wh-also{font-family:var(--font-mono);font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;
-  color:rgba(240,241,233,.5);margin:0 0 18px;display:flex;flex-wrap:wrap;gap:6px 14px;}
-.wh-also span{white-space:nowrap;}
+.wh-hero h1.wh-lines-in .ln{overflow:visible;}
 .wh-hero .hero__lede{color:rgba(240,241,233,.76);max-width:40ch;margin-bottom:24px;}
 .wh-hero .cta-stack{align-items:flex-start;}
 .wh-hero .btn--primary{background:var(--paper-bright);color:var(--ink);border-color:var(--paper-bright);}
@@ -902,14 +900,23 @@ html.js .wh-hero h1 .ln>span{transform:translateY(106%);}
 
 /* the replay button, lives in the footer beside the monogram */
 .wh-replay-wrap{margin:-8px 0 22px;}
-.wh-replay{display:inline-flex;align-items:center;gap:8px;background:none;cursor:pointer;
+/* the same tube, shrunk to a switch: glow needs a dark ground to read as
+   light, so the button carries its own little window */
+.wh-replay{display:inline-flex;align-items:center;gap:8px;cursor:pointer;
   font-family:var(--font-mono);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--leather);border:1px solid var(--rule-bold);border-radius:999px;padding:5px 13px 5px 10px;
-  transition:color .16s,border-color .16s;}
-.wh-replay:hover{color:var(--oxblood);border-color:var(--oxblood);}
-.wh-replay__d{width:7px;height:7px;border-radius:50%;background:var(--gold);flex:none;
-  box-shadow:0 0 0 0 rgba(184,144,74,.55);animation:whglow 2.6s ease-in-out infinite;}
-@keyframes whglow{0%,100%{box-shadow:0 0 0 0 rgba(184,144,74,.5)}50%{box-shadow:0 0 0 5px rgba(184,144,74,0)}}
+  background:#122419;color:#FFE9BC;border:1.5px solid rgba(232,190,118,.5);
+  border-radius:999px;padding:6px 14px 6px 11px;
+  text-shadow:0 0 5px rgba(255,214,142,.9),0 0 13px rgba(224,168,80,.55);
+  box-shadow:0 0 11px rgba(212,164,88,.32),inset 0 0 13px rgba(212,164,88,.15);
+  transition:border-color .2s,box-shadow .2s,color .2s;}
+.wh-replay:hover{color:#FFF6E2;border-color:rgba(255,222,164,.95);
+  text-shadow:0 0 6px rgba(255,230,190,1),0 0 18px rgba(232,170,72,.8);
+  box-shadow:0 0 20px rgba(212,164,88,.6),inset 0 0 17px rgba(212,164,88,.26);}
+.wh-replay__d{width:7px;height:7px;border-radius:50%;background:#FFD79A;flex:none;
+  box-shadow:0 0 6px rgba(255,206,128,.95),0 0 0 0 rgba(255,206,128,.5);
+  animation:whglow 2.6s ease-in-out infinite;}
+@keyframes whglow{0%,100%{box-shadow:0 0 6px rgba(255,206,128,.95),0 0 0 0 rgba(255,206,128,.5)}
+  50%{box-shadow:0 0 6px rgba(255,206,128,.95),0 0 0 5px rgba(255,206,128,0)}}
 
 /* ── 2 · the check, scanned into a Menu Card ─────────────────── */
 .wh-slipwrap{perspective:1500px;min-width:0;}
@@ -941,11 +948,20 @@ html.js .wh-hero h1 .ln>span{transform:translateY(106%);}
 .wh-slip__foot b{color:var(--ink);font-weight:700;}
 .wh-slip__foot .tot{transition:opacity .3s;}
 .wh-slip__foot .card{position:absolute;right:0;top:12px;opacity:0;transition:opacity .3s;color:var(--oxblood);font-weight:700;}
-.wh-slip.is-card .lead{opacity:1;}
-.wh-slip.is-card .wh-strip__v{opacity:1;}
-.wh-slip.is-card .wh-strip__p{opacity:0;}
-.wh-slip.is-card .wh-strip__n .raw{display:none;}
-.wh-slip.is-card .wh-strip__n .set{display:inline;}
+/* the scanner: a beam driven down the check by scroll. Each row resolves as
+   the beam reaches it, so the change is caused by the pass rather than all
+   firing at once — and it is a nod to the scanner in the app. */
+.wh-scan{position:absolute;left:-13px;right:-13px;top:0;height:2.5px;border-radius:2px;
+  pointer-events:none;opacity:0;transition:opacity .22s ease;will-change:transform,opacity;
+  background:linear-gradient(90deg,transparent,rgba(184,144,74,.5) 5%,rgba(167,122,42,.98) 26%,rgba(140,100,28,1) 50%,rgba(167,122,42,.98) 74%,rgba(184,144,74,.5) 95%,transparent);
+  box-shadow:0 0 9px rgba(224,168,80,.9),0 0 26px rgba(212,164,88,.5);}
+.wh-scan::before{content:'';position:absolute;left:8%;right:8%;bottom:1px;height:38px;
+  background:linear-gradient(to top,rgba(212,164,88,.17),rgba(212,164,88,0));}
+.wh-strip.is-set .lead{opacity:1;}
+.wh-strip.is-set .wh-strip__v{opacity:1;}
+.wh-strip.is-set .wh-strip__p{opacity:0;}
+.wh-strip.is-set .wh-strip__n .raw{display:none;}
+.wh-strip.is-set .wh-strip__n .set{display:inline;}
 .wh-slip.is-card .wh-slip__foot .tot{opacity:0;}
 .wh-slip.is-card .wh-slip__foot .card{opacity:1;}
 
@@ -1059,9 +1075,8 @@ html.js #product .artifact-card.wh-in:nth-of-type(3){animation:whthrow-r 820ms c
         <div class="hero__label"><span class="taped">the community dining app</span></div>
         <h1 class="hero__headline">
           <span class="ln"><span>Everyone has a friend</span></span>
-          <span class="ln"><span>who knows <em>what to order.</em></span></span>
+          <span class="ln"><span>who knows <span class="word-rotator" aria-label="what to order, where to go, how to get in, when to pivot"><em>what to order.</em><em>where to go.</em><em>how to get in.</em><em>when to pivot.</em></span></span></span>
         </h1>
-        <p class="wh-also"><span>where to go</span><span>&middot;</span><span>how to get in</span><span>&middot;</span><span>when to pivot</span></p>
         <p class="hero__lede">WildHeavy is that friend, for every table.</p>
         <div class="cta-stack">
           <a href="https://testflight.apple.com/join/UUrFyauF" target="_blank" rel="noopener" class="btn btn--primary">Get the iOS App &rarr;</a>
@@ -1074,6 +1089,7 @@ html.js #product .artifact-card.wh-in:nth-of-type(3){animation:whthrow-r 820ms c
           <div class="wh-slipwrap__in">
             <div class="wh-slip" id="whSlip">
               <div class="wh-slip__perf" aria-hidden="true"></div>
+              <div class="wh-scan" id="whScan" aria-hidden="true"></div>
               <div class="wh-slip__head"><span>Le&nbsp;Bouchon</span><span><b>No.&nbsp;08422</b></span></div>
               <div class="wh-strip"><span class="wh-strip__q">1</span><span class="wh-strip__n"><span class="raw">Steak Frites</span><span class="set">Steak Frites</span></span><span class="lead"></span><span class="wh-strip__p">38.00</span><span class="wh-strip__v wh-v-must">must</span></div>
               <div class="wh-strip"><span class="wh-strip__q">1</span><span class="wh-strip__n"><span class="raw">Onion Tarte</span><span class="set">Onion Tarte</span></span><span class="lead"></span><span class="wh-strip__p">19.00</span><span class="wh-strip__v wh-v-must">must</span></div>
@@ -1447,19 +1463,22 @@ var raf = window.requestAnimationFrame.bind(window);
   var c = document.getElementById('whCurtain'), sg = document.getElementById('whSign');
   if (!c) return;
   var lines = document.querySelectorAll('.wh-hero h1 .ln > span');
+  var h1 = document.querySelector('.wh-hero h1');
   function reveal(){
     c.classList.add('gone');
     lines.forEach(function(s,i){
       s.style.transition = 'transform .9s cubic-bezier(.16,.9,.28,1) ' + (i*95) + 'ms';
       s.style.transform = 'translateY(0)';
     });
-    setTimeout(function(){ c.style.display = 'none'; }, 1400);
+    setTimeout(function(){ c.style.display = 'none';
+      if (h1) h1.classList.add('wh-lines-in'); }, 1400);
   }
   var timers = [];
   function play(){
     timers.forEach(clearTimeout); timers = [];
     c.style.display = '';
     c.classList.remove('gone');
+    if (h1) h1.classList.remove('wh-lines-in');
     sg.classList.remove('lit','flick');
     lines.forEach(function(s){ s.style.transition = 'none'; s.style.transform = 'translateY(106%)'; });
     void c.offsetWidth;
@@ -1488,7 +1507,12 @@ var raf = window.requestAnimationFrame.bind(window);
   var slip = document.getElementById('whSlip'), open = document.getElementById('whOpen');
   if (!slip) return;
   var strips = [].slice.call(slip.querySelectorAll('.wh-strip'));
-  var tx=0,ty=0,cx=0,cy=0,sep=0,was=false;
+  var scan = document.getElementById('whScan');
+  var foot = slip.querySelector('.wh-slip__foot');
+  var tx=0,ty=0,cx=0,cy=0,sep=0,was=false,mids=[],footMid=0,slipH=1;
+  function measure(){ slipH = slip.offsetHeight || 1;
+    mids = strips.map(function(el){ return el.offsetTop + el.offsetHeight*.55; });
+    footMid = foot ? foot.offsetTop + 10 : slipH; }
   if (window.matchMedia('(hover:hover) and (pointer:fine)').matches){
     window.addEventListener('pointermove', function(e){
       var r = open.getBoundingClientRect();
@@ -1500,14 +1524,21 @@ var raf = window.requestAnimationFrame.bind(window);
   function read(){ var r = open.getBoundingClientRect();
     sep = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height*.62))); }
   window.addEventListener('scroll', read, {passive:true});
-  window.addEventListener('resize', read); read();
+  window.addEventListener('resize', function(){ measure(); read(); });
+  window.addEventListener('load', measure);
+  measure(); read();
   (function tick(){
     cx += (tx-cx)*.09; cy += (ty-cy)*.09;
     var e = reduce ? 1 : sep*sep*(3-2*sep);
     slip.style.transform = 'rotateX('+(-cy*6-e*4)+'deg) rotateY('+(cx*13)+'deg) rotateZ('+(-3+e*3)+'deg) translateZ('+(e*26)+'px) scale('+(1+e*.04)+')';
     for (var i=0;i<strips.length;i++){ var d=i-(strips.length-1)/2;
       strips[i].style.transform='translateZ('+(e*(14+i*10))+'px) translateY('+(e*d*6)+'px) rotateX('+(e*d*-2)+'deg)'; }
-    var on = e>.45; if (on!==was){ was=on; slip.classList.toggle('is-card',on); }
+    /* the beam enters just above the check and leaves just below it */
+    var beam = -26 + e*(slipH+52);
+    if (scan){ scan.style.transform='translateY('+beam.toFixed(1)+'px) translateZ(60px)';
+      scan.style.opacity = (e>.012 && e<.985) ? '1' : '0'; }
+    for (var j=0;j<strips.length;j++) strips[j].classList.toggle('is-set', beam>=mids[j]);
+    var on = beam>=footMid; if (on!==was){ was=on; slip.classList.toggle('is-card',on); }
     raf(tick);
   })();
 })();
