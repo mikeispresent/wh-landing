@@ -1,0 +1,7 @@
+# macOS finder junk
+.DS_Store
+**/.DS_Store
+
+# Local backup of the pre-institution site. Kept on disk, not deployed:
+# .nojekyll means GitHub Pages would serve these verbatim if committed.
+_archive_pre_institution/
