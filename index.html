@@ -107,16 +107,19 @@
             white-space: nowrap;
             opacity: 0;
             transform: translateY(0.18em);
-            animation: wordCycle 14s infinite;
+            animation: wordCycle 20s infinite;
         }
+        /* the rotator waits for the neon intro; without JS it just runs */
+        html.js .word-rotator em { animation-play-state: paused; }
+        html.js.wh-revealed .word-rotator em { animation-play-state: running; }
         .word-rotator em:nth-child(1) { animation-delay: 0s; }
-        .word-rotator em:nth-child(2) { animation-delay: 3.5s; }
-        .word-rotator em:nth-child(3) { animation-delay: 7s; }
-        .word-rotator em:nth-child(4) { animation-delay: 10.5s; }
+        .word-rotator em:nth-child(2) { animation-delay: 5s; }
+        .word-rotator em:nth-child(3) { animation-delay: 10s; }
+        .word-rotator em:nth-child(4) { animation-delay: 15s; }
         @keyframes wordCycle {
             0%   { opacity: 0; transform: translateY(0.18em); }
-            3%   { opacity: 1; transform: translateY(0); }
-            22%  { opacity: 1; transform: translateY(0); }
+            2%   { opacity: 1; transform: translateY(0); }
+            23%  { opacity: 1; transform: translateY(0); }
             25%  { opacity: 0; transform: translateY(-0.18em); }
             100% { opacity: 0; transform: translateY(0.18em); }
         }
@@ -1039,7 +1042,8 @@ html.js #product .artifact-card.wh-in:nth-of-type(3){animation:whthrow-r 820ms c
   .wh-last__say{justify-self:center;text-align:center;max-width:30ch;}
   .wh-last__say .cta-stack{align-items:center;}
   .wh-hero{grid-template-columns:1fr;gap:30px;padding-top:26px;}
-  .wh-hero__words{order:1;}.wh-slipwrap{order:2;}
+  .wh-hero__words{order:2;}.wh-slipwrap{order:1;}
+  .wh-scan{display:none;}
   .wh-slipwrap__in{max-width:min(400px,86vw);}
 }
 @media (max-width:430px){
@@ -1069,21 +1073,19 @@ html.js #product .artifact-card.wh-in:nth-of-type(3){animation:whthrow-r 820ms c
         <nav class="site-masthead__nav">
             <span class="seg"><a href="/about.html">About</a></span>
             <span class="seg"><a href="/blog.html">Off Menu</a></span>
+            <span class="seg"><a href="https://wildheavy.app" target="_blank" rel="noopener">Web</a></span>
             <span class="seg"><a href="https://testflight.apple.com/join/UUrFyauF" target="_blank" rel="noopener">Get the App</a></span>
         </nav>
     </header>
     <div class="wh-hero">
       <div class="wh-hero__words">
-        <div class="hero__label"><span class="taped">the community dining app</span></div>
         <h1 class="hero__headline">
           <span class="ln"><span>Everyone has a friend</span></span>
           <span class="ln"><span>who knows <span class="word-rotator" aria-label="what to order, where to go, how to get in, when to pivot"><em>what to order.</em><em>where to go.</em><em>how to get in.</em><em>when to pivot.</em></span></span></span>
         </h1>
-        <p class="hero__lede">WildHeavy is that friend, for every table.</p>
         <div class="cta-stack">
           <a href="https://testflight.apple.com/join/UUrFyauF" target="_blank" rel="noopener" class="btn btn--primary">Get the iOS App &rarr;</a>
           <span class="cta-stack__meta">Opens in TestFlight (free)</span>
-          <a href="https://wildheavy.app" target="_blank" rel="noopener" class="cta-stack__secondary">or use it on the web &rarr;</a>
         </div>
       </div>
 
@@ -1468,6 +1470,8 @@ var raf = window.requestAnimationFrame.bind(window);
   var h1 = document.querySelector('.wh-hero h1');
   function reveal(){
     c.classList.add('gone');
+    document.documentElement.classList.add('wh-revealed');
+    try { window.dispatchEvent(new CustomEvent('wh:revealed')); } catch(e){}
     lines.forEach(function(s,i){
       s.style.transition = 'transform .9s cubic-bezier(.16,.9,.28,1) ' + (i*95) + 'ms';
       s.style.transform = 'translateY(0)';
@@ -1508,6 +1512,8 @@ var raf = window.requestAnimationFrame.bind(window);
 (function(){
   var slip = document.getElementById('whSlip'), open = document.getElementById('whOpen');
   if (!slip) return;
+  /* phones resolve the check on a timer instead of on scroll (see auto-resolve below) */
+  window.__whAuto = window.matchMedia('(max-width:900px)').matches;
   var strips = [].slice.call(slip.querySelectorAll('.wh-strip'));
   var scan = document.getElementById('whScan');
   var foot = slip.querySelector('.wh-slip__foot');
@@ -1539,8 +1545,10 @@ var raf = window.requestAnimationFrame.bind(window);
     var beam = -26 + e*(slipH+52);
     if (scan){ scan.style.transform='translateY('+beam.toFixed(1)+'px) translateZ(60px)';
       scan.style.opacity = (e>.012 && e<.985) ? '1' : '0'; }
-    for (var j=0;j<strips.length;j++) strips[j].classList.toggle('is-set', beam>=mids[j]);
-    var on = beam>=footMid; if (on!==was){ was=on; slip.classList.toggle('is-card',on); }
+    if (!window.__whAuto){
+      for (var j=0;j<strips.length;j++) strips[j].classList.toggle('is-set', beam>=mids[j]);
+      var on = beam>=footMid; if (on!==was){ was=on; slip.classList.toggle('is-card',on); }
+    }
     raf(tick);
   })();
 })();
@@ -1653,5 +1661,23 @@ var raf = window.requestAnimationFrame.bind(window);
 })();
 </script>
 
+<script>
+/* phone hero: the check resolves itself into the rated card, no scroll required */
+(function(){
+  if (!window.__whAuto) return;
+  var slip = document.getElementById('whSlip'); if (!slip) return;
+  var strips = [].slice.call(slip.querySelectorAll('.wh-strip'));
+  var reduced = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var fired = false;
+  function resolve(){
+    if (fired) return; fired = true;
+    strips.forEach(function(el,i){ setTimeout(function(){ el.classList.add('is-set'); }, reduced ? 0 : 420 + i*240); });
+    setTimeout(function(){ slip.classList.add('is-card'); }, reduced ? 0 : 420 + strips.length*240 + 120);
+  }
+  /* starts the moment the neon curtain lifts, so it never plays behind the intro */
+  window.addEventListener('wh:revealed', resolve);
+  setTimeout(resolve, 4200);
+})();
+</script>
 </body>
 </html>
