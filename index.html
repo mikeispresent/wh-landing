@@ -1043,7 +1043,6 @@ html.js #product .artifact-card.wh-in:nth-of-type(3){animation:whthrow-r 820ms c
   .wh-last__say .cta-stack{align-items:center;}
   .wh-hero{grid-template-columns:1fr;gap:30px;padding-top:26px;}
   .wh-hero__words{order:2;}.wh-slipwrap{order:1;}
-  .wh-scan{display:none;}
   .wh-slipwrap__in{max-width:min(400px,86vw);}
 }
 @media (max-width:430px){
@@ -1512,13 +1511,12 @@ var raf = window.requestAnimationFrame.bind(window);
 (function(){
   var slip = document.getElementById('whSlip'), open = document.getElementById('whOpen');
   if (!slip) return;
-  /* phones resolve the check on a timer instead of on scroll (see auto-resolve below) */
-  window.__whAuto = window.matchMedia('(max-width:900px)').matches;
   var strips = [].slice.call(slip.querySelectorAll('.wh-strip'));
   var scan = document.getElementById('whScan');
   var foot = slip.querySelector('.wh-slip__foot');
-  var tx=0,ty=0,cx=0,cy=0,sep=0,was=false,mids=[],footMid=0,slipH=1;
+  var tx=0,ty=0,cx=0,cy=0,sep=0,was=false,mids=[],footMid=0,slipH=1,isMob=false;
   function measure(){ slipH = slip.offsetHeight || 1;
+    isMob = window.matchMedia('(max-width:900px)').matches;
     mids = strips.map(function(el){ return el.offsetTop + el.offsetHeight*.55; });
     footMid = foot ? foot.offsetTop + 10 : slipH; }
   if (window.matchMedia('(hover:hover) and (pointer:fine)').matches){
@@ -1529,8 +1527,17 @@ var raf = window.requestAnimationFrame.bind(window);
       ty = ((e.clientY - r.top)/Math.max(1,r.height) - .5)*2;
     }, {passive:true});
   }
-  function read(){ var r = open.getBoundingClientRect();
-    sep = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height*.62))); }
+  function read(){
+    if (isMob){
+      /* on phones the check sits at the TOP of the page, so the beam is driven
+         by a short scroll rather than the height of the whole hero — otherwise
+         the check scrolls out of view before it finishes converting */
+      sep = Math.min(1, Math.max(0, (window.pageYOffset||0) / Math.max(210, slipH*1.25)));
+    } else {
+      var r = open.getBoundingClientRect();
+      sep = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height*.62)));
+    }
+  }
   window.addEventListener('scroll', read, {passive:true});
   window.addEventListener('resize', function(){ measure(); read(); });
   window.addEventListener('load', measure);
@@ -1545,10 +1552,8 @@ var raf = window.requestAnimationFrame.bind(window);
     var beam = -26 + e*(slipH+52);
     if (scan){ scan.style.transform='translateY('+beam.toFixed(1)+'px) translateZ(60px)';
       scan.style.opacity = (e>.012 && e<.985) ? '1' : '0'; }
-    if (!window.__whAuto){
-      for (var j=0;j<strips.length;j++) strips[j].classList.toggle('is-set', beam>=mids[j]);
-      var on = beam>=footMid; if (on!==was){ was=on; slip.classList.toggle('is-card',on); }
-    }
+    for (var j=0;j<strips.length;j++) strips[j].classList.toggle('is-set', beam>=mids[j]);
+    var on = beam>=footMid; if (on!==was){ was=on; slip.classList.toggle('is-card',on); }
     raf(tick);
   })();
 })();
@@ -1661,23 +1666,5 @@ var raf = window.requestAnimationFrame.bind(window);
 })();
 </script>
 
-<script>
-/* phone hero: the check resolves itself into the rated card, no scroll required */
-(function(){
-  if (!window.__whAuto) return;
-  var slip = document.getElementById('whSlip'); if (!slip) return;
-  var strips = [].slice.call(slip.querySelectorAll('.wh-strip'));
-  var reduced = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-  var fired = false;
-  function resolve(){
-    if (fired) return; fired = true;
-    strips.forEach(function(el,i){ setTimeout(function(){ el.classList.add('is-set'); }, reduced ? 0 : 420 + i*240); });
-    setTimeout(function(){ slip.classList.add('is-card'); }, reduced ? 0 : 420 + strips.length*240 + 120);
-  }
-  /* starts the moment the neon curtain lifts, so it never plays behind the intro */
-  window.addEventListener('wh:revealed', resolve);
-  setTimeout(resolve, 4200);
-})();
-</script>
 </body>
 </html>
