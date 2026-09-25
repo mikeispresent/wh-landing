@@ -101,7 +101,7 @@ function previewState(data, slug, ctx = {}) {
     const appUrl = buildAppUrl('ranking', r.id);
     return {
       status: 'ok',
-      ogTitle: `${r.title} \u2014 by ${creatorName}`,
+      ogTitle: `${r.title} by ${creatorName}`,
       ogDescription: buildRankingDescription(r),
       ogImage: dynamicOgImage('ranking', slug),
       appUrl,
@@ -115,7 +115,7 @@ function previewState(data, slug, ctx = {}) {
     const appUrl = buildAppUrl('menu_card', m.id);
     return {
       status: 'ok',
-      ogTitle: `${m.restaurant_name} \u2014 a menu card by ${creatorName}`,
+      ogTitle: `${m.restaurant_name}, a menu card by ${creatorName}`,
       ogDescription: buildMenuCardDescription(m),
       ogImage: dynamicOgImage('menu_card', slug),
       appUrl,
@@ -131,8 +131,8 @@ function previewState(data, slug, ctx = {}) {
   return {
     status: 'ok',
     ogTitle: isSpots
-      ? `${t.title} \u2014 Spots${t.city ? ` in ${t.city}` : ` by ${creatorName}`}`
-      : `${t.title} \u2014 a route by ${creatorName}`,
+      ? `${t.title}: Spots${t.city ? ` in ${t.city}` : ` by ${creatorName}`}`
+      : `${t.title}, a route by ${creatorName}`,
     ogDescription: buildRouteDescription(t),
     ogImage: dynamicOgImage('route', slug),
     appUrl,
@@ -229,7 +229,7 @@ function rankingBody({ r, creator, remaining, appUrl, ctx }) {
 
   const remainingLine =
     remaining > 0
-      ? `+ ${remaining} more ranked \u2014 the full list, with notes & receipts, in the app.`
+      ? `+ ${remaining} more ranked. The full list, with notes & receipts, is in the app.`
       : `Sign up to see full details and build your own.`;
 
   return `
@@ -241,7 +241,7 @@ function rankingBody({ r, creator, remaining, appUrl, ctx }) {
       <ol class="rank">${items || '<li class="rank__empty">Nothing plated yet.</li>'}${moreTile}</ol>
       <div class="rule-gold"></div>
       <div class="shift-note">
-        <span class="shift-note__label">Shift Note \u2014</span>${remainingLine}
+        <span class="shift-note__label">Shift Note:</span> ${remainingLine}
       </div>
       ${signupCta('See the full ranking', appUrl, ctx)}
     </article>`;
@@ -274,7 +274,7 @@ function menuCardBody({ m, creator, remaining, appUrl, ctx }) {
 
   const remainingLine =
     remaining > 0
-      ? `+ ${remaining} more dishes \u2014 every note, every bite, in the app.`
+      ? `+ ${remaining} more dishes. Every note, every bite, in the app.`
       : `Sign up to see every note from this visit.`;
 
   // Visit date sits in the sub. Numeric overall_rating stays out of the
@@ -297,7 +297,7 @@ function menuCardBody({ m, creator, remaining, appUrl, ctx }) {
       <ul class="dishes">${dishes || '<li class="rank__empty">No dishes plated yet.</li>'}${moreTile}</ul>
       <div class="rule-gold"></div>
       <div class="shift-note">
-        <span class="shift-note__label">Shift Note \u2014</span>${remainingLine}
+        <span class="shift-note__label">Shift Note:</span> ${remainingLine}
       </div>
       ${signupCta('See the full menu card', appUrl, ctx)}
     </article>`;
@@ -424,7 +424,7 @@ function spotsBody({ t, creator, appUrl, ctx }) {
       <ol class="timeline">${rows || '<li class="rank__empty">No places on this list yet.</li>'}</ol>
       <div class="rule-gold"></div>
       <div class="shift-note">
-        <span class="shift-note__label">Shift Note —</span>Notes from the table live in the app.
+        <span class="shift-note__label">Shift Note:</span> Notes from the table live in the app.
       </div>
       ${signupCta('See all the spots', appUrl, ctx)}
     </article>`;
@@ -508,7 +508,7 @@ function routeBody({ t, creator, appUrl, ctx }) {
       <ol class="timeline">${stopRows || '<li class="rank__empty">No stops on this walk yet.</li>'}</ol>
       <div class="rule-gold"></div>
       <div class="shift-note">
-        <span class="shift-note__label">Shift Note \u2014</span>Time between stops & notes from the table live in the app.
+        <span class="shift-note__label">Shift Note:</span> Time between stops & notes from the table live in the app.
       </div>
       ${signupCta('See the full route', appUrl, ctx)}
     </article>`;
@@ -533,7 +533,7 @@ function morePseudoRow(remaining, kind) {
     <li class="${cls}" aria-hidden="true">
       <span class="more__plus">+</span>
       <span class="more__count">${esc(String(remaining))}</span>
-      <span class="more__label">more ${esc(noun)} \u2014 in the app</span>
+      <span class="more__label">more ${esc(noun)} in the app</span>
     </li>`;
 }
 
@@ -588,7 +588,7 @@ function signupCta(label, appUrl, ctx = {}) {
 function buildRankingDescription(r) {
   const top = (r.items_preview || []).slice(0, 3).map((d) => d.name).filter(Boolean);
   const head = top.length ? top.join(' \u00b7 ') : r.category || '';
-  return trim(`${head}${r.city ? ` \u2014 ${r.city}` : ''}`);
+  return trim(`${head}${r.city ? ` \u00b7 ${r.city}` : ''}`);
 }
 
 function buildRankingSub(r) {
@@ -608,7 +608,7 @@ function buildMenuCardDescription(m) {
   const lead = [tier, partyMeal, dishes].filter(Boolean).join(' \u00b7 ');
   const top = (m.dishes_preview || []).slice(0, 3).map((d) => d.name).filter(Boolean);
   const tail = top.length ? top.join(' \u00b7 ') : '';
-  return trim([lead, tail].filter(Boolean).join(' \u2014 '));
+  return trim([lead, tail].filter(Boolean).join(' \u00b7 '));
 }
 
 function buildRouteDescription(t) {
@@ -619,7 +619,7 @@ function buildRouteDescription(t) {
     const count = t.total_stop_count
       ? `${t.total_stop_count} ${t.total_stop_count === 1 ? 'place' : 'places'}`
       : '';
-    return trim([names, count].filter(Boolean).join(' \u2014 '));
+    return trim([names, count].filter(Boolean).join(' \u00b7 '));
   }
   const start = stops[0]?.name;
   const end = stops.length > 1 ? stops[stops.length - 1]?.name : null;
@@ -627,7 +627,7 @@ function buildRouteDescription(t) {
   const count = t.total_stop_count
     ? `${t.total_stop_count} ${t.total_stop_count === 1 ? 'stop' : 'stops'}`
     : '';
-  return trim([arc, count].filter(Boolean).join(' \u2014 '));
+  return trim([arc, count].filter(Boolean).join(' \u00b7 '));
 }
 
 // ---------- OG image (dynamic card, rendered by the og-image Worker) ----------
