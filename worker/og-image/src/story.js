@@ -256,7 +256,7 @@ function menuCardBody(m, C) {
       // isn't surfaced anywhere in the app, so a story card is the wrong
       // place for it to debut.
       sub: subLine(
-        m.visit_date ? formatDate(m.visit_date) : null,
+        m.visit_date ? formatMonth(m.visit_date) : null,
         mealServiceLabel(m.meal_service),
         party,
       ),
@@ -470,4 +470,15 @@ function esc(s) {
   return String(s ?? '')
     .replace(/</g, '‹')
     .replace(/>/g, '›');
+}
+
+// Visit dates show month and year only ("Sep 2026"), matching the app.
+function formatMonth(iso) {
+  try {
+    const d = new Date(String(iso).slice(0, 7) + '-15T12:00:00Z');
+    if (Number.isNaN(d.getTime())) return null;
+    return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+  } catch {
+    return null;
+  }
 }
