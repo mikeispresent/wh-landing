@@ -35,7 +35,7 @@ const ROMAN = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x'];
 // Until the app is approved, leaving this empty is fine — the Worker falls
 // back to the wildheavy.app CTA on every device. Flip the constant once
 // you have the ID and redeploy. No other changes needed.
-const APP_STORE_APP_ID = '';
+const APP_STORE_APP_ID = '6758928194';
 
 function appStoreUrl() {
   return APP_STORE_APP_ID
@@ -285,7 +285,7 @@ function menuCardBody({ m, creator, remaining, appUrl, ctx }) {
     ? `${total} ${total === 1 ? 'Dish Logged' : 'Dishes Logged'}`
     : null;
 
-  const sub = m.visit_date ? `Visited ${formatDate(m.visit_date)}` : '';
+  const sub = m.visit_date ? `Visited ${formatMonth(m.visit_date)}` : '';
 
   return `
     <article class="card">
@@ -1579,4 +1579,15 @@ body::before {
       'Cache-Control': 'public, max-age=60, s-maxage=60',
     },
   });
+}
+
+// Visit dates show month and year only ("Sep 2026"), matching the app.
+function formatMonth(iso) {
+  try {
+    const d = new Date(String(iso).slice(0, 7) + '-15T12:00:00Z');
+    if (Number.isNaN(d.getTime())) return null;
+    return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+  } catch {
+    return null;
+  }
 }
