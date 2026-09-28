@@ -146,13 +146,15 @@ function unavailableState() {
     ogTitle: 'WildHeavy',
     ogDescription: 'This link isn\u2019t available right now.',
     ogImage: 'https://wildheavy.com/og-image.png',
-    appUrl: 'https://wildheavy.app',
+    // /feed (not the bare domain) so iOS opens the installed app: the
+    // wildheavy.app app-site-association lists /feed but not "/".
+    appUrl: 'https://wildheavy.app/feed',
     bodyHtml: stateHtml({
       kicker: 'Off the menu',
       title: 'This link isn\u2019t on the menu.',
-      sub: 'The regular who made this either set it private or pulled it down. Happens.',
+      sub: 'The regular who made this either set it private or pulled it down.',
       ctaLabel: 'Open WildHeavy',
-      ctaHref: 'https://wildheavy.app',
+      ctaHref: 'https://wildheavy.app/feed',
     }),
   };
 }
