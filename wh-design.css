@@ -613,6 +613,18 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
     margin-bottom: 10px;
     font-weight: 600;
 }
+/* Second copy line (trademark notice) sits tight under the copyright line. */
+.legal-footer__copy--tm { margin-top: -6px; }
+
+/* ™ mark: small and raised, same font and color as the word it follows.
+   line-height 0 + relative offset so it never changes the line height. */
+.tm {
+    font-size: 0.5em;
+    line-height: 0;
+    position: relative;
+    top: -0.75em;
+    margin-left: 0.05em;
+}
 .legal-footer__disclaimer {
     font-size: 0.7rem;
     max-width: 560px;

@@ -104,7 +104,7 @@ export function buildStory(data, variant, photoUri, avatarUri) {
 // ---------- Shell ----------
 function shell({ C, body, handle, usePhoto, photoUri, avatarUri }) {
   const inner = `
-    <div style="display:flex;flex-direction:column;width:${STORY_W}px;height:${STORY_H}px;padding:250px 60px 310px;${
+    <div style="display:flex;flex-direction:column;width:${STORY_W}px;height:${STORY_H}px;padding:250px 60px 270px;${
       usePhoto
         ? `background-image:linear-gradient(180deg, rgba(18,18,18,0.62) 0%, rgba(18,18,18,0.28) 34%, rgba(18,18,18,0.90) 100%);`
         : ''
@@ -155,7 +155,8 @@ function footer(C, handle, avatarUri) {
     <div style="display:flex;width:${markW}px;height:${markH}px;">
       <img src="${mark.uri}" width="${markW}" height="${markH}" style="width:${markW}px;height:${markH}px;" />
     </div>
-    <div style="display:flex;font-family:'JetBrains Mono';font-weight:700;font-size:24px;letter-spacing:6px;color:${C.urlColor};margin-top:16px;">WILDHEAVY.COM</div>
+    <div style="display:flex;font-family:Bitter;font-style:italic;font-weight:400;font-size:28px;line-height:1;color:${C.urlColor};margin-top:14px;">We're all regulars here.</div>
+    <div style="display:flex;font-family:'JetBrains Mono';font-weight:700;font-size:24px;letter-spacing:6px;color:${C.urlColor};margin-top:14px;">WILDHEAVY.COM</div>
   </div>`;
 }
 

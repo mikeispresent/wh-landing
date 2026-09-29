@@ -128,7 +128,7 @@ const STORY_CORS = { 'Access-Control-Allow-Origin': '*' };
 // deploys and are keyed by URL, so without this a design fix stays invisible
 // for the full TTL. Content edits are handled separately by the client
 // passing ?v=<updated_at>.
-const STORY_CACHE_VERSION = '5';
+const STORY_CACHE_VERSION = '6';
 
 async function handleStory(request, ctx, match, url) {
   if (request.method === 'OPTIONS') {
@@ -473,6 +473,8 @@ const FONT_SPECS = [
   { name: 'Bitter',   weight: 700, css: 'Bitter:wght@700' },
   { name: 'JetBrains Mono', weight: 700, css: 'JetBrains+Mono:wght@700' },
   { name: 'Instrument Sans', weight: 600, css: 'Instrument+Sans:wght@600' },
+  // Tagline face: Bitter italic, same as the site and app mastheads.
+  { name: 'Bitter', weight: 400, style: 'italic', css: 'Bitter:ital,wght@1,400' },
 ];
 let fontCache = null;
 
@@ -482,7 +484,7 @@ async function loadFonts() {
     FONT_SPECS.map(async (spec) => ({
       name: spec.name,
       weight: spec.weight,
-      style: 'normal',
+      style: spec.style || 'normal',
       data: await fetchGoogleFontTtf(spec.css),
     }))
   );
