@@ -900,6 +900,13 @@ body::before {
 @media (max-width: 480px) {
   .brand__logo img { height: 36px; }
 }
+.tm {
+  font-size: 0.5em;
+  line-height: 0;
+  position: relative;
+  top: -0.75em;
+  margin-left: 0.05em;
+}
 .brand__tag {
   flex: 1;
   text-align: right;
@@ -1566,7 +1573,7 @@ body::before {
       <a class="brand__logo" href="https://wildheavy.com" aria-label="WildHeavy">
         <img src="https://wildheavy.com/Wild%20Heavy%20-%20Logo%20Branding%20-%20Transparent%20-%20Edited.png" alt="WildHeavy">
       </a>
-      <span class="brand__tag">We're all regulars here.</span>
+      <span class="brand__tag">We're all regulars here.<span class="tm">™</span></span>
     </header>
     ${state.bodyHtml}
     <p class="foot">Shared from <a href="https://wildheavy.com">WildHeavy</a></p>
