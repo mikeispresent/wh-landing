@@ -17,6 +17,18 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,300..800;1,300..700&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="wh-design.css?v=18">
+    <style>
+        /* Email-change landing (shown only when arriving from the email link). */
+        .ec-container { max-width: 500px; margin: 64px auto 80px; padding: 0 24px; }
+        .ec-card { background: var(--paper-bright); border: 1px solid var(--rule); border-radius: var(--radius-card); padding: 40px 32px; box-shadow: var(--shadow-press); }
+        .ec-card .kicker { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 12px; }
+        .ec-card h2 { font-family: var(--font-display); font-size: 2rem; font-weight: 400; color: var(--ink); margin-bottom: 12px; letter-spacing: -0.02em; }
+        .ec-card p { font-size: 0.96rem; color: var(--ink-soft); margin-bottom: 0; }
+        .ec-email { margin-top: 20px; padding: 12px 14px; border: 1px solid var(--rule); border-radius: var(--radius); font-family: var(--font-mono); font-size: 0.9rem; color: var(--ink); background: white; word-break: break-all; }
+        .ec-card .btn { width: 100%; text-align: center; display: block; margin-top: 24px; }
+        .ec-fine { font-size: 0.8rem !important; color: var(--ink-mute) !important; margin-top: 20px !important; }
+        .ec-hidden { display: none !important; }
+    </style>
 </head>
 <body>
 
@@ -29,6 +41,34 @@
             <div class="site-masthead__line">We’re all regulars here.<span class="tm">™</span></div>
             <div class="site-masthead__rule"></div>
         </header>
+
+        <!-- Email-change landing. Hidden unless Supabase just sent the person
+             here from the "Confirm Email Change" link. -->
+        <div class="ec-container ec-hidden" id="ecUpdated">
+            <div class="ec-card">
+                <div class="kicker">Account</div>
+                <h2>Your email is updated.</h2>
+                <p>From now on, sign in to WildHeavy with:</p>
+                <div class="ec-email" id="ecEmail"></div>
+                <a href="https://apps.apple.com/us/app/wildheavy/id6758928194" class="btn btn--primary">Open WildHeavy</a>
+                <p class="ec-fine">If this wasn't you, contact <a href="mailto:security@wildheavy.com">security@wildheavy.com</a> right away.</p>
+            </div>
+        </div>
+        <div class="ec-container ec-hidden" id="ecPending">
+            <div class="ec-card">
+                <div class="kicker">Account</div>
+                <h2>One more step.</h2>
+                <p>We also sent a confirmation link to your other email address. Open that one to finish the change.</p>
+            </div>
+        </div>
+        <div class="ec-container ec-hidden" id="ecExpired">
+            <div class="ec-card">
+                <div class="kicker">Account</div>
+                <h2>This link has expired.</h2>
+                <p>Links work once and expire after a short time. To try again, open the app, go to Settings, and change your email there.</p>
+                <a href="https://apps.apple.com/us/app/wildheavy/id6758928194" class="btn btn--primary">Open WildHeavy</a>
+            </div>
+        </div>
 
         <section class="doc-masthead">
             <div class="doc-masthead__kicker">Account</div>
@@ -142,5 +182,59 @@
         </div>
     </footer>
 
+    <script>
+    /*
+     * Email-change landing. The "Confirm Email Change" button in the email goes
+     * to Supabase, which confirms the change (single-use link) and then sends
+     * the person here with the result in the URL fragment (#...). This page
+     * never confirms anything itself. It only:
+     *   - success: asks Supabase for the account as it is NOW and shows the
+     *     new address only if it is live with nothing still pending;
+     *   - error: shows "link expired";
+     *   - otherwise: leaves the normal Account page alone.
+     * It wipes the fragment from the address bar immediately and ends the
+     * one-off sign-in Supabase attached, so nothing lingers in this browser.
+     */
+    (function () {
+        var hash = window.location.hash ? window.location.hash.slice(1) : '';
+        if (!hash) return;
+        var f = new URLSearchParams(hash);
+        var isError = f.has('error') || f.has('error_code');
+        var token = f.get('access_token');
+        var type = f.get('type');
+        var message = f.get('message');
+        if (!isError && !(token && type === 'email_change') && !message) return;
+
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+
+        var SUPABASE_URL = 'https://dxwjkuqsncatvovjwrzv.supabase.co';
+        var KEY = 'sb_publishable_Eb7RJwMEQz9Tz_P33mx2_A_gA_U13Lt';
+        var info = document.querySelectorAll('.doc-masthead, .doc, .rule-gold, .close-cta');
+        function show(id) {
+            info.forEach(function (el) { el.classList.add('ec-hidden'); });
+            ['ecUpdated', 'ecPending', 'ecExpired'].forEach(function (x) {
+                document.getElementById(x).classList.toggle('ec-hidden', x !== id);
+            });
+        }
+
+        if (isError) { show('ecExpired'); return; }
+        if (!token) { show('ecPending'); return; }  // first of two confirmations
+
+        fetch(SUPABASE_URL + '/auth/v1/user', { headers: { apikey: KEY, Authorization: 'Bearer ' + token } })
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .then(function (user) {
+                if (!user || !user.email) { show('ecExpired'); return; }
+                if (user.new_email) { show('ecPending'); return; }
+                document.getElementById('ecEmail').textContent = user.email;
+                show('ecUpdated');
+            })
+            .catch(function () { show('ecExpired'); })
+            .finally(function () {
+                fetch(SUPABASE_URL + '/auth/v1/logout?scope=local', {
+                    method: 'POST', headers: { apikey: KEY, Authorization: 'Bearer ' + token }
+                }).catch(function () {});
+            });
+    })();
+    </script>
 </body>
 </html>
