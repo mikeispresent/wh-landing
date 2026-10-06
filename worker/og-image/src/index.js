@@ -20,6 +20,8 @@
 import { ImageResponse } from 'workers-og';
 import { WORDMARK_FOREST } from './brand.js';
 import { buildStory, isAllowedPhotoUrl, STORY_W, STORY_H } from './story.js';
+import { buildPaperHtml, PAPER_SIZES } from './paper.js';
+import { renderInBrowser } from './browser.js';
 
 // wildheavy-prod. The old Lovable Cloud project (kufhzivrzvqayvzbwrpn) was
 // decommissioned in the 2026-08 backend migration — its DNS no longer
@@ -52,7 +54,7 @@ export default {
     const url = new URL(request.url);
 
     const storyMatch = url.pathname.match(/^\/story\/([rmt])\/([A-Za-z0-9_-]{8,32})\.png$/);
-    if (storyMatch) return handleStory(request, ctx, storyMatch, url);
+    if (storyMatch) return handleStory(request, env, ctx, storyMatch, url);
 
     const match = url.pathname.match(/^\/og\/([rmt])\/([A-Za-z0-9_-]{8,32})\.png$/);
     if (!match) return Response.redirect(FALLBACK_IMG, 302);
@@ -128,9 +130,9 @@ const STORY_CORS = { 'Access-Control-Allow-Origin': '*' };
 // deploys and are keyed by URL, so without this a design fix stays invisible
 // for the full TTL. Content edits are handled separately by the client
 // passing ?v=<updated_at>.
-const STORY_CACHE_VERSION = '6';
+const STORY_CACHE_VERSION = '10';
 
-async function handleStory(request, ctx, match, url) {
+async function handleStory(request, env, ctx, match, url) {
   if (request.method === 'OPTIONS') {
     return new Response(null, {
       status: 204,
@@ -170,6 +172,38 @@ async function handleStory(request, ctx, match, url) {
   } catch {
     return jsonErr(502, 'upstream_error');
   }
+
+  // Paper cards (Guest Check / Lineup Card / Route + Spots Card), drawn by a
+  // real Chrome via Cloudflare Browser Rendering so they match the mockups
+  // exactly. ?format=story (1080x1920, default) or ?format=post (1080x1440).
+  // `variant` and `photo` are ignored here: the paper carries its own photos.
+  // Any failure falls back to the Satori story card below (story size only;
+  // a 9:16 image in a 3:4 post slot would be wrong, so post returns an error
+  // and the app's Retry state takes over).
+  const format = url.searchParams.get('format') === 'post' ? 'post' : 'story';
+  if (env && env.BROWSER && url.searchParams.get('engine') !== 'satori') {
+    try {
+      const html = buildPaperHtml(data, { format, wordmarkUri: WORDMARK_FOREST.uri });
+      if (html) {
+        const { w, h } = PAPER_SIZES[format];
+        const png = await renderInBrowser(env.BROWSER, html, w, h);
+        const response = new Response(png, {
+          headers: {
+            ...STORY_CORS,
+            'Content-Type': 'image/png',
+            'X-WH-Engine': 'paper',
+            'Cache-Control': 'public, max-age=60, s-maxage=300',
+          },
+        });
+        ctx.waitUntil(cache.put(cacheKey, response.clone()));
+        return response;
+      }
+    } catch (err) {
+      console.error('paper render failed:', err && err.message);
+      if (url.searchParams.has('debug')) return jsonErr(500, `paper_failed: ${err && err.message}`);
+    }
+  }
+  if (format === 'post') return jsonErr(502, 'render_failed');
 
   // A rejected photo (wrong host, wrong format, too slow) silently degrades
   // to the clean card rather than failing the whole render.

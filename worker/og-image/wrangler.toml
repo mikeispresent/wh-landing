@@ -1,13 +1,21 @@
 # WildHeavy — og-image Worker
 # Renders 1200x630 PNG share cards at wildheavy.com/og/{r|m|t}/{slug}.png
+# and share images at wildheavy.com/story/{r|m|t}/{slug}.png
+#   ?format=story (1080x1920, default) | ?format=post (1080x1440)
 #
 # Deploy:  npx wrangler deploy   (from this directory; `npm install` first)
 # NOTE: Satori rendering needs more than the free tier's 10ms CPU cap —
 # requires the Workers Paid plan ($5/mo) on the account.
+# The paper share cards (Guest Check / Lineup Card / Route + Spots Card) are
+# drawn by Cloudflare Browser Rendering through the BROWSER binding below.
+# Included on Workers Paid: 10 browser-hours/month, then $0.09/hour.
 
 name = "wildheavy-og-image"
 main = "src/index.js"
 compatibility_date = "2026-07-01"
+compatibility_flags = ["nodejs_compat"]
+
+browser = { binding = "BROWSER" }
 
 routes = [
   { pattern = "wildheavy.com/og/*", zone_name = "wildheavy.com" },
