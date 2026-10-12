@@ -522,8 +522,7 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
         transparent, transparent 27px,
         rgba(26,54,41,0.06) 27px, rgba(26,54,41,0.06) 28px
     );
-    padding: 16px 18px;
-    border-left: 3px solid var(--oxblood);
+    padding: 16px 0;
     margin-top: 14px;
     position: relative;
 }
