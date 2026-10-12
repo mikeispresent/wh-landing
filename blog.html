@@ -18,8 +18,8 @@
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,300..800;1,300..700&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="wh-design.css?v=18">
+    <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@900&family=Bitter:ital,wght@0,300..800;1,300..700&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="wh-design.css?v=19">
 
     <style>
         /* Masthead — broadsheet feel, coaster bug printed behind */
@@ -68,14 +68,16 @@
     font-weight: 600;
 }
         .masthead h1 {
-            font-family: var(--font-display);
-            font-size: clamp(3.2rem, 9vw, 6.5rem);
-            font-weight: 600;
+            font-family: var(--font-title);
+            font-size: clamp(3.7rem, 10.3vw, 7.5rem);
+            font-weight: 900;
             line-height: 0.92;
-            letter-spacing: -0.035em;
+            letter-spacing: 0;
             color: var(--ink);
+            font-style: normal;
+            font-synthesis: none;
         }
-        .masthead h1 em { font-style: italic; color: var(--ink); font-weight: 300;}
+        .masthead h1 em { font-style: normal; color: var(--ink); font-weight: inherit; font-family: inherit; }
         .masthead__dateline {
             font-family: var(--font-mono);
             font-size: 0.7rem;
@@ -163,16 +165,18 @@
         .article__meta-tag { display: block; }
 
         .article__title {
-            font-family: var(--font-display);
-            font-size: clamp(1.6rem, 3.2vw, 2.25rem);
-            font-weight: 600;
+            font-family: var(--font-title);
+            font-size: clamp(1.85rem, 3.7vw, 2.6rem);
+            font-weight: 900;
             color: var(--ink);
             line-height: 1.1;
-            letter-spacing: -0.02em;
+            letter-spacing: 0;
             margin-bottom: 18px;
             text-wrap: balance;
+            font-style: normal;
+            font-synthesis: none;
         }
-        .article__title em { font-style: italic; color: var(--leather); }
+        .article__title em { font-style: normal; color: var(--leather); font-weight: inherit; font-family: inherit; }
 
         .article__body p {
             font-size: 1.02rem;

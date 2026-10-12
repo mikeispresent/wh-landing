@@ -18,8 +18,8 @@
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,300..800;1,300..700&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="wh-design.css?v=18">
+    <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@900&family=Bitter:ital,wght@0,300..800;1,300..700&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="wh-design.css?v=19">
 
     <style>
         .page-hero {
@@ -30,15 +30,17 @@
         }
         .page-hero__eyebrow { margin-bottom: 20px; display: inline-block; }
         .page-hero h1 {
-            font-family: var(--font-display);
-            font-size: clamp(2.6rem, 5.4vw, 4rem);
-            font-weight: 600;
+            font-family: var(--font-title);
+            font-size: clamp(3rem, 6.2vw, 4.6rem);
+            font-weight: 900;
             line-height: 1;
-            letter-spacing: -0.022em;
+            letter-spacing: 0;
             color: var(--ink);
             margin-bottom: 24px;
+            font-style: normal;
+            font-synthesis: none;
         }
-        .page-hero h1 em { font-style: italic; color: var(--leather); font-weight: 400; }
+        .page-hero h1 em { font-style: normal; color: var(--leather); font-weight: inherit; font-family: inherit; }
         .page-hero__lede {
             font-family: var(--font-display);
             font-style: italic;
@@ -60,17 +62,19 @@
             margin-bottom: 28px;
         }
         .section h2 {
-            font-family: var(--font-display);
-            font-size: clamp(1.7rem, 3vw, 2.2rem);
-            font-weight: 600;
-            letter-spacing: -0.02em;
+            font-family: var(--font-title);
+            font-size: clamp(1.95rem, 3.45vw, 2.55rem);
+            font-weight: 900;
+            letter-spacing: 0;
             line-height: 1.15;
             color: var(--ink);
             text-align: center;
             max-width: 520px;
             margin: 0 auto 36px;
+            font-style: normal;
+            font-synthesis: none;
         }
-        .section h2 em { font-style: italic; color: var(--leather); }
+        .section h2 em { font-style: normal; color: var(--leather); font-weight: inherit; font-family: inherit; }
         .section p {
             font-size: 1.08rem;
             line-height: 1.7;
