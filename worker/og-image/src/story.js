@@ -162,12 +162,12 @@ function footer(C, handle, avatarUri) {
 
 function header(C, { eyebrow, title, sub }) {
   const t = clip(title, LIMITS.title);
-  const size = t.length > 24 ? 62 : 76;
+  const size = t.length > 24 ? 68 : 84;
   return `
     <div style="display:flex;align-items:center;">
       <div style="display:flex;font-family:'JetBrains Mono';font-weight:700;font-size:22px;letter-spacing:6px;color:${C.goldSoft};">${esc(clip(eyebrow, LIMITS.eyebrow + 20))}</div>
     </div>
-    <div style="display:flex;font-family:Bitter;font-weight:700;font-size:${size}px;line-height:1.06;color:${C.ink};margin-top:22px;">${esc(t)}</div>
+    <div style="display:flex;font-family:'Big Shoulders Display';font-weight:900;font-size:${size}px;line-height:1.06;color:${C.ink};margin-top:22px;">${esc(t)}</div>
     ${sub ? `<div style="display:flex;font-family:'JetBrains Mono';font-size:22px;letter-spacing:3px;color:${C.mute};margin-top:16px;">${esc(sub)}</div>` : ''}`;
 }
 

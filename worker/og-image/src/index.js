@@ -368,7 +368,7 @@ function routeCard(t, creatorName, handle) {
 // ---------- Shared layout ----------
 function shell({ eyebrow, title, sub, rows, foot, rowsGap = 12 }) {
   const t = clip(title, 60);
-  const titleSize = t.length > 30 ? 42 : 52;
+  const titleSize = t.length > 30 ? 46 : 56;
 
   return `
   <div style="display:flex;flex-direction:column;width:${WIDTH}px;height:${HEIGHT}px;background:${C.paper};padding:36px;">
@@ -381,7 +381,7 @@ function shell({ eyebrow, title, sub, rows, foot, rowsGap = 12 }) {
         ${wordmark(40)}
       </div>
 
-      <div style="display:flex;font-family:Bitter;font-weight:700;font-size:${titleSize}px;line-height:1.05;color:${C.ink};margin-top:14px;max-width:1080px;">${esc(t)}</div>
+      <div style="display:flex;font-family:'Big Shoulders Display';font-weight:900;font-size:${titleSize}px;line-height:1.05;color:${C.ink};margin-top:14px;max-width:1080px;">${esc(t)}</div>
       ${sub ? `<div style="display:flex;font-family:'JetBrains Mono';font-size:16px;letter-spacing:2px;color:${C.mute};margin-top:10px;">${esc(sub)}</div>` : ''}
 
       <div style="display:flex;flex-direction:column;flex:1;justify-content:center;margin-top:14px;overflow:hidden;${rowsGap ? `gap:${rowsGap}px;` : ''}">
@@ -505,6 +505,8 @@ async function resolveImages(items) {
 // Cached at module level so warm isolates skip the fetch entirely.
 const FONT_SPECS = [
   { name: 'Bitter',   weight: 700, css: 'Bitter:wght@700' },
+  // Title face (2026-10-11): Big Shoulders Display, same as the app and site titles.
+  { name: 'Big Shoulders Display', weight: 900, css: 'Big+Shoulders+Display:wght@900' },
   { name: 'JetBrains Mono', weight: 700, css: 'JetBrains+Mono:wght@700' },
   { name: 'Instrument Sans', weight: 600, css: 'Instrument+Sans:wght@600' },
   // Tagline face: Bitter italic, same as the site and app mastheads.
