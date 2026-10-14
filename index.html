@@ -27,7 +27,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@900&family=Bitter:ital,wght@0,300..800;1,300..700&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="wh-design.css?v=20">
+    <link rel="stylesheet" href="wh-design.css?v=21">
 
     <style>
         /* ============================================================
@@ -454,6 +454,54 @@
             font-weight: 700;
         }
 
+        /* Menu Card (2026-10-14): mirrors the app's Menu Card page.
+           Bear Nº top line, pen rules, ruled form, six-step table scale,
+           course groups, bronze stars with the app's rating words, and a
+           "Shift notes:" caption (the left-rule note is retired). */
+        .mc { --mc-ox: var(--oxblood); --mc-star: #A8772B; --mc-hair: rgba(26,54,41,.16); }
+        .mc .mc-rule { margin: 8px 0 0; }
+        .mc-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .mc-kind { font-family: var(--font-body); font-weight: 600; font-size: 15px; color: var(--ink); }
+        .mc-no { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-weight: 700; font-size: 15px; color: var(--mc-ox); }
+        .mc-bear { display: inline-block; width: 18px; height: 17px; background: currentColor;
+            -webkit-mask: url(bear-mark.png) center/contain no-repeat; mask: url(bear-mark.png) center/contain no-repeat; }
+        .mc .mc-title { margin: 14px 0 0; }
+        .mc-form { margin-top: 4px; }
+        .mc-fr { display: grid; grid-template-columns: 1fr; border-bottom: 1px solid var(--mc-hair); }
+        .mc-fr:last-child { border-bottom: 0; }
+        .mc-fr--2 { grid-template-columns: 1.25fr 1fr; }
+        .mc-fr--2 > .mc-f + .mc-f { border-left: 1px solid var(--mc-hair); padding-left: 10px; }
+        .mc-f { display: flex; flex-direction: column; gap: 6px; padding: 8px 10px 8px 0; min-width: 0; }
+        .mc-lbl { font-family: var(--font-body); font-size: 10.5px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-mute); }
+        .mc-val { display: flex; align-items: flex-start; gap: 6px; font-family: var(--font-body); font-weight: 600; font-size: 16px; line-height: 1.2; color: var(--ink); }
+        .mc-ic { width: 16px; height: 16px; flex: none; margin-top: 1px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+        .mc-f--table { gap: 8px; padding-bottom: 12px; }
+        .mc-scale__track { position: relative; display: flex; justify-content: space-between; align-items: center; height: 18px; margin: 0 4px; }
+        .mc-scale__track::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; transform: translateY(-50%); background: rgba(26,54,41,.18); }
+        .mc-scale__track i { position: relative; width: 9px; height: 9px; border-radius: 50%; border: 2px solid rgba(26,54,41,.35); background: var(--paper); }
+        .mc-scale__track i.on { width: 16px; height: 16px; border: 0; background: var(--ink); box-shadow: 0 0 0 3px var(--paper); }
+        .mc-scale__ends { display: flex; justify-content: space-between; margin-top: 2px; font-family: var(--font-body); font-size: 11.5px; color: var(--ink-mute); }
+        .mc-where { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--mc-hair); font-family: var(--font-body); font-size: 15px; color: var(--ink); }
+        .mc-dir { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+        .mc-ordhd { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding-top: 24px; }
+        .mc-sec { font-family: var(--font-title); font-weight: 900; font-size: 1.5rem; line-height: 1; color: var(--ink); font-synthesis: none; }
+        .mc-cnt { font-family: var(--font-mono); font-weight: 700; font-size: 12px; color: var(--ink-mute); white-space: nowrap; }
+        .mc-course { font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--ink-mute); padding: 14px 0 2px; }
+        .mc-row { display: grid; grid-template-columns: 58px minmax(0,1fr) auto; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--mc-hair); }
+        .mc-row img { width: 58px; height: 58px; object-fit: cover; display: block; }
+        .mc-dish { min-width: 0; }
+        .mc-n { display: block; font-family: var(--font-display); font-weight: 600; font-size: 16.5px; line-height: 1.22; color: var(--ink); }
+        .mc-mod { display: block; margin-top: 2px; font-family: var(--font-body); font-style: italic; font-size: 12.5px; color: var(--ink-mute); }
+        .mc-rate { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; text-align: right; }
+        .mc-stars { display: flex; gap: 2px; }
+        .mc-stars svg { width: 14px; height: 14px; fill: var(--mc-star); stroke: var(--mc-star); stroke-width: 1.2; stroke-linejoin: round; }
+        .mc-stars svg.off { fill: none; stroke: rgba(26,54,41,.3); }
+        .mc-v { font-family: var(--font-body); font-weight: 600; font-size: 12.5px; white-space: nowrap; color: var(--ink); }
+        .mc-v--top { color: var(--mc-ox); }
+        .mc-caption { display: flex; align-items: flex-start; gap: 8px; padding-top: 16px; font-family: var(--font-body); font-size: 14.5px; line-height: 1.45; color: rgba(26,54,41,.86); }
+        .mc-caption .mc-ic { margin-top: 2px; color: var(--ink); }
+        .mc-caption b, .mc-caption strong { font-weight: 600; color: var(--ink); }
+
         /* Personal Ranking — roman numerals */
         .rank-rows {
             list-style: none;
@@ -751,63 +799,6 @@
            CLOSING CTA
            ============================================================ */
         /* ============================================================
-           SHIFT NOTE (preview-page styled, oxblood label + border)
-           Already styled in wh-design.css; small homepage tweak
-           ============================================================ */
-        .home-shift-note {
-            margin: 18px 0 0;
-        }
-
-        /* ============================================================
-           RESERVATION DIFFICULTY METER — five-segment gauge + verdict
-           ============================================================ */
-        .reso-diff {
-            display: flex;
-            flex-direction: column;
-            gap: 7px;
-            margin: 16px 0 4px;
-        }
-        .reso-diff__label {
-            font-family: var(--font-mono);
-            font-size: 0.6rem;
-            letter-spacing: 0.22em;
-            text-transform: uppercase;
-            color: var(--ink-mute);
-            font-weight: 700;
-        }
-        .reso-diff__row {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-        .reso-diff__bars {
-            display: flex;
-            gap: 4px;
-            flex: 0 1 200px;
-        }
-        .reso-diff__bar {
-            flex: 1;
-            height: 9px;
-            background: var(--paper);
-            border: 1px solid var(--rule);
-            border-radius: 1px;
-        }
-        .reso-diff__bar--filled {
-            background: var(--gold);
-            border-color: var(--gold);
-        }
-        /* Two inks in a row: the gauge is already brass, so the verdict is
-           plain ink. Oxblood is reserved for live state. */
-        .reso-diff__verdict {
-            font-family: var(--font-mono);
-            font-size: 0.62rem;
-            letter-spacing: 0.22em;
-            text-transform: uppercase;
-            color: var(--ink-mute);
-            font-weight: 700;
-        }
-
-        /* ============================================================
            PHOTO THUMBS — real images inside .menu-rows__thumb / .rank-rows__thumb
            Containers already have border + size; cover the inside.
            ============================================================ */
@@ -982,8 +973,8 @@ html.js .wh-hero h1 .ln>span{transform:translateY(106%);}
   background-size:5px 5px;background-repeat:repeat-x;background-position:0 bottom 3px;}
 .wh-strip__p{font-family:var(--font-mono);font-size:.66rem;font-variant-numeric:tabular-nums;white-space:nowrap;transition:opacity .3s;}
 .wh-strip__v{position:absolute;right:0;top:50%;transform:translateY(-50%);opacity:0;transition:opacity .3s;
-  font-family:var(--font-mono);font-size:.58rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;}
-.wh-v-must{color:var(--oxblood);}.wh-v-solid{color:var(--leather);}
+  font-family:var(--font-body);font-size:.74rem;font-weight:600;letter-spacing:0;white-space:nowrap;color:var(--ink);}
+.wh-v-top{color:var(--oxblood);}
 .wh-slip__foot{position:relative;display:flex;align-items:baseline;justify-content:space-between;padding-top:12px;
   font-family:var(--font-mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(26,54,41,.58);}
 .wh-slip__foot b{color:var(--ink);font-weight:700;}
@@ -1001,6 +992,9 @@ html.js .wh-hero h1 .ln>span{transform:translateY(106%);}
 .wh-strip.is-set .lead{opacity:1;}
 .wh-strip.is-set .wh-strip__v{opacity:1;}
 .wh-strip.is-set .wh-strip__p{opacity:0;}
+/* the rating word is longer than a price: once set, it takes the price's place in the row so the leader dots stop short of it */
+.wh-strip.is-set .wh-strip__p{width:0;overflow:hidden;}
+.wh-strip.is-set .wh-strip__v{position:static;transform:none;}
 .wh-strip.is-set .wh-strip__n .raw{display:none;}
 .wh-strip.is-set .wh-strip__n .set{display:inline;}
 .wh-slip.is-card .wh-slip__foot .tot{opacity:0;}
@@ -1130,12 +1124,12 @@ html.js #product .artifact-card.wh-in:nth-of-type(3){animation:whthrow-r 820ms c
               <div class="wh-slip__perf" aria-hidden="true"></div>
               <div class="wh-scan" id="whScan" aria-hidden="true"></div>
               <div class="wh-slip__head"><span>Le&nbsp;Bouchon</span><span><b>No.&nbsp;08422</b></span></div>
-              <div class="wh-strip"><span class="wh-strip__q">1</span><span class="wh-strip__n"><span class="raw">Steak Frites</span><span class="set">Steak Frites</span></span><span class="lead"></span><span class="wh-strip__p">38.00</span><span class="wh-strip__v wh-v-must">must</span></div>
-              <div class="wh-strip"><span class="wh-strip__q">1</span><span class="wh-strip__n"><span class="raw">Onion Tarte</span><span class="set">Onion Tarte</span></span><span class="lead"></span><span class="wh-strip__p">19.00</span><span class="wh-strip__v wh-v-must">must</span></div>
-              <div class="wh-strip"><span class="wh-strip__q">1</span><span class="wh-strip__n"><span class="raw">Martini</span><span class="set">Martini</span></span><span class="lead"></span><span class="wh-strip__p">17.00</span><span class="wh-strip__v wh-v-solid">solid</span></div>
+              <div class="wh-strip"><span class="wh-strip__q">1</span><span class="wh-strip__n"><span class="raw">Steak Frites</span><span class="set">Steak Frites</span></span><span class="lead"></span><span class="wh-strip__p">38.00</span><span class="wh-strip__v wh-v-top">Top Rank Worthy</span></div>
+              <div class="wh-strip"><span class="wh-strip__q">1</span><span class="wh-strip__n"><span class="raw">Onion Tarte</span><span class="set">Onion Tarte</span></span><span class="lead"></span><span class="wh-strip__p">19.00</span><span class="wh-strip__v">Can't Miss</span></div>
+              <div class="wh-strip"><span class="wh-strip__q">1</span><span class="wh-strip__n"><span class="raw">Martini</span><span class="set">Martini</span></span><span class="lead"></span><span class="wh-strip__p">17.00</span><span class="wh-strip__v">Solid</span></div>
               <div class="wh-slip__foot">
                 <span class="tot">Total</span><span class="tot"><b>$74.00</b></span>
-                <span class="card">2 must &middot; 1 solid</span>
+                <span class="card">2 dishes &middot; 1 drink</span>
               </div>
             </div>
           </div>
@@ -1159,25 +1153,24 @@ html.js #product .artifact-card.wh-in:nth-of-type(3){animation:whthrow-r 820ms c
                 <span class="why-rows__numeral">i</span>
                 <div>
                     <div class="why-rows__head">Your taste, on call when you aren't.</div>
-                    <p class="why-rows__body">A good rec is real work. The occasion, the party size, who's eating. Do it once here and your people get the answer without waiting on you.</p>
+                    <p class="why-rows__body">Do it once. Your people get the answer without waiting on you.</p>
                 </div>
             </li>
             <li>
                 <span class="why-rows__numeral">ii</span>
                 <div>
                     <div class="why-rows__head">Keep it. Find it. Send it.</div>
-                    <p class="why-rows__body">Scan the check and the dishes fill themselves in. Your time goes to the photos and the ratings.</p>
+                    <p class="why-rows__body">Scan the check. Your time goes to the photos and the ratings.</p>
                 </div>
             </li>
             <li>
                 <span class="why-rows__numeral">iii</span>
                 <div>
                     <div class="why-rows__head">Walk in already knowing.</div>
-                    <p class="why-rows__body">What to order, what to skip, what regulars know, how hard the table is to get. Before you sit down.</p>
+                    <p class="why-rows__body">What to order, what to skip, how hard the table is to get.</p>
                 </div>
             </li>
         </ul>
-        <p class="why-rows__kicker">Every card makes the next dinner better. Yours, your friends', and everyone's going next.</p>
     </section>
 
     <!-- Diamond rule -->
@@ -1189,86 +1182,61 @@ html.js #product .artifact-card.wh-in:nth-of-type(3){animation:whthrow-r 820ms c
             <div class="rule-dbl"></div>
             <h2 class="sec__title">Three ways to keep score.</h2>
             <p class="sec__sub">
-                <strong>Log restaurants. Rank dishes. Build Spreads.</strong> Everything your friends ask you for, in one place they can follow.
+                <strong>Log restaurants. Rank dishes. Build Spreads.</strong>
             </p>
         </div>
 
-        <!-- Artifact 1: Menu Card -->
-        <a class="artifact-card" href="https://apps.apple.com/us/app/wildheavy/id6758928194" target="_blank" rel="noopener">
+        <!-- Artifact 1: Menu Card (matches the app's Menu Card page, Oct 2026 brand pass) -->
+        <a class="artifact-card mc" href="https://apps.apple.com/us/app/wildheavy/id6758928194" target="_blank" rel="noopener">
             <div class="pen-bracket ink-menu" aria-hidden="true"><svg class="pen-bracket__top" width="60" height="10" viewBox="0 0 60 10"><path fill="currentColor" d="M56 2.9C40 2.25 22 2.2 7 2C4.2 2 2 4.2 2 7L2 10L4 10L4 7C4 5.3 5.3 4 7 4C22 4.2 40 4.3 56 3.1Z"/></svg><svg class="pen-bracket__mid" viewBox="0 0 6 1000" preserveAspectRatio="none"><path fill="currentColor" d="M2.09 0C2.3 300 2.25 700 1.88 1000L3.78 1000C4.36 700 4.36 300 4.09 0Z"/></svg><svg class="pen-bracket__bot" width="60" height="10" viewBox="0 0 60 10"><path fill="currentColor" d="M56 2.9C40 2.25 22 2.2 7 2C4.2 2 2 4.2 2 7L2 10L4 10L4 7C4 5.3 5.3 4 7 4C22 4.2 40 4.3 56 3.1Z"/></svg></div>
-            <div class="artifact-card__head">
-                <div class="type-label ink-menu">Menu Card · 3 dishes · <b>2 must</b></div>
-                <h3 class="artifact-card__title">Le Bouchon</h3>
-                <div class="artifact-card__meta">Bucktown · French bistro · Date night, party of 2</div>
-            </div>
+            <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="mcStar" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol></svg>
 
-            <div class="reso-diff">
-                <div class="reso-diff__label">Reservation Difficulty</div>
-                <div class="reso-diff__row">
-                    <div class="reso-diff__bars" aria-label="2 of 5">
-                        <span class="reso-diff__bar reso-diff__bar--filled"></span>
-                        <span class="reso-diff__bar reso-diff__bar--filled"></span>
-                        <span class="reso-diff__bar"></span>
-                        <span class="reso-diff__bar"></span>
-                        <span class="reso-diff__bar"></span>
+            <div class="mc-top">
+                <span class="mc-kind">Menu Card</span>
+                <span class="mc-no"><i class="mc-bear" aria-hidden="true"></i>N&ordm; 001</span>
+            </div>
+            <svg class="pen-rule mc-rule ink-menu" viewBox="0 0 1000 6" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 3.1C8 2.4 16 2.1 30 2.1C300 2.26 600 2.22 965 1.91C985 1.95 995 2.4 1000 2.8C995 3.3 985 3.65 965 3.76C600 4.27 300 4.43 30 4.18C16 4.15 8 3.8 0 3.1Z"/></svg>
+            <h3 class="artifact-card__title mc-title">Le Bouchon</h3>
+
+            <svg class="pen-rule mc-rule ink-menu" viewBox="0 0 1000 6" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 3.1C8 2.4 16 2.1 30 2.1C300 2.26 600 2.22 965 1.91C985 1.95 995 2.4 1000 2.8C995 3.3 985 3.65 965 3.76C600 4.27 300 4.43 30 4.18C16 4.15 8 3.8 0 3.1Z"/></svg>
+            <div class="mc-form">
+                <div class="mc-fr">
+                    <div class="mc-f mc-f--table">
+                        <span class="mc-lbl">Getting a table</span>
+                        <span class="mc-val"><svg class="mc-ic" viewBox="0 0 24 24"><path d="M13 4h3a2 2 0 0 1 2 2v14"/><path d="M2 20h3"/><path d="M13 20h9"/><path d="M10 12v.01"/><path d="M13 4.562v16.157a1 1 0 0 1-1.242.97L5 20V5.562a2 2 0 0 1 1.515-1.94l4-1A2 2 0 0 1 13 4.561Z"/></svg>Plan Ahead</span>
+                        <div class="mc-scale" aria-label="Getting a table: step 3 of 6">
+                            <div class="mc-scale__track"><i></i><i></i><i class="on"></i><i></i><i></i><i></i></div>
+                            <div class="mc-scale__ends"><span>Walk in</span><span>Insider only</span></div>
+                        </div>
                     </div>
-                    <div class="reso-diff__verdict">Plan Ahead</div>
                 </div>
             </div>
 
-            <svg class="pen-rule ink-menu" viewBox="0 0 1000 6" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 3.1C8 2.4 16 2.1 30 2.1C300 2.26 600 2.22 965 1.91C985 1.95 995 2.4 1000 2.8C995 3.3 985 3.65 965 3.76C600 4.27 300 4.43 30 4.18C16 4.15 8 3.8 0 3.1Z"/></svg>
+            <div class="mc-ordhd"><span class="mc-sec">The order</span><span class="mc-cnt">2 dishes &middot; 1 drink</span></div>
+            <svg class="pen-rule mc-rule ink-menu" viewBox="0 0 1000 6" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 3.1C8 2.4 16 2.1 30 2.1C300 2.26 600 2.22 965 1.91C985 1.95 995 2.4 1000 2.8C995 3.3 985 3.65 965 3.76C600 4.27 300 4.43 30 4.18C16 4.15 8 3.8 0 3.1Z"/></svg>
 
-            <ul class="menu-rows">
-                <li>
-                    <div class="menu-rows__thumb"><img src="photos/dishes/le-bouchon-steak-frites.jpg" alt="Steak Frites at Le Bouchon" loading="lazy"></div>
-                    <div>
-                        <div class="lead-line">
-                            <span class="menu-rows__name">Steak Frites</span>
-                            <span class="lead" aria-hidden="true"></span>
-                            <span class="menu-rows__rating">★★★★★</span>
-                        </div>
-                        <div class="menu-rows__byline">
-                            <span class="menu-rows__desc">Au poivre, shoestring frites</span>
-                            <span class="menu-rows__verdict menu-rows__verdict--must">must</span>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <div class="menu-rows__thumb"><img src="photos/dishes/le-bouchon-onion-tarte.jpg" alt="Onion Tarte at Le Bouchon" loading="lazy"></div>
-                    <div>
-                        <div class="lead-line">
-                            <span class="menu-rows__name">Onion Tarte</span>
-                            <span class="lead" aria-hidden="true"></span>
-                            <span class="menu-rows__rating">★★★★<span style="opacity:0.22;">★</span></span>
-                        </div>
-                        <div class="menu-rows__byline">
-                            <span class="menu-rows__desc">Caramelized onion, gruyère</span>
-                            <span class="menu-rows__verdict menu-rows__verdict--must">must</span>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <div class="menu-rows__thumb"><img src="photos/dishes/le-bouchon-martini.jpg" alt="Martini at Le Bouchon" loading="lazy"></div>
-                    <div>
-                        <div class="lead-line">
-                            <span class="menu-rows__name">Martini</span>
-                            <span class="lead" aria-hidden="true"></span>
-                            <span class="menu-rows__rating">★★★<span style="opacity:0.22;">★★</span></span>
-                        </div>
-                        <div class="menu-rows__byline">
-                            <span class="menu-rows__desc">Up, dirty, olive</span>
-                            <span class="menu-rows__verdict">solid</span>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-
-            <div class="shift-note home-shift-note">
-                <span class="shift-note__label">Shift Note</span>
-                &ldquo;Manion-style&rdquo; is when they put the steak on top of the fries and pour the au poivre over the whole pile. Going to try it next time.
+            <div class="mc-course">Drinks</div>
+            <div class="mc-row">
+                <img src="photos/dishes/le-bouchon-martini.jpg" alt="Martini at Le Bouchon" loading="lazy">
+                <div class="mc-dish"><span class="mc-n">Martini</span><span class="mc-mod">Up, dirty, olive</span></div>
+                <div class="mc-rate"><span class="mc-stars" aria-label="3 of 5 stars"><svg><use href="#mcStar"/></svg><svg><use href="#mcStar"/></svg><svg><use href="#mcStar"/></svg><svg class="off"><use href="#mcStar"/></svg><svg class="off"><use href="#mcStar"/></svg></span><span class="mc-v">Solid</span></div>
+            </div>
+            <div class="mc-course">To Start</div>
+            <div class="mc-row">
+                <img src="photos/dishes/le-bouchon-onion-tarte.jpg" alt="Onion Tarte at Le Bouchon" loading="lazy">
+                <div class="mc-dish"><span class="mc-n">Onion Tarte</span><span class="mc-mod">Caramelized onion, gruy&egrave;re</span></div>
+                <div class="mc-rate"><span class="mc-stars" aria-label="4 of 5 stars"><svg><use href="#mcStar"/></svg><svg><use href="#mcStar"/></svg><svg><use href="#mcStar"/></svg><svg><use href="#mcStar"/></svg><svg class="off"><use href="#mcStar"/></svg></span><span class="mc-v">Can't Miss</span></div>
+            </div>
+            <div class="mc-course">The Mains</div>
+            <div class="mc-row">
+                <img src="photos/dishes/le-bouchon-steak-frites.jpg" alt="Steak Frites at Le Bouchon" loading="lazy">
+                <div class="mc-dish"><span class="mc-n">Steak Frites</span><span class="mc-mod">Au poivre, shoestring frites</span></div>
+                <div class="mc-rate"><span class="mc-stars" aria-label="5 of 5 stars"><svg><use href="#mcStar"/></svg><svg><use href="#mcStar"/></svg><svg><use href="#mcStar"/></svg><svg><use href="#mcStar"/></svg><svg><use href="#mcStar"/></svg></span><span class="mc-v mc-v--top">Top Rank Worthy</span></div>
             </div>
 
-            <span class="artifact-card__cta">Build your own Menu Card → Try WildHeavy</span>
+            <div class="mc-caption"><svg class="mc-ic" viewBox="0 0 24 24"><path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4"/><path d="M2 6h4"/><path d="M2 10h4"/><path d="M2 14h4"/><path d="M2 18h4"/><path d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/></svg><p><b>Shift notes:</b> &ldquo;Manion-style&rdquo; is when they put the steak on top of the fries and pour the au poivre over the whole pile. Going to try it next time.</p></div>
+
+            <span class="artifact-card__cta">Build your own Menu Card →</span>
         </a>
 
         <!-- Artifact 2: Personal Ranking -->
@@ -1277,7 +1245,6 @@ html.js #product .artifact-card.wh-in:nth-of-type(3){animation:whthrow-r 820ms c
             <div class="artifact-card__head">
                 <div class="type-label ink-rank">Ranking · 4 entries</div>
                 <h3 class="artifact-card__title artifact-card__title--long">My Sweet Potato Rankings, <em>Chicago.</em></h3>
-                <div class="artifact-card__meta">Sweet potato</div>
             </div>
 
             <svg class="pen-rule pen-rule--brass" viewBox="0 0 1000 6" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="whRankP" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7a5a24"></stop><stop offset="0.14" stop-color="#b8904a"></stop><stop offset="0.3" stop-color="#f3dd9b"></stop><stop offset="0.44" stop-color="#c9a24e"></stop><stop offset="0.58" stop-color="#8a6a2f"></stop><stop offset="0.74" stop-color="#d8bb72"></stop><stop offset="0.84" stop-color="#f6e7b4"></stop><stop offset="1" stop-color="#9c7633"></stop></linearGradient></defs><path fill="url(#whRankP)" d="M0 3.1C8 2.4 16 2.1 30 2.1C300 2.26 600 2.22 965 1.91C985 1.95 995 2.4 1000 2.8C995 3.3 985 3.65 965 3.76C600 4.27 300 4.43 30 4.18C16 4.15 8 3.8 0 3.1Z"/></svg>
@@ -1313,7 +1280,7 @@ html.js #product .artifact-card.wh-in:nth-of-type(3){animation:whthrow-r 820ms c
             </ul>
             <div class="menu-rows__more">+ <strong>1</strong> more ranked</div>
 
-            <span class="artifact-card__cta">Build your own Ranking → Try WildHeavy</span>
+            <span class="artifact-card__cta">Build your own Ranking →</span>
         </a>
 
         <!-- Artifact 3: Hot Route -->
@@ -1351,12 +1318,8 @@ html.js #product .artifact-card.wh-in:nth-of-type(3){animation:whthrow-r 820ms c
                 </li>
             </ul>
 
-            <div class="shift-note home-shift-note">
-                <span class="shift-note__label">Shift Note</span>
-                Map view, time between stops, and notes from the table live in the app. Skip the order and it's <strong>Spots</strong>. Either way, you're building a <strong>Spread</strong>.
-            </div>
 
-            <span class="artifact-card__cta">Build your own Route → Try WildHeavy</span>
+            <span class="artifact-card__cta">Build your own Route →</span>
         </a>
     </section>
 
@@ -1445,7 +1408,7 @@ html.js #product .artifact-card.wh-in:nth-of-type(3){animation:whthrow-r 820ms c
                     </div>
                 </li>
             </ul>
-            <div class="top-rank-card__footnote">Static example. Live rankings update inside the app.</div>
+            <div class="top-rank-card__footnote">Example. Live in the app.</div>
         </article>
     </section>
 

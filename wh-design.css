@@ -17,7 +17,7 @@
     --ink-soft:     #2A4538;   /* secondary ink */
     --ink-mute:     rgba(26, 54, 41, 0.58);
 
-    --oxblood:      #8B2A2A;   /* stamp, accent, hot */
+    --oxblood:      #7A2621;   /* oxblood, matches the app (2026-10-14) */
     --oxblood-soft: #6E2020;   /* hover / pressed */
     --gold:         #B8904A;   /* brass — HARDWARE ONLY: rules, seal, gauge,
                                   underlines, ::selection. Never a word: it
@@ -748,7 +748,7 @@ a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
     margin-bottom: 1em;
 }
 .doc__section p strong { color: var(--ink); font-weight: 600; }
-.doc__section a { color: var(--oxblood); text-decoration-color: rgba(139,42,42,0.5); }
+.doc__section a { color: var(--oxblood); text-decoration-color: rgba(122,38,33,0.5); }
 .doc__section a:hover { color: var(--oxblood-soft); }
 .doc__section ul, .doc__section ol {
     margin: 0.6em 0 1em 1.4em;
