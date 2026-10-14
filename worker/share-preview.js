@@ -818,7 +818,7 @@ ${state.status === 'ok' ? `<meta property="og:image:width" content="1200">
   --ink: #1A3629;
   --ink-soft: #2A4538;
   --ink-mute: rgba(26, 54, 41, 0.58);
-  --oxblood: #8B2A2A;
+  --oxblood: #7A2621;
   --oxblood-soft: #6E2020;
   --gold: #B8904A;
   --gold-soft: #9E7A3B;

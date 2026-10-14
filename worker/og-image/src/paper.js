@@ -302,7 +302,7 @@ function escAttr(s) {
 function CSS(size) {
   return `
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--ink:#24442f;--pen:#1d2a55;--ox:#8f2f2a;--hair:1.5px solid var(--ink);--heavy:3px solid var(--ink)}
+:root{--ink:#24442f;--pen:#1d2a55;--ox:#7A2621;--hair:1.5px solid var(--ink);--heavy:3px solid var(--ink)}
 html,body{width:${size.w}px;height:${size.h}px;overflow:hidden}
 body{background:radial-gradient(ellipse at 50% 40%,#2b4a37 0%,#1a2f22 75%);font-family:'Instrument Sans',sans-serif;color:var(--ink)}
 .table{position:absolute;inset:0;display:grid;gap:6px;background:#1a2f22}
