@@ -47,7 +47,7 @@ const CLEAN = {
   mute: 'rgba(26,54,41,0.58)',
   gold: '#B8904A',
   goldSoft: '#9E7A3B',
-  oxblood: '#8B2A2A',
+  oxblood: '#7A2621',
   rule: 'rgba(26,54,41,0.18)',
   neutralDot: 'rgba(26,54,41,0.40)',
   wordmark: WORDMARK_FOREST,
@@ -408,7 +408,7 @@ function routeBody(t, C) {
 // app renders the same dots on light and dark surfaces, and a story card
 // that recolours them stops matching what the user just saw in the feed.
 const INTENT_FILL = {
-  food: '#8B2A2A',   // --burnt-sienna
+  food: '#7A2621',   // --burnt-sienna
   drinks: '#BC8E49', // --gold
   both: '#B87333',   // INTENT_BOTH_COPPER
 };

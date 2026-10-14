@@ -40,7 +40,7 @@ const C = {
   mute: 'rgba(26,54,41,0.58)',
   gold: '#B8904A',
   goldSoft: '#9E7A3B',
-  oxblood: '#8B2A2A',
+  oxblood: '#7A2621',
   rule: 'rgba(26,54,41,0.18)',
   ruleGold: 'rgba(184,144,74,0.55)',
 };
