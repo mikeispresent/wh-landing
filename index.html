@@ -175,6 +175,9 @@
         /* The seal used to space these. The section head does the labelling
            now, so the break is spacing alone. */
         .sec + .sec { padding-top: 72px; }
+        /* breathing room between the forest hero and the first headline */
+        #why { padding-top: 56px; }
+        @media (max-width: 640px) { #why { padding-top: 40px; } }
         @media (max-width: 640px) { .sec + .sec { padding-top: 52px; } }
         .sec__head { margin-bottom: 32px; }
         .sec__title {
@@ -200,28 +203,21 @@
         }
 
         /* ============================================================
-           WHY YOU'LL BE A REGULAR — three value beats, numeral motif
+           WHY YOU'LL BE A REGULAR — three value beats, one bear each
            ============================================================ */
         .why-rows { list-style: none; margin: 0; padding: 0; }
         .why-rows li {
             display: grid;
-            grid-template-columns: 40px 1fr;
+            grid-template-columns: 56px 1fr;
             gap: 18px;
             padding: 22px 0;
             border-bottom: 1px solid var(--rule);
             align-items: start;
         }
         .why-rows li:last-child { border-bottom: 0; }
-        .why-rows__numeral {
-            font-family: var(--font-display);
-            font-style: italic;
-            font-weight: 400;
-            font-size: 1.5rem;
-            color: var(--leather);
-            line-height: 1;
-            text-align: center;
-            padding-top: 3px;
-        }
+        /* one bear per row, matched to what the row says: thumbs up for the rec,
+           happy for the keep, hungry for the walk-in. Decorative, so alt="". */
+        .why-rows__bear { display: block; width: 100%; height: auto; margin-top: -2px; }
         .why-rows__head {
             font-family: var(--font-display);
             font-weight: 500;
@@ -254,7 +250,7 @@
         /* Stacked three-sentence section headline: let the explicit breaks rule. */
         .sec__title--stack { max-width: none; }
         @media (max-width: 520px) {
-            .why-rows li { grid-template-columns: 30px 1fr; gap: 14px; padding: 18px 0; }
+            .why-rows li { grid-template-columns: 44px 1fr; gap: 14px; padding: 18px 0; }
             .why-rows__head { font-size: 1.18rem; }
             .why-rows__kicker { font-size: 1rem; }
         }
@@ -502,7 +498,7 @@
         .mc-caption .mc-ic { margin-top: 2px; color: var(--ink); }
         .mc-caption b, .mc-caption strong { font-weight: 600; color: var(--ink); }
 
-        /* Personal Ranking — roman numerals */
+        /* Personal Ranking — plain position numbers */
         .rank-rows {
             list-style: none;
             margin: 0;
@@ -519,8 +515,8 @@
         .rank-rows li:last-child { border-bottom: 0; }
         .rank-rows__numeral {
             font-family: var(--font-display);
-            font-style: italic;
-            font-weight: 400;
+            font-style: normal;
+            font-weight: 700;
             font-size: 1.3rem;
             color: var(--leather);
             line-height: 1;
@@ -1061,7 +1057,7 @@ html.js #product .artifact-card.wh-in:nth-of-type(3){animation:whthrow-r 820ms c
 .wh-last__say .cta-stack.on{opacity:1;transform:none;}
 .wh-glass{width:min(380px,34vw);border:1px solid var(--rule-bold);border-radius:3px;overflow:hidden;
   line-height:0;background:var(--paper);box-shadow:0 18px 40px -26px rgba(10,24,16,.34);}
-.wh-glass canvas{display:block;width:100%;height:auto;}
+.wh-glass svg{display:block;width:100%;height:auto;}
 .wh-last__cap{font-family:var(--font-mono);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;
   color:var(--ink-mute);margin-top:16px;}
 
@@ -1150,21 +1146,21 @@ html.js #product .artifact-card.wh-in:nth-of-type(3){animation:whthrow-r 820ms c
         </div>
         <ul class="why-rows">
             <li>
-                <span class="why-rows__numeral">i</span>
+                <img class="why-rows__bear" src="bears/bear-community.webp" alt="" width="56" height="50" loading="lazy">
                 <div>
                     <div class="why-rows__head">Your taste, on call when you aren't.</div>
                     <p class="why-rows__body">Do it once. Your people get the answer without waiting on you.</p>
                 </div>
             </li>
             <li>
-                <span class="why-rows__numeral">ii</span>
+                <img class="why-rows__bear" src="bears/bear-happy.webp" alt="" width="56" height="50" loading="lazy">
                 <div>
                     <div class="why-rows__head">Keep it. Find it. Send it.</div>
                     <p class="why-rows__body">Scan the check. Your time goes to the photos and the ratings.</p>
                 </div>
             </li>
             <li>
-                <span class="why-rows__numeral">iii</span>
+                <img class="why-rows__bear" src="bears/bear-hungry.webp" alt="" width="56" height="50" loading="lazy">
                 <div>
                     <div class="why-rows__head">Walk in already knowing.</div>
                     <p class="why-rows__body">What to order, what to skip, how hard the table is to get.</p>
@@ -1251,7 +1247,7 @@ html.js #product .artifact-card.wh-in:nth-of-type(3){animation:whthrow-r 820ms c
 
             <ul class="rank-rows">
                 <li>
-                    <div class="rank-rows__numeral">i</div>
+                    <div class="rank-rows__numeral">1</div>
                     <div class="rank-rows__thumb"><img src="photos/dishes/sweet-potato-johns.jpg" alt="Sweet Potato at John's Food and Wine" loading="lazy"></div>
                     <div class="lead-line">
                         <span class="rank-rows__rest">Sweet Potato</span>
@@ -1260,7 +1256,7 @@ html.js #product .artifact-card.wh-in:nth-of-type(3){animation:whthrow-r 820ms c
                     </div>
                 </li>
                 <li>
-                    <div class="rank-rows__numeral">ii</div>
+                    <div class="rank-rows__numeral">2</div>
                     <div class="rank-rows__thumb"><img src="photos/dishes/sweet-potato-maxwells.jpg" alt="Japanese Sweet Potato at Maxwells Trading" loading="lazy"></div>
                     <div class="lead-line">
                         <span class="rank-rows__rest">Japanese Sweet Potato (green curry)</span>
@@ -1269,7 +1265,7 @@ html.js #product .artifact-card.wh-in:nth-of-type(3){animation:whthrow-r 820ms c
                     </div>
                 </li>
                 <li>
-                    <div class="rank-rows__numeral">iii</div>
+                    <div class="rank-rows__numeral">3</div>
                     <div class="rank-rows__thumb"><img src="photos/dishes/sweet-potato-brasero.jpg" alt="Sweet Potato at Brasero" loading="lazy"></div>
                     <div class="lead-line">
                         <span class="rank-rows__rest">Sweet Potato</span>
@@ -1419,7 +1415,49 @@ html.js #product .artifact-card.wh-in:nth-of-type(3){animation:whthrow-r 820ms c
     <div class="wh-last" id="whLast">
       <div class="wh-last__track" id="whLastTrack">
         <div class="wh-last__stick">
-          <div class="wh-glass"><canvas id="whGlass" width="520" height="660" aria-label="A dirty martini lifting to reveal a printed WildHeavy coaster"></canvas></div>
+          <div class="wh-glass"><svg id="whGlass" viewBox="0 0 520 660" role="img" aria-label="A dirty martini lifting off a printed WildHeavy coaster">
+            <defs>
+              <clipPath id="mgBowl"><path d="M-165 -390 A165 26 0 0 1 165 -390 L8 -206 Q0 -198 -8 -206 Z"/></clipPath>
+              <filter id="mgSoft" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur id="mgBlur" stdDeviation="2"/></filter>
+              <path id="mgRing" d="M-121 0 A121 121 0 1 1 121 0 A121 121 0 1 1 -121 0"/>
+            </defs>
+            <g transform="translate(260 540)">
+              <ellipse cx="0" cy="7" rx="150" ry="51" fill="#D8D2BF"/>
+              <g transform="scale(1 .34)">
+                <circle r="150" fill="#F3EFE2" stroke="rgba(26,54,41,.35)" stroke-width="1.4"/>
+                <circle r="141" fill="none" stroke="#1A3629" stroke-width="2.4"/>
+                <circle r="104" fill="none" stroke="#1A3629" stroke-width="1"/>
+                <text font-family="JetBrains Mono, ui-monospace, monospace" font-weight="700" font-size="12.5" letter-spacing="3" fill="#1A3629"><textPath href="#mgRing" textLength="740" lengthAdjust="spacing">WE&#8217;RE ALL REGULARS HERE &#183; CERTIFIED HEAVY &#183; EST. 2019 &#183;</textPath></text>
+                <image href="Wild%20Heavy%20-%20Monogram%20-%20Transparent%20-%20Edited.png" x="-62" y="-62" width="124" height="124" opacity=".9"/>
+                <circle r="61" fill="none" stroke="rgba(26,54,41,.09)" stroke-width="7"/>
+              </g>
+              <ellipse id="mgContact" cx="6" cy="2" rx="66" ry="17" fill="rgba(10,24,16,.30)" filter="url(#mgSoft)"/>
+              <ellipse id="mgShadow" cx="30" cy="4" rx="96" ry="26" fill="rgba(10,24,16,.22)" filter="url(#mgSoft)"/>
+              <g id="mgGlass">
+                <ellipse cx="0" cy="-8" rx="72" ry="21" fill="rgba(255,255,255,.45)" stroke="#1A3629" stroke-width="2"/>
+                <ellipse cx="0" cy="-11" rx="56" ry="13" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="1.6"/>
+                <path d="M-6 -14 L-4 -198 L4 -198 L6 -14 Z" fill="rgba(255,255,255,.5)" stroke="#1A3629" stroke-width="1.8" stroke-linejoin="round"/>
+                <path d="M-1.5 -30 L-1 -190" stroke="rgba(255,255,255,.95)" stroke-width="1.4"/>
+                <path d="M-165 -390 L-8 -206 Q0 -198 8 -206 L165 -390 A165 26 0 0 1 -165 -390 Z" fill="rgba(255,255,255,.3)"/>
+                <path d="M-165 -390 A165 26 0 0 1 165 -390" fill="none" stroke="#1A3629" stroke-width="1.2" opacity=".55"/>
+                <g id="mgPick">
+                  <line id="mgStick" stroke="#9C7633" stroke-width="2.6" stroke-linecap="round"/>
+                  <g id="mgOl1"><ellipse rx="17" ry="14" fill="#6F7A2E" stroke="#3D4518" stroke-width="1.4"/><ellipse class="pim" cx="13" rx="5" ry="4.2" fill="#7A2621"/><ellipse cx="-5" cy="-5" rx="5" ry="3" fill="rgba(255,255,255,.4)"/></g>
+                  <g id="mgOl2"><ellipse rx="17" ry="14" fill="#7A852F" stroke="#3D4518" stroke-width="1.4"/><ellipse class="pim" cx="13" rx="5" ry="4.2" fill="#7A2621"/><ellipse cx="-5" cy="-5" rx="5" ry="3" fill="rgba(255,255,255,.45)"/></g>
+                </g>
+                <g clip-path="url(#mgBowl)">
+                  <g id="mgLiq">
+                    <rect x="-420" y="-345" width="840" height="640" fill="rgba(196,208,166,.66)"/>
+                    <ellipse cx="0" cy="-345" rx="126" ry="20" fill="rgba(234,238,216,.72)" stroke="#1A3629" stroke-width="1" stroke-opacity=".5"/>
+                  </g>
+                </g>
+                <path d="M-165 -390 L-8 -206 Q0 -198 8 -206 L165 -390" fill="none" stroke="#1A3629" stroke-width="2.2" stroke-linejoin="round"/>
+                <path d="M-165 -390 A165 26 0 0 0 165 -390" fill="none" stroke="#1A3629" stroke-width="2.2"/>
+                <path d="M-138 -372 L-40 -258" stroke="rgba(255,255,255,.95)" stroke-width="3" stroke-linecap="round"/>
+                <path d="M-118 -376 L-82 -334" stroke="rgba(255,255,255,.8)" stroke-width="1.6" stroke-linecap="round"/>
+              </g>
+            </g>
+          </svg></div>
           <div class="wh-last__say">
             <p class="close-cta__quote">"We're all regulars here."</p>
             <div class="cta-stack" id="whLastCta">
@@ -1627,47 +1665,83 @@ var raf = window.requestAnimationFrame.bind(window);
   }, {passive:true});
 })();
 
-/* 5 · the martini, scrubbed */
+/* 5 · the martini, drawn by hand and moved by physics.
+   Scroll sets where the glass WANTS to be. Springs decide where it IS, so a
+   lift carries weight, overshoots a touch and settles. The pick swings a beat
+   behind the glass, the liquid holds level and sloshes, the shadow shrinks
+   and softens as the glass leaves the coaster, and a hand tremor (three
+   uneven sines, so it never repeats) keeps it alive while it's held. */
 (function(){
-    /* 64 frames of the martini turntable, served as files and fetched
-     only once the closing section is within about a screen and a half */
-  var F = []; for (var fi = 0; fi < 64; fi++) F.push('martini/f' + (fi < 10 ? '0' + fi : fi) + '.jpg');
-  var cv = document.getElementById('whGlass'); if (!cv || !F.length) return;
-  var ctx = cv.getContext('2d'), imgs = [], cur = -1;
-  var track = document.getElementById('whLastTrack');
-  var stick = document.querySelector('.wh-last__stick');
-  function place(){ if(!stick) return;
-    var gap = (window.innerHeight - stick.offsetHeight) / 2;
-    stick.style.top = Math.max(10, Math.round(gap)) + 'px'; }
-  var fetched=false;
-  function fetchFrames(){ if(fetched) return; fetched=true;
-    F.forEach(function(src,i){ var im=new Image(); im.decoding='async';
-      im.onload=function(){ if(i===0&&cur<0) draw(0); read(); }; im.src=src; imgs[i]=im; }); }
-  /* first frame straight away so the pane is never empty, the rest on approach */
-  (function(){ var im=new Image(); im.decoding='async';
-    im.onload=function(){ if(cur<0) draw(0); }; im.src=F[0]; imgs[0]=im; })();
-  if ('IntersectionObserver' in window){
-    new IntersectionObserver(function(es,ob){
-      es.forEach(function(en){ if(en.isIntersecting){ fetchFrames(); ob.disconnect(); } });
-    }, {rootMargin:'150% 0px'}).observe(document.getElementById('whLast'));
-  } else { window.addEventListener('load', fetchFrames); }
+  var svg = document.getElementById('whGlass'); if (!svg) return;
+  var G = document.getElementById('mgGlass'), L = document.getElementById('mgLiq');
+  var stick = document.getElementById('mgStick'), O1 = document.getElementById('mgOl1'), O2 = document.getElementById('mgOl2');
+  var SH = document.getElementById('mgShadow'), CT = document.getElementById('mgContact'), BL = document.getElementById('mgBlur');
+  var track = document.getElementById('whLastTrack'), stk = document.querySelector('.wh-last__stick');
   var cta = document.getElementById('whLastCta');
-  function draw(i){ if(i===cur) return; var im=imgs[i];
-    if(!im||!im.complete||!im.naturalWidth) return; cur=i; ctx.drawImage(im,0,0,cv.width,cv.height);
-    if (cta) cta.classList.toggle('on', i/(F.length-1) > .78); }
-  var pend=false;
-  function read(){ if(pend) return; pend=true;
-    raf(function(){ pend=false;
-      var r=track.getBoundingClientRect();
-      var t=stick?(parseFloat(getComputedStyle(stick).top)||0):0;
-      var span=track.offsetHeight-(stick?stick.offsetHeight:window.innerHeight);
-      if(span<=0){ draw(F.length-1); return; }
-      draw(Math.round(Math.min(1,Math.max(0,(t-r.top)/span))*(F.length-1))); }); }
-  window.addEventListener('scroll', read, {passive:true});
+  var S = .9, PIV = -200 * S, D = Math.PI / 180;
+  function cl(v){ return v < 0 ? 0 : v > 1 ? 1 : v; }
+  function sm(v){ v = cl(v); return v * v * (3 - 2 * v); }
+  function spr(k, z){ return { x: 0, v: 0, a: 0, k: k, c: 2 * z * Math.sqrt(k) }; }
+  var spin = spr(26, .85), lift = spr(90, .55), tilt = spr(70, .5), drift = spr(60, .6), pick = spr(55, .3), slosh = spr(45, .12);
+  var p = 0, t = 0, last = 0, running = false, visible = true;
+  function step(s, target, dt){ var a = s.k * (target - s.x) - s.c * s.v; s.a = a; s.v += a * dt; s.x += s.v * dt; }
+  function proj(r, y, a){ return [r * Math.cos(a), y + r * Math.sin(a) * .16, Math.sin(a)]; }
+  function render(){
+    var h = lift.x, th = tilt.x;
+    G.setAttribute('transform', 'translate(' + drift.x.toFixed(2) + ' ' + (-h).toFixed(2) + ') rotate(' + th.toFixed(3) + ' 0 ' + PIV + ') scale(' + S + ')');
+    L.setAttribute('transform', 'rotate(' + (-th + slosh.x).toFixed(3) + ' 0 -345)');
+    var a = pick.x, b = proj(12, -232, a), tp = proj(150, -440, a);
+    stick.setAttribute('x1', b[0].toFixed(1)); stick.setAttribute('y1', b[1].toFixed(1));
+    stick.setAttribute('x2', tp[0].toFixed(1)); stick.setAttribute('y2', tp[1].toFixed(1));
+    var ang = Math.atan2(tp[1] - b[1], tp[0] - b[0]) / D;
+    [[O1, .40], [O2, .57]].forEach(function(o){
+      var x = b[0] + (tp[0] - b[0]) * o[1], y = b[1] + (tp[1] - b[1]) * o[1], sc = 1 + b[2] * .06;
+      o[0].setAttribute('transform', 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ') rotate(' + ang.toFixed(1) + ') scale(' + sc.toFixed(3) + ')');
+    });
+    var s = 1 / (1 + Math.max(0, h) / 150);
+    SH.setAttribute('cx', (drift.x + 26 + h * .3).toFixed(1));
+    SH.setAttribute('rx', (96 * s).toFixed(1)); SH.setAttribute('ry', (26 * s).toFixed(1));
+    SH.setAttribute('fill', 'rgba(10,24,16,' + (.22 * Math.pow(s, 1.6)).toFixed(3) + ')');
+    BL.setAttribute('stdDeviation', (2 + Math.max(0, h) / 11).toFixed(2));
+    CT.setAttribute('opacity', cl(1 - h / 10).toFixed(3));
+    if (cta) cta.classList.toggle('on', p > .78);
+  }
+  function targets(){
+    var held = sm((p - .48) / .34);
+    var trem = held * (.38 * Math.sin(1.31 * t) + .21 * Math.sin(2.07 * t + 1.1) + .11 * Math.sin(3.73 * t + 2.3));
+    return { spin: sm(p / .55) * Math.PI * 2.2 - Math.PI * .15, lift: held * 118 + held * 1.4 * Math.sin(.93 * t + .4),
+             tilt: held * 4.5 + trem, drift: held * 12, held: held };
+  }
+  function frame(now){
+    var dt = Math.min(.05, (now - last) / 1000 || .016); last = now; t += dt;
+    var T = targets(), n = Math.max(1, Math.ceil(dt / (1 / 240))), h = dt / n;
+    for (var i = 0; i < n; i++){
+      step(spin, T.spin, h); step(lift, T.lift, h); step(tilt, T.tilt, h); step(drift, T.drift, h);
+      step(pick, spin.x, h);
+      var drive = -(tilt.a * .55) - drift.a * .045;
+      slosh.a = -slosh.k * slosh.x - slosh.c * slosh.v + drive; slosh.v += slosh.a * h; slosh.x += slosh.v * h;
+      if (slosh.x > 9) { slosh.x = 9; slosh.v = 0; } else if (slosh.x < -9) { slosh.x = -9; slosh.v = 0; }
+    }
+    render();
+    var calm = T.held < .001 && Math.abs(spin.v) + Math.abs(lift.v) + Math.abs(tilt.v) + Math.abs(pick.v) + Math.abs(slosh.v) < .002
+               && Math.abs(spin.x - T.spin) < .001 && Math.abs(lift.x - T.lift) < .01;
+    if (visible && !calm) raf(frame); else running = false;
+  }
+  function kick(){ if (!running && visible){ running = true; last = performance.now(); raf(frame); } }
+  function read(){
+    var r = track.getBoundingClientRect(), top = stk ? (parseFloat(getComputedStyle(stk).top) || 0) : 0;
+    var span = track.offsetHeight - (stk ? stk.offsetHeight : window.innerHeight);
+    p = span <= 0 ? 1 : cl((top - r.top) / span); kick();
+  }
+  function place(){ if (!stk) return; stk.style.top = Math.max(10, Math.round((window.innerHeight - stk.offsetHeight) / 2)) + 'px'; }
+  if (reduce){ p = 1; var T = targets(); spin.x = pick.x = T.spin; lift.x = 118; tilt.x = 4.5; drift.x = 12; render(); return; }
+  if ('IntersectionObserver' in window){
+    new IntersectionObserver(function(es){ visible = es[0].isIntersecting; if (visible) kick(); }).observe(svg);
+  }
+  window.addEventListener('scroll', read, {passive: true});
   window.addEventListener('resize', function(){ place(); read(); });
-  place(); read();
+  spin.x = pick.x = targets().spin; render(); place(); read();
   window.addEventListener('load', function(){ place(); read(); });
-  if (reduce) setTimeout(function(){ draw(F.length-1); }, 400);
 })();
 })();
 </script>
