@@ -853,7 +853,106 @@
             .rank-rows__loc { display: block; margin-top: 3px; white-space: normal; }
             .rule-gold { margin: 44px 0; }
         }
-    </style>
+    
+/* ── 1.0.2 app match (2026-10-15): podium tops, big numerals, map-led Route ── */
+.x-kind{display:flex;justify-content:space-between;align-items:center;gap:10px;font-family:var(--font-body);font-weight:600;font-size:15px;color:var(--ink)}
+.x-kind__tr{display:inline-flex;align-items:center;gap:6px}
+.x-city{font-family:var(--font-mono);font-weight:500;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-mute);display:inline-flex;align-items:center}
+.x-city .live-dot{margin:0 5px 0 10px}.x-city .live-word{letter-spacing:.1em}
+.pen-rule.x-rule{margin:8px 0 0}
+.x-title{margin:14px 0 0}
+.x-cnt{font-family:var(--font-mono);font-weight:500;font-size:12px;color:var(--ink-mute);margin-top:6px;white-space:nowrap}
+.x-sh{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-top:20px}
+.x-sh .x-cnt{margin:0}
+.x-n{display:block;font-family:var(--font-display);font-weight:600;font-size:15.5px;line-height:1.22;color:var(--ink)}
+.x-n--lg{font-size:20px}
+.x-rs{display:block;margin-top:3px;font-family:var(--font-body);font-size:13px;color:var(--ink-mute)}
+.x-mod{display:block;margin-top:3px;font-family:var(--font-body);font-style:italic;font-size:12.5px;color:var(--ink-mute)}
+.x-v{display:block;margin-top:3px;font-family:var(--font-body);font-weight:600;font-size:13px;color:var(--ink);white-space:nowrap}
+.x-v--top{color:var(--oxblood)}
+.x-lead{margin-top:12px}
+.x-lead img{display:block;width:100%;aspect-ratio:2/1;object-fit:cover}
+.mc .x-lead img{aspect-ratio:2/1}
+.x-lead__line{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-top:10px}
+.x-lead__line .x-v{margin:0}
+.x-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:14px}
+.x-two img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;margin-bottom:8px}
+.x-v--row{overflow:hidden;text-overflow:ellipsis}
+.x-v--row .x-mod{display:inline;margin:0 0 0 4px;font-weight:400}
+.x-num{font-family:var(--font-title);font-weight:900;line-height:.85;color:var(--leather);font-variant-numeric:tabular-nums;font-synthesis:none}
+.brass{background:linear-gradient(170deg,#6f5220 0%,#a8802f 35%,#c9a24e 52%,#8a6a2f 75%,#6f5220 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.x-numline{display:flex;align-items:flex-start;gap:10px;padding-top:10px}
+.x-two .x-numline{padding-top:0}
+.x-num--lg{font-size:60px;width:34px;flex:none}
+.x-num--md{font-size:40px;flex:none}
+.x-numline>span:last-child{min-width:0;padding-top:2px}
+.x-qrow{display:flex;justify-content:space-between;align-items:center;min-height:50px;margin-top:16px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);font-family:var(--font-body);font-weight:600;font-size:15px;color:var(--ink)}
+.x-qrow svg{width:16px;height:16px;stroke:var(--ink-mute);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.x-map{display:block;width:100%;height:auto;margin-top:16px}
+.x-key{display:flex;gap:14px;margin-top:10px;font-family:var(--font-body);font-size:12.5px;color:var(--ink-mute)}
+.x-key i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.x-stops{list-style:none;margin:16px 0 0;padding:0}
+.x-stops li{position:relative;padding:0 0 22px 38px;min-height:30px}
+.x-stops li:last-child{padding-bottom:0}
+.x-stops li:not(:last-child)::before{content:"";position:absolute;left:11px;top:14px;bottom:-4px;width:2px;background:var(--oxblood)}
+.x-pin{position:absolute;left:0;top:0;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:700 12px var(--font-mono);font-style:normal;box-shadow:0 0 0 3px var(--paper)}
+.x-go{display:flex;align-items:center;justify-content:center;gap:9px;min-height:50px;margin-top:22px;border-radius:4px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);box-sizing:border-box;font:600 16px var(--font-body)}
+.x-go svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.x-tro{width:16px;height:16px;flex:none;stroke:var(--leather);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.x-tr .top-rank-rows{margin-top:10px}
+.x-tr{max-width:400px;margin-inline:auto;box-sizing:border-box}
+.x-tr__t{flex:1;min-width:0}
+.x-tr .facepile{margin-left:auto}
+.x-tr .facepile__av{width:24px;height:24px}
+@media (max-width:520px){ .x-tr{padding:18px 18px 14px 22px} }
+/* phone fit (2026-10-15): every card fits one phone screen */
+.x-rest{list-style:none;margin:8px 0 0;padding:0}
+.x-rest li{display:flex;align-items:center;gap:12px;padding:8px 0;border-top:1px solid var(--rule)}
+.x-rest li:first-child{border-top:0}
+.x-rest__t{flex:1;min-width:0}
+.x-rest img{flex:none;width:52px;height:52px;object-fit:cover;display:block}
+.x-num--sm{font-size:30px;width:24px;flex:none}
+.x-rest .x-v--row{white-space:nowrap}
+.mc .mc-f--table{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:6px 12px;padding:4px 0 8px}
+.mc .mc-f--table .mc-val{justify-self:end;font-size:15px}
+.mc .mc-f--table .mc-scale{grid-column:1/-1}
+.mc .mc-title{margin-top:10px}
+.x-lead__line{padding-top:8px}
+.mc-caption{padding-top:12px;font-size:13.5px;line-height:1.4}
+.x-map{height:auto}
+.x-stops li{padding-bottom:12px;min-height:26px}
+.x-stops .x-n{font-size:15px}
+.x-stops .x-rs{margin-top:1px;font-size:12.5px}
+.x-go{min-height:46px;margin-top:16px}
+.x-sh{padding-top:16px}
+.x-qrow{margin-top:8px;min-height:46px}
+.artifact-card__cta{margin-top:14px}
+
+.mc .pen-rule.mc-rule{margin-top:6px}
+.mc .mc-title{margin-top:8px}
+.x-rest li{padding:6px 0}
+.x-rest img{width:46px;height:46px}
+.mc-caption{font-size:13px;line-height:1.38;padding-top:10px}
+.x-lead{margin-top:10px}
+.x-sh{padding-top:14px}
+.artifact-card__cta{margin-top:12px}
+.x-stops li{padding-bottom:10px}
+.x-key{margin-top:8px}
+.x-stops{margin-top:12px}
+.mc .mc-scale__ends{display:none}
+.mc .mc-f--table{padding-bottom:4px}
+@media (max-width:520px){ #product .artifact-card{padding:18px 18px 14px 22px} }
+
+.x-foot{margin:4px 0 0;text-align:center}.x-foot a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+/* the three cards stay receipt-sized (400px, same as the hero check) and stack, so each one is thrown in as you reach it */
+.x-row{max-width:400px;margin-inline:auto}
+.x-tr .top-rank-rows li{display:flex;align-items:center;gap:14px;min-height:72px;padding:10px 0;box-sizing:border-box}
+.x-tr .top-rank-rows__num{font-size:34px;width:32px;flex:none;text-align:left;padding:0}
+.x-tr .x-n .x-tro{display:none;margin-left:6px;vertical-align:-1px}
+.x-tr li.is-lead .x-n .x-tro{display:inline-block}
+.x-tr .facepile__more{font:inherit;margin:0;padding:0;color:inherit;letter-spacing:0}
+.x-tr li.wh-bump .facepile__more{color:var(--oxblood);font-weight:700}
+</style>
 
 <style id="wh-v2">
 /* ============================================================
@@ -1182,6 +1281,7 @@ html.js #product .artifact-card.wh-in:nth-of-type(3){animation:whthrow-r 820ms c
             </p>
         </div>
 
+        <div class="x-row">
         <!-- Artifact 1: Menu Card (matches the app's Menu Card page, Oct 2026 brand pass) -->
         <a class="artifact-card mc" href="https://apps.apple.com/us/app/wildheavy/id6758928194" target="_blank" rel="noopener">
             <div class="pen-bracket ink-menu" aria-hidden="true"><svg class="pen-bracket__top" width="60" height="10" viewBox="0 0 60 10"><path fill="currentColor" d="M56 2.9C40 2.25 22 2.2 7 2C4.2 2 2 4.2 2 7L2 10L4 10L4 7C4 5.3 5.3 4 7 4C22 4.2 40 4.3 56 3.1Z"/></svg><svg class="pen-bracket__mid" viewBox="0 0 6 1000" preserveAspectRatio="none"><path fill="currentColor" d="M2.09 0C2.3 300 2.25 700 1.88 1000L3.78 1000C4.36 700 4.36 300 4.09 0Z"/></svg><svg class="pen-bracket__bot" width="60" height="10" viewBox="0 0 60 10"><path fill="currentColor" d="M56 2.9C40 2.25 22 2.2 7 2C4.2 2 2 4.2 2 7L2 10L4 10L4 7C4 5.3 5.3 4 7 4C22 4.2 40 4.3 56 3.1Z"/></svg></div>
@@ -1208,115 +1308,78 @@ html.js #product .artifact-card.wh-in:nth-of-type(3){animation:whthrow-r 820ms c
                 </div>
             </div>
 
-            <div class="mc-ordhd"><span class="mc-sec">The order</span><span class="mc-cnt">2 dishes &middot; 1 drink</span></div>
-            <svg class="pen-rule mc-rule ink-menu" viewBox="0 0 1000 6" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 3.1C8 2.4 16 2.1 30 2.1C300 2.26 600 2.22 965 1.91C985 1.95 995 2.4 1000 2.8C995 3.3 985 3.65 965 3.76C600 4.27 300 4.43 30 4.18C16 4.15 8 3.8 0 3.1Z"/></svg>
-
-            <div class="mc-course">Drinks</div>
-            <div class="mc-row">
-                <img src="photos/dishes/le-bouchon-martini.jpg" alt="Martini at Le Bouchon" loading="lazy">
-                <div class="mc-dish"><span class="mc-n">Martini</span><span class="mc-mod">Up, dirty, olive</span></div>
-                <div class="mc-rate"><span class="mc-stars" aria-label="3 of 5 stars"><svg><use href="#mcStar"/></svg><svg><use href="#mcStar"/></svg><svg><use href="#mcStar"/></svg><svg class="off"><use href="#mcStar"/></svg><svg class="off"><use href="#mcStar"/></svg></span><span class="mc-v">Solid</span></div>
+            <div class="x-sh"><span class="mc-sec">What to order</span><span class="x-cnt">3 of 3</span></div>
+            <svg class="pen-rule x-rule ink-menu" viewBox="0 0 1000 6" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 3.1C8 2.4 16 2.1 30 2.1C300 2.26 600 2.22 965 1.91C985 1.95 995 2.4 1000 2.8C995 3.3 985 3.65 965 3.76C600 4.27 300 4.43 30 4.18C16 4.15 8 3.8 0 3.1Z"/></svg>
+            <div class="x-lead">
+                <img src="photos/dishes/le-bouchon-steak-frites.jpg" style="object-position:50% 56%" alt="Steak Frites at Le Bouchon" loading="lazy">
+                <div class="x-lead__line"><span class="x-n x-n--lg">Steak Frites</span><span class="x-v x-v--top">Top Rank Worthy</span></div>
+                <span class="x-mod">Au poivre, shoestring frites</span>
             </div>
-            <div class="mc-course">To Start</div>
-            <div class="mc-row">
-                <img src="photos/dishes/le-bouchon-onion-tarte.jpg" alt="Onion Tarte at Le Bouchon" loading="lazy">
-                <div class="mc-dish"><span class="mc-n">Onion Tarte</span><span class="mc-mod">Caramelized onion, gruy&egrave;re</span></div>
-                <div class="mc-rate"><span class="mc-stars" aria-label="4 of 5 stars"><svg><use href="#mcStar"/></svg><svg><use href="#mcStar"/></svg><svg><use href="#mcStar"/></svg><svg><use href="#mcStar"/></svg><svg class="off"><use href="#mcStar"/></svg></span><span class="mc-v">Can't Miss</span></div>
-            </div>
-            <div class="mc-course">The Mains</div>
-            <div class="mc-row">
-                <img src="photos/dishes/le-bouchon-steak-frites.jpg" alt="Steak Frites at Le Bouchon" loading="lazy">
-                <div class="mc-dish"><span class="mc-n">Steak Frites</span><span class="mc-mod">Au poivre, shoestring frites</span></div>
-                <div class="mc-rate"><span class="mc-stars" aria-label="5 of 5 stars"><svg><use href="#mcStar"/></svg><svg><use href="#mcStar"/></svg><svg><use href="#mcStar"/></svg><svg><use href="#mcStar"/></svg><svg><use href="#mcStar"/></svg></span><span class="mc-v mc-v--top">Top Rank Worthy</span></div>
-            </div>
-
+            <ul class="x-rest">
+                <li><span class="x-rest__t"><span class="x-n">Onion Tarte</span><span class="x-v x-v--row">Can't Miss <span class="x-mod">Caramelized onion, gruy&egrave;re</span></span></span><img src="photos/dishes/le-bouchon-onion-tarte.jpg" style="object-position:50% 58%" alt="Onion Tarte at Le Bouchon" loading="lazy"></li>
+                <li><span class="x-rest__t"><span class="x-n">Martini</span><span class="x-v x-v--row">Solid <span class="x-mod">Up, dirty, olive</span></span></span><img src="photos/dishes/le-bouchon-martini.jpg" style="object-position:50% 30%" alt="Martini at Le Bouchon" loading="lazy"></li>
+            </ul>
             <div class="mc-caption"><svg class="mc-ic" viewBox="0 0 24 24"><path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4"/><path d="M2 6h4"/><path d="M2 10h4"/><path d="M2 14h4"/><path d="M2 18h4"/><path d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/></svg><p><b>Shift notes:</b> &ldquo;Manion-style&rdquo; is when they put the steak on top of the fries and pour the au poivre over the whole pile. Going to try it next time.</p></div>
 
             <span class="artifact-card__cta">Build your own Menu Card →</span>
         </a>
 
-        <!-- Artifact 2: Personal Ranking -->
+        <!-- Artifact 2: Ranking (matches the app's Ranking page, 1.0.2) -->
         <a class="artifact-card" href="https://apps.apple.com/us/app/wildheavy/id6758928194" target="_blank" rel="noopener">
             <div class="pen-bracket" aria-hidden="true"><svg class="pen-bracket__top" width="60" height="10" viewBox="0 0 60 10"><defs><linearGradient id="whRankH" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7a5a24"></stop><stop offset="0.14" stop-color="#b8904a"></stop><stop offset="0.3" stop-color="#f3dd9b"></stop><stop offset="0.44" stop-color="#c9a24e"></stop><stop offset="0.58" stop-color="#8a6a2f"></stop><stop offset="0.74" stop-color="#d8bb72"></stop><stop offset="0.84" stop-color="#f6e7b4"></stop><stop offset="1" stop-color="#9c7633"></stop></linearGradient></defs><path fill="url(#whRankH)" d="M56 2.9C40 2.25 22 2.2 7 2C4.2 2 2 4.2 2 7L2 10L4 10L4 7C4 5.3 5.3 4 7 4C22 4.2 40 4.3 56 3.1Z"/></svg><svg class="pen-bracket__mid" viewBox="0 0 6 1000" preserveAspectRatio="none"><defs><linearGradient id="whRankV" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a5a24"></stop><stop offset="0.14" stop-color="#b8904a"></stop><stop offset="0.3" stop-color="#f3dd9b"></stop><stop offset="0.44" stop-color="#c9a24e"></stop><stop offset="0.58" stop-color="#8a6a2f"></stop><stop offset="0.74" stop-color="#d8bb72"></stop><stop offset="0.84" stop-color="#f6e7b4"></stop><stop offset="1" stop-color="#9c7633"></stop></linearGradient></defs><path fill="url(#whRankV)" d="M2.09 0C2.3 300 2.25 700 1.88 1000L3.78 1000C4.36 700 4.36 300 4.09 0Z"/></svg><svg class="pen-bracket__bot" width="60" height="10" viewBox="0 0 60 10"><path fill="url(#whRankH)" d="M56 2.9C40 2.25 22 2.2 7 2C4.2 2 2 4.2 2 7L2 10L4 10L4 7C4 5.3 5.3 4 7 4C22 4.2 40 4.3 56 3.1Z"/></svg></div>
-            <div class="artifact-card__head">
-                <div class="type-label ink-rank">Ranking · 4 entries</div>
-                <h3 class="artifact-card__title artifact-card__title--long">My Sweet Potato Rankings, <em>Chicago.</em></h3>
+            <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="whBrass" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7a5a24"/><stop offset=".14" stop-color="#b8904a"/><stop offset=".3" stop-color="#f3dd9b"/><stop offset=".44" stop-color="#c9a24e"/><stop offset=".58" stop-color="#8a6a2f"/><stop offset=".74" stop-color="#d8bb72"/><stop offset=".84" stop-color="#f6e7b4"/><stop offset="1" stop-color="#9c7633"/></linearGradient></defs></svg>
+            <div class="x-kind"><span>Ranking</span><span class="x-city">Chicago</span></div>
+            <svg class="pen-rule x-rule" viewBox="0 0 1000 6" preserveAspectRatio="none" aria-hidden="true"><path fill="url(#whBrass)" d="M0 3.1C8 2.4 16 2.1 30 2.1C300 2.26 600 2.22 965 1.91C985 1.95 995 2.4 1000 2.8C995 3.3 985 3.65 965 3.76C600 4.27 300 4.43 30 4.18C16 4.15 8 3.8 0 3.1Z"/></svg>
+            <h3 class="artifact-card__title x-title">Sweet Potato</h3>
+            <div class="x-cnt">14 dishes &middot; 1,286 views</div>
+            <div class="x-sh"><span class="mc-sec">The top 3</span><span class="x-cnt">of 14</span></div>
+            <svg class="pen-rule x-rule" viewBox="0 0 1000 6" preserveAspectRatio="none" aria-hidden="true"><path fill="url(#whBrass)" d="M0 3.1C8 2.4 16 2.1 30 2.1C300 2.26 600 2.22 965 1.91C985 1.95 995 2.4 1000 2.8C995 3.3 985 3.65 965 3.76C600 4.27 300 4.43 30 4.18C16 4.15 8 3.8 0 3.1Z"/></svg>
+            <div class="x-lead">
+                <img src="photos/dishes/sweet-potato-johns.jpg" style="object-position:50% 62%" alt="Sweet Potato at John's Food and Wine" loading="lazy">
+                <div class="x-numline"><span class="x-num x-num--lg brass">1</span><span><span class="x-n x-n--lg">Sweet Potato</span><span class="x-rs">John's Food and Wine</span></span></div>
             </div>
-
-            <svg class="pen-rule pen-rule--brass" viewBox="0 0 1000 6" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="whRankP" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7a5a24"></stop><stop offset="0.14" stop-color="#b8904a"></stop><stop offset="0.3" stop-color="#f3dd9b"></stop><stop offset="0.44" stop-color="#c9a24e"></stop><stop offset="0.58" stop-color="#8a6a2f"></stop><stop offset="0.74" stop-color="#d8bb72"></stop><stop offset="0.84" stop-color="#f6e7b4"></stop><stop offset="1" stop-color="#9c7633"></stop></linearGradient></defs><path fill="url(#whRankP)" d="M0 3.1C8 2.4 16 2.1 30 2.1C300 2.26 600 2.22 965 1.91C985 1.95 995 2.4 1000 2.8C995 3.3 985 3.65 965 3.76C600 4.27 300 4.43 30 4.18C16 4.15 8 3.8 0 3.1Z"/></svg>
-
-            <ul class="rank-rows">
-                <li>
-                    <div class="rank-rows__numeral">1</div>
-                    <div class="rank-rows__thumb"><img src="photos/dishes/sweet-potato-johns.jpg" alt="Sweet Potato at John's Food and Wine" loading="lazy"></div>
-                    <div class="lead-line">
-                        <span class="rank-rows__rest">Sweet Potato</span>
-                        <span class="lead" aria-hidden="true"></span>
-                        <span class="rank-rows__loc">John's Food and Wine</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="rank-rows__numeral">2</div>
-                    <div class="rank-rows__thumb"><img src="photos/dishes/sweet-potato-maxwells.jpg" alt="Japanese Sweet Potato at Maxwells Trading" loading="lazy"></div>
-                    <div class="lead-line">
-                        <span class="rank-rows__rest">Japanese Sweet Potato (green curry)</span>
-                        <span class="lead" aria-hidden="true"></span>
-                        <span class="rank-rows__loc">Maxwells Trading</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="rank-rows__numeral">3</div>
-                    <div class="rank-rows__thumb"><img src="photos/dishes/sweet-potato-brasero.jpg" alt="Sweet Potato at Brasero" loading="lazy"></div>
-                    <div class="lead-line">
-                        <span class="rank-rows__rest">Sweet Potato</span>
-                        <span class="lead" aria-hidden="true"></span>
-                        <span class="rank-rows__loc">Brasero</span>
-                    </div>
-                </li>
+            <ul class="x-rest">
+                <li><span class="x-num x-num--sm brass">2</span><span class="x-rest__t"><span class="x-n">Japanese Sweet Potato (green curry)</span><span class="x-rs">Maxwells Trading</span></span><img src="photos/dishes/sweet-potato-maxwells.jpg" style="object-position:50% 45%" alt="Japanese Sweet Potato at Maxwells Trading" loading="lazy"></li>
+                <li><span class="x-num x-num--sm brass">3</span><span class="x-rest__t"><span class="x-n">Sweet Potato</span><span class="x-rs">Brasero</span></span><img src="photos/dishes/sweet-potato-brasero.jpg" style="object-position:50% 50%" alt="Sweet Potato at Brasero" loading="lazy"></li>
             </ul>
-            <div class="menu-rows__more">+ <strong>1</strong> more ranked</div>
-
-            <span class="artifact-card__cta">Build your own Ranking →</span>
+            <div class="x-qrow"><span>See all 14</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></div>
+            <span class="artifact-card__cta">Build your own Ranking &rarr;</span>
         </a>
 
-        <!-- Artifact 3: Hot Route -->
+        <!-- Artifact 3: Route (matches the app's Route page, 1.0.2: map leads, pins match the map) -->
         <a class="artifact-card" href="https://apps.apple.com/us/app/wildheavy/id6758928194" target="_blank" rel="noopener">
             <div class="pen-bracket ink-route" aria-hidden="true"><svg class="pen-bracket__top" width="60" height="10" viewBox="0 0 60 10"><path fill="currentColor" d="M56 2.9C40 2.25 22 2.2 7 2C4.2 2 2 4.2 2 7L2 10L4 10L4 7C4 5.3 5.3 4 7 4C22 4.2 40 4.3 56 3.1Z"/></svg><svg class="pen-bracket__mid" viewBox="0 0 6 1000" preserveAspectRatio="none"><path fill="currentColor" d="M2.09 0C2.3 300 2.25 700 1.88 1000L3.78 1000C4.36 700 4.36 300 4.09 0Z"/></svg><svg class="pen-bracket__bot" width="60" height="10" viewBox="0 0 60 10"><path fill="currentColor" d="M56 2.9C40 2.25 22 2.2 7 2C4.2 2 2 4.2 2 7L2 10L4 10L4 7C4 5.3 5.3 4 7 4C22 4.2 40 4.3 56 3.1Z"/></svg></div>
-            <div class="artifact-card__head">
-                <div class="type-label ink-route">Route · 3 stops</div>
-                <h3 class="artifact-card__title artifact-card__title--long">Logan Square Elevated Date Night</h3>
-                <div class="artifact-card__meta">Logan Square · Chicago</div>
-            </div>
-
-            <svg class="pen-rule ink-route" viewBox="0 0 1000 6" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 3.1C8 2.4 16 2.1 30 2.1C300 2.26 600 2.22 965 1.91C985 1.95 995 2.4 1000 2.8C995 3.3 985 3.65 965 3.76C600 4.27 300 4.43 30 4.18C16 4.15 8 3.8 0 3.1Z"/></svg>
-
-            <ul class="route-rows">
-                <li>
-                    <div class="route-rows__num">1</div>
-                    <div>
-                        <div class="route-rows__stop-label">Start · Cocktails</div>
-                        <div class="route-rows__rest">Cara Cara Club</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="route-rows__num route-rows__num--food">2</div>
-                    <div>
-                        <div class="route-rows__stop-label">Stop 2 · Dinner</div>
-                        <div class="route-rows__rest">Daisies</div>
-                    </div>
-                </li>
-                <li>
-                    <div class="route-rows__num">3</div>
-                    <div>
-                        <div class="route-rows__stop-label">End · Nightcap</div>
-                        <div class="route-rows__rest">Easy Does It</div>
-                    </div>
-                </li>
-            </ul>
-
-
-            <span class="artifact-card__cta">Build your own Route →</span>
+            <div class="x-kind"><span>Route</span><span class="x-city">Chicago</span></div>
+            <svg class="pen-rule x-rule ink-route" viewBox="0 0 1000 6" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 3.1C8 2.4 16 2.1 30 2.1C300 2.26 600 2.22 965 1.91C985 1.95 995 2.4 1000 2.8C995 3.3 985 3.65 965 3.76C600 4.27 300 4.43 30 4.18C16 4.15 8 3.8 0 3.1Z"/></svg>
+            <h3 class="artifact-card__title x-title artifact-card__title--long">Logan Square Elevated Date Night</h3>
+            <div class="x-cnt">3 stops &middot; 864 views</div>
+            <svg class="x-map" viewBox="0 0 350 175" role="img" aria-label="Map of the three stops in Logan Square, Chicago">
+                <rect x=".5" y=".5" width="349" height="174" fill="#F0F1E9" stroke="rgba(26,54,41,.18)"/>
+                <path d="M0.0 81.3H350.0 M0.0 172.5H350.0 M198.9 0.0V175.0 M152.9 0.0V175.0 M245.0 0.0V175.0" stroke="rgba(26,54,41,.09)" stroke-width="1.2" fill="none"/>
+                <path d="M0.0 126.4H350.0 M108.7 37.0H350.0 M108.7 0.0V175.0 M289.2 0.0V175.0" stroke="rgba(26,54,41,.16)" stroke-width="3" fill="none"/>
+                <path d="M397.9 262.5L-20.1 -65.6" stroke="rgba(26,54,41,.2)" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+                <circle cx="108.7" cy="37.0" r="9" fill="#DCE3D2" stroke="rgba(26,54,41,.22)" stroke-width="1.5"/>
+                <g font-family="Instrument Sans, sans-serif" font-size="7.5" font-weight="600" letter-spacing=".08em" fill="rgba(26,54,41,.5)"><text x="51.7" y="122.4" text-anchor="start">FULLERTON AVE</text><text x="197.1" y="33.0" text-anchor="start">LOGAN BLVD</text><text x="103.7" y="160.2" text-anchor="end">KEDZIE BLVD</text><text x="285.2" y="44.4" transform="rotate(-90.0 285.2 44.4)" text-anchor="middle">CALIFORNIA AVE</text><text x="174.3" y="77.1" transform="rotate(38.1 174.3 77.1)" text-anchor="middle">MILWAUKEE AVE</text><text x="121.7" y="28.0" text-anchor="start" font-size="8.5" fill="rgba(26,54,41,.62)">LOGAN SQUARE</text></g>
+                <path d="M109.6 58.9L241.1 139.5" fill="none" stroke="#7A2621" stroke-width="2.2" stroke-dasharray="5 5" stroke-linecap="round"/>
+                <g font-family="JetBrains Mono, monospace" font-weight="700" font-size="11" text-anchor="middle">
+                    <circle cx="109.6" cy="58.9" r="11" fill="#C9A84C" stroke="#FBFBF9" stroke-width="2.5"/><text x="109.6" y="62.9" fill="#1A3629">1</text>
+                    <circle cx="227.1" cy="155.5" r="11" fill="#C9A84C" stroke="#FBFBF9" stroke-width="2.5"/><text x="227.1" y="159.5" fill="#1A3629">3</text>
+                    <circle cx="241.1" cy="139.5" r="11" fill="#A0522D" stroke="#FBFBF9" stroke-width="2.5"/><text x="241.1" y="143.5" fill="#FBFBF9">2</text>
+                </g>
+            </svg>
+            <div class="x-sh"><span class="mc-sec">The stops</span><span class="x-cnt">3</span></div>
+            <svg class="pen-rule x-rule ink-route" viewBox="0 0 1000 6" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0 3.1C8 2.4 16 2.1 30 2.1C300 2.26 600 2.22 965 1.91C985 1.95 995 2.4 1000 2.8C995 3.3 985 3.65 965 3.76C600 4.27 300 4.43 30 4.18C16 4.15 8 3.8 0 3.1Z"/></svg>
+            <div class="x-key"><span><i style="background:#C9A84C"></i>Drinks</span><span><i style="background:#A0522D"></i>Food</span></div>
+            <ol class="x-stops">
+                <li><i class="x-pin" style="background:#C9A84C;color:#1A3629">1</i><span class="x-n">Cara Cara Club</span><span class="x-rs">Drinks</span></li>
+                <li><i class="x-pin" style="background:#A0522D;color:#FBFBF9">2</i><span class="x-n">Daisies</span><span class="x-rs">Food</span></li>
+                <li><i class="x-pin" style="background:#C9A84C;color:#1A3629">3</i><span class="x-n">Easy Does It</span><span class="x-rs">Drinks</span></li>
+            </ol>
+            <span class="x-go"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l18-8-8 18-2-8z"/></svg>Directions for all 3 stops</span>
+            <span class="artifact-card__cta">Build your own Route &rarr;</span>
         </a>
+        </div>
+        <p class="top-rank-card__footnote x-foot">Examples. Live in the app.</p>
     </section>
 
     <!-- Hungry Bear rule -->
@@ -1332,76 +1395,37 @@ html.js #product .artifact-card.wh-in:nth-of-type(3){animation:whthrow-r 820ms c
             </p>
         </div>
 
-        <article class="top-rank-card">
+        <article class="top-rank-card x-tr">
             <div class="pen-bracket" aria-hidden="true"><svg class="pen-bracket__top" width="60" height="10" viewBox="0 0 60 10"><defs><linearGradient id="whTopH" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7a5a24"></stop><stop offset="0.14" stop-color="#b8904a"></stop><stop offset="0.3" stop-color="#f3dd9b"></stop><stop offset="0.44" stop-color="#c9a24e"></stop><stop offset="0.58" stop-color="#8a6a2f"></stop><stop offset="0.74" stop-color="#d8bb72"></stop><stop offset="0.84" stop-color="#f6e7b4"></stop><stop offset="1" stop-color="#9c7633"></stop></linearGradient></defs><path fill="url(#whTopH)" d="M56 2.9C40 2.25 22 2.2 7 2C4.2 2 2 4.2 2 7L2 10L4 10L4 7C4 5.3 5.3 4 7 4C22 4.2 40 4.3 56 3.1Z"/></svg><svg class="pen-bracket__mid" viewBox="0 0 6 1000" preserveAspectRatio="none"><defs><linearGradient id="whTopV" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7a5a24"></stop><stop offset="0.14" stop-color="#b8904a"></stop><stop offset="0.3" stop-color="#f3dd9b"></stop><stop offset="0.44" stop-color="#c9a24e"></stop><stop offset="0.58" stop-color="#8a6a2f"></stop><stop offset="0.74" stop-color="#d8bb72"></stop><stop offset="0.84" stop-color="#f6e7b4"></stop><stop offset="1" stop-color="#9c7633"></stop></linearGradient></defs><path fill="url(#whTopV)" d="M2.09 0C2.3 300 2.25 700 1.88 1000L3.78 1000C4.36 700 4.36 300 4.09 0Z"/></svg><svg class="pen-bracket__bot" width="60" height="10" viewBox="0 0 60 10"><path fill="url(#whTopH)" d="M56 2.9C40 2.25 22 2.2 7 2C4.2 2 2 4.2 2 7L2 10L4 10L4 7C4 5.3 5.3 4 7 4C22 4.2 40 4.3 56 3.1Z"/></svg></div>
-            <div class="top-rank-card__head">
-                <div>
-                    <div class="sec-label sec-label--live"><span>Burger / Chicago<span class="live-dot" aria-hidden="true"></span><span class="live-word">Live</span></span></div>
-                    <h3 class="top-rank-card__title">What's leading right now.</h3>
-                    <div class="top-rank-card__sub">Updated 2 hr ago</div>
-                </div>
-                <div class="top-rank-card__weight">
-                    Expertise-Weighted
-                    <small>1,400 Votes</small>
-                </div>
-            </div>
-
-            <svg class="pen-rule pen-rule--brass" viewBox="0 0 1000 6" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="whTopP" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7a5a24"></stop><stop offset="0.14" stop-color="#b8904a"></stop><stop offset="0.3" stop-color="#f3dd9b"></stop><stop offset="0.44" stop-color="#c9a24e"></stop><stop offset="0.58" stop-color="#8a6a2f"></stop><stop offset="0.74" stop-color="#d8bb72"></stop><stop offset="0.84" stop-color="#f6e7b4"></stop><stop offset="1" stop-color="#9c7633"></stop></linearGradient></defs><path fill="url(#whTopP)" d="M0 3.1C8 2.4 16 2.1 30 2.1C300 2.26 600 2.22 965 1.91C985 1.95 995 2.4 1000 2.8C995 3.3 985 3.65 965 3.76C600 4.27 300 4.43 30 4.18C16 4.15 8 3.8 0 3.1Z"/></svg>
+            <div class="x-kind"><span class="x-kind__tr"><svg class="x-tro" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8v5a4 4 0 01-8 0zM8 6H5a3 3 0 003 4M16 6h3a3 3 0 01-3 4M12 13v4M8.5 20h7M10 17h4v3h-4z"/></svg>Top Rank</span><span class="x-city">Chicago<span class="live-dot" aria-hidden="true"></span><span class="live-word">Live</span></span></div>
+            <svg class="pen-rule x-rule" viewBox="0 0 1000 6" preserveAspectRatio="none" aria-hidden="true"><path fill="url(#whBrass)" d="M0 3.1C8 2.4 16 2.1 30 2.1C300 2.26 600 2.22 965 1.91C985 1.95 995 2.4 1000 2.8C995 3.3 985 3.65 965 3.76C600 4.27 300 4.43 30 4.18C16 4.15 8 3.8 0 3.1Z"/></svg>
+            <h3 class="artifact-card__title x-title">Burger</h3>
+            <div class="x-cnt">48 places &middot; 2,400 voters</div>
             <ul class="top-rank-rows">
-                <li>
-                    <div class="top-rank-rows__num top-rank-rows__num--1"><svg class="top-rank-trophy" viewBox="0 0 24 24" fill="none" stroke="#A8772B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>1<sup>st</sup></div>
-                    <div>
-                        <div class="lead-line">
-                            <span class="top-rank-rows__rest">Au Cheval</span>
-                            <span class="lead" aria-hidden="true"></span>
-                            <span class="facepile" aria-label="18 more regulars voted"><span class="facepile__av facepile__av--leather"></span><span class="facepile__av facepile__av--sage"></span><span class="facepile__av facepile__av--gold"></span><span class="facepile__more">+18</span></span>
-                        </div>
-                        <div class="top-rank-rows__dish">Single Cheeseburger</div>
-                    </div>
+                <li class="is-lead">
+                    <div class="top-rank-rows__num x-num brass">1</div>
+                    <div class="x-tr__t"><span class="x-n">Au Cheval<svg class="x-tro" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8v5a4 4 0 01-8 0zM8 6H5a3 3 0 003 4M16 6h3a3 3 0 01-3 4M12 13v4M8.5 20h7M10 17h4v3h-4z"/></svg></span><span class="x-rs">Single Cheeseburger &middot; <span class="facepile__more">412</span> votes</span></div>
+                    <span class="facepile" aria-hidden="true"><span class="facepile__av facepile__av--leather"></span><span class="facepile__av facepile__av--sage"></span><span class="facepile__av facepile__av--gold"></span></span>
                 </li>
                 <li>
-                    <div class="top-rank-rows__num">2<sup>nd</sup></div>
-                    <div>
-                        <div class="lead-line">
-                            <span class="top-rank-rows__rest">Mott St</span>
-                            <span class="lead" aria-hidden="true"></span>
-                            <span class="facepile" aria-label="11 more regulars voted"><span class="facepile__av facepile__av--gold"></span><span class="facepile__av facepile__av--leather"></span><span class="facepile__more">+11</span></span>
-                        </div>
-                        <div class="top-rank-rows__dish">Mott Burger</div>
-                    </div>
+                    <div class="top-rank-rows__num x-num brass">2</div>
+                    <div class="x-tr__t"><span class="x-n">Mott St<svg class="x-tro" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8v5a4 4 0 01-8 0zM8 6H5a3 3 0 003 4M16 6h3a3 3 0 01-3 4M12 13v4M8.5 20h7M10 17h4v3h-4z"/></svg></span><span class="x-rs">Mott Burger &middot; <span class="facepile__more">398</span> votes</span></div>
+                    <span class="facepile" aria-hidden="true"><span class="facepile__av facepile__av--gold"></span><span class="facepile__av facepile__av--leather"></span><span class="facepile__av facepile__av--forest"></span></span>
                 </li>
                 <li>
-                    <div class="top-rank-rows__num">3<sup>rd</sup></div>
-                    <div>
-                        <div class="lead-line">
-                            <span class="top-rank-rows__rest">The Loyalist</span>
-                            <span class="lead" aria-hidden="true"></span>
-                            <span class="facepile" aria-label="9 more regulars voted"><span class="facepile__av facepile__av--sage"></span><span class="facepile__av facepile__av--forest"></span><span class="facepile__more">+9</span></span>
-                        </div>
-                        <div class="top-rank-rows__dish">Loyalist Burger</div>
-                    </div>
+                    <div class="top-rank-rows__num x-num brass">3</div>
+                    <div class="x-tr__t"><span class="x-n">The Loyalist<svg class="x-tro" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8v5a4 4 0 01-8 0zM8 6H5a3 3 0 003 4M16 6h3a3 3 0 01-3 4M12 13v4M8.5 20h7M10 17h4v3h-4z"/></svg></span><span class="x-rs">Loyalist Burger &middot; <span class="facepile__more">371</span> votes</span></div>
+                    <span class="facepile" aria-hidden="true"><span class="facepile__av facepile__av--sage"></span><span class="facepile__av facepile__av--forest"></span><span class="facepile__av facepile__av--leather"></span></span>
                 </li>
                 <li>
-                    <div class="top-rank-rows__num">4<sup>th</sup></div>
-                    <div>
-                        <div class="lead-line">
-                            <span class="top-rank-rows__rest">Izakaya at Momotaro</span>
-                            <span class="lead" aria-hidden="true"></span>
-                            <span class="facepile" aria-label="6 more regulars voted"><span class="facepile__av facepile__av--leather"></span><span class="facepile__av facepile__av--gold"></span><span class="facepile__more">+6</span></span>
-                        </div>
-                        <div class="top-rank-rows__dish">Momo Royale</div>
-                    </div>
+                    <div class="top-rank-rows__num x-num">4</div>
+                    <div class="x-tr__t"><span class="x-n">Izakaya at Momotaro<svg class="x-tro" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8v5a4 4 0 01-8 0zM8 6H5a3 3 0 003 4M16 6h3a3 3 0 01-3 4M12 13v4M8.5 20h7M10 17h4v3h-4z"/></svg></span><span class="x-rs">Momo Royale &middot; <span class="facepile__more">240</span> votes</span></div>
+                    <span class="facepile" aria-hidden="true"><span class="facepile__av facepile__av--leather"></span><span class="facepile__av facepile__av--gold"></span></span>
                 </li>
                 <li>
-                    <div class="top-rank-rows__num">5<sup>th</sup></div>
-                    <div>
-                        <div class="lead-line">
-                            <span class="top-rank-rows__rest">Leavitt Street Inn</span>
-                            <span class="lead" aria-hidden="true"></span>
-                            <span class="facepile" aria-label="5 more regulars voted"><span class="facepile__av facepile__av--sage"></span><span class="facepile__more">+5</span></span>
-                        </div>
-                        <div class="top-rank-rows__dish">Leavitt St. Smash</div>
-                    </div>
+                    <div class="top-rank-rows__num x-num">5</div>
+                    <div class="x-tr__t"><span class="x-n">Leavitt Street Inn<svg class="x-tro" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8v5a4 4 0 01-8 0zM8 6H5a3 3 0 003 4M16 6h3a3 3 0 01-3 4M12 13v4M8.5 20h7M10 17h4v3h-4z"/></svg></span><span class="x-rs">Leavitt St. Smash &middot; <span class="facepile__more">196</span> votes</span></div>
+                    <span class="facepile" aria-hidden="true"><span class="facepile__av facepile__av--sage"></span><span class="facepile__av facepile__av--gold"></span></span>
                 </li>
             </ul>
             <div class="top-rank-card__footnote">Example. Live in the app.</div>
@@ -1628,26 +1652,26 @@ var raf = window.requestAnimationFrame.bind(window);
     var n = m ? parseInt((m.textContent||'').replace(/[^0-9]/g,''),10) : 0;
     return { li:li, more:m, n:n, base:n, dom:i, num:li.querySelector('.top-rank-rows__num') };
   });
-  var EV = [ {at:.28,i:1,add:9}, {at:.54,i:2,add:12}, {at:.78,i:0,add:5} ];
+  var EV = [ {at:.28,i:1,add:22}, {at:.54,i:2,add:55}, {at:.78,i:0,add:19} ];
   var fired = EV.map(function(){return false;}), rowH = 0, ran = false;
   function measure(){ rowH = rows[0].getBoundingClientRect().height; }
   function order(){
     st.slice().sort(function(a,b){ return b.n-a.n || a.dom-b.dom; }).forEach(function(x,r){
       x.li.style.transform = 'translateY(' + ((r-x.dom)*rowH) + 'px)';
-      if (x.num){ x.num.innerHTML = (r===0 ? TROPHY : '') + (ORD[r] || (r+1));
-        x.num.classList.toggle('top-rank-rows__num--1', r===0); }
+      if (x.num){ x.num.textContent = r+1;
+        x.num.classList.toggle('brass', r<3); x.li.classList.toggle('is-lead', r===0); }
     });
   }
   function roll(x,to){ var f=x.n, s0=performance.now();
     (function g(now){ var t=Math.min(1,(now-s0)/620), q=1-Math.pow(1-t,3);
-      if (x.more) x.more.textContent = '+' + Math.round(f+(to-f)*q);
+      if (x.more) x.more.textContent = Math.round(f+(to-f)*q);
       if (t<1) raf(g); })(performance.now()); }
   function fire(k){ if (fired[k]) return; fired[k]=true;
     var x = st[EV[k].i]; x.n = x.base + EV[k].add;
     x.li.classList.add('wh-bump'); roll(x, x.n); measure(); order();
     setTimeout(function(){ x.li.classList.remove('wh-bump'); }, 2200); }
   function reset(){ fired = EV.map(function(){return false;});
-    st.forEach(function(x){ x.n=x.base; if(x.more) x.more.textContent='+'+x.base; x.li.classList.remove('wh-bump'); });
+    st.forEach(function(x){ x.n=x.base; if(x.more) x.more.textContent=''+x.base; x.li.classList.remove('wh-bump'); });
     measure(); order(); }
   measure(); order();
   window.addEventListener('resize', function(){ measure(); order(); });
