@@ -10,9 +10,9 @@
 /* ---- Design Tokens ---- */
 :root {
     /* The Institution Palette */
-    --paper:        #E9EBE1;   /* menu paper — green-biased, not warm cream */
-    --paper-bright: #F0F1E9;   /* lifted paper */
-    --paper-dark:   #DFE2D6;   /* deep paper, footer */
+    --paper:        #FBFBF9;   /* the app's sheet (matches the app, 2026-10-16) */
+    --paper-bright: #FFFFFF;   /* lifted paper */
+    --paper-dark:   #F0F1EC;   /* deep paper, footer */
     --ink:          #1A3629;   /* forest green — primary ink */
     --ink-soft:     #2A4538;   /* secondary ink */
     --ink-mute:     rgba(26, 54, 41, 0.58);
