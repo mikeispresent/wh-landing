@@ -89,13 +89,12 @@ function guestCheck(m, handle, size, wordmarkUri) {
   const noun = hasDrinks ? (total === 1 ? 'item' : 'items') : total === 1 ? 'dish' : 'dishes';
   const serial = typeof m.ticket_number === 'number' ? `Nº ${String(m.ticket_number).padStart(3, '0')}` : '';
 
-  let stamped = false;
+  // Every Top Rank Worthy row gets the stamp; every other verdict is pen.
   const rows = dishes
     .map((d) => {
       const r = d.rating == null ? null : Math.round(Number(d.rating));
       let verdict = '';
-      if (r === 5 && !stamped) {
-        stamped = true;
+      if (r === 5) {
         verdict = `<div class="stamp">Top Rank<br>Worthy</div>`;
       } else if (RATING_WORDS[r]) {
         verdict = pen(RATING_WORDS[r], 'wrap');
