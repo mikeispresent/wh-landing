@@ -37,10 +37,18 @@ const ROMAN = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x'];
 // you have the ID and redeploy. No other changes needed.
 const APP_STORE_APP_ID = '6758928194';
 
-function appStoreUrl() {
-  return APP_STORE_APP_ID
-    ? `https://apps.apple.com/app/id${APP_STORE_APP_ID}`
-    : 'https://wildheavy.app';
+// Install tracking. Paste the provider token from App Store Connect
+// (Analytics > Sources > Campaigns > create a link) and every App Store link
+// from a share page carries a campaign name (share_menu, share_rank,
+// share_spread), so installs from shared links show up there. Empty = off.
+const APP_STORE_PROVIDER_TOKEN = '128451653';
+
+function appStoreUrl(campaign) {
+  if (!APP_STORE_APP_ID) return 'https://wildheavy.app';
+  const base = `https://apps.apple.com/app/id${APP_STORE_APP_ID}`;
+  return APP_STORE_PROVIDER_TOKEN && campaign
+    ? `${base}?pt=${APP_STORE_PROVIDER_TOKEN}&ct=${campaign}&mt=8`
+    : base;
 }
 
 // True for iPhone, iPod, and iPads running iPadOS that still report 'iPad'
@@ -97,7 +105,6 @@ function previewState(data, slug, ctx = {}) {
 
   if (data.content_type === 'ranking') {
     const r = data.ranking;
-    const remaining = Math.max(0, (r.total_item_count || 0) - (r.items_preview?.length || 0));
     const appUrl = buildAppUrl('ranking', r.id);
     return {
       status: 'ok',
@@ -105,13 +112,13 @@ function previewState(data, slug, ctx = {}) {
       ogDescription: buildRankingDescription(r),
       ogImage: dynamicOgImage('ranking', slug),
       appUrl,
-      bodyHtml: rankingBody({ r, creator: { name: creatorName, handle: creatorHandle, avatar }, remaining, appUrl, ctx }),
+      campaign: 'share_rank',
+      bodyHtml: rankingBody({ r, creator: { name: creatorName, handle: creatorHandle, avatar }, appUrl, ctx }),
     };
   }
 
   if (data.content_type === 'menu_card') {
     const m = data.menu_card;
-    const remaining = Math.max(0, (m.total_dish_count || 0) - (m.dishes_preview?.length || 0));
     const appUrl = buildAppUrl('menu_card', m.id);
     return {
       status: 'ok',
@@ -119,7 +126,8 @@ function previewState(data, slug, ctx = {}) {
       ogDescription: buildMenuCardDescription(m),
       ogImage: dynamicOgImage('menu_card', slug),
       appUrl,
-      bodyHtml: menuCardBody({ m, creator: { name: creatorName, handle: creatorHandle, avatar }, remaining, appUrl, ctx }),
+      campaign: 'share_menu',
+      bodyHtml: menuCardBody({ m, creator: { name: creatorName, handle: creatorHandle, avatar }, appUrl, ctx }),
     };
   }
 
@@ -136,6 +144,7 @@ function previewState(data, slug, ctx = {}) {
     ogDescription: buildRouteDescription(t),
     ogImage: dynamicOgImage('route', slug),
     appUrl,
+    campaign: 'share_spread',
     bodyHtml: routeBody({ t, creator: { name: creatorName, handle: creatorHandle, avatar }, appUrl, ctx }),
   };
 }
@@ -204,104 +213,479 @@ function stateHtml({ kicker, title, sub, ctaLabel, ctaHref }) {
 }
 
 // ---------- Body templates ----------
-function rankingBody({ r, creator, remaining, appUrl, ctx }) {
-  const items = (r.items_preview || [])
-    .map((d, i) => {
-      const pos = ROMAN[i] || String(i + 1);
-      // Each ranking entry is a specific dish at a specific restaurant —
-      // restaurant_name is the credit line under the dish name.
-      const meta = d.restaurant_name ? esc(d.restaurant_name) : '';
-      return `
-      <li class="rank__row">
-        <div class="rank__pos">${esc(pos)}</div>
-        <div class="rank__body">
-          <div class="rank__name">${esc(d.name || 'Unnamed')}</div>
-          ${meta ? `<div class="rank__meta">${meta}</div>` : ''}
-        </div>
-        ${
-          d.image_url
-            ? `<div class="rank__thumb"><img src="${esc(d.image_url)}" alt="" loading="lazy"></div>`
-            : `<div class="rank__thumb rank__thumb--empty"></div>`
-        }
-      </li>`;
-    })
+// ---------- Ranking (the app's layout) ----------
+//
+// Mirrors RankingDetail.tsx: brass pen rule, category title with the city,
+// the Giver, the top 3 (TopThree.tsx), then #4 to #20 as rows (RankListRow.tsx).
+// The app folds anything past #20; the page says how many more are in the app.
+
+function rankNumeral(n, tone, size) {
+  return `<span class="rk-n rk-n--${size} rk-n--${tone}" aria-hidden="true">${n}</span>`;
+}
+
+function rankingBody({ r, creator, appUrl, ctx }) {
+  const restOnly = r.is_restaurant_only === true;
+  const items = (r.items_all || r.items_preview || []).map((d, i) => ({
+    rank: i + 1,
+    name: (restOnly ? d.restaurant_name : d.name) || d.name || 'Unnamed',
+    sub: restOnly ? '' : d.restaurant_name || '',
+    photo: d.image_url || '',
+  }));
+  const total = Math.max(r.total_item_count || 0, items.length);
+  const hiddenCount = Math.max(0, total - items.length);
+
+  const podium = items.slice(0, 3);
+  const list = items.slice(3);
+
+  const subLine = (it, cls = '') => (it.sub ? `<span class="rk-sub ${cls}">${esc(it.sub)}</span>` : '');
+
+  let top = '';
+  if (podium.length) {
+    const first = podium[0];
+    const lead = first.photo
+      ? `<img class="rk-lead__img" src="${esc(first.photo)}" alt="">
+         <div class="rk-lead__cap">${rankNumeral(1, 'brass', 'xl')}<span class="rk-lead__txt"><span class="rk-name rk-name--lead">${esc(first.name)}</span>${subLine(first, 'rk-sub--lead')}</span></div>`
+      : `<div class="rk-lead__nophoto">${rankNumeral(1, 'brass', 'xl')}
+          <div class="rk-bracketed">${penBracket(true)}<span class="rk-name rk-name--lead">${esc(first.name)}</span>${subLine(first, 'rk-sub--lead')}</div>
+        </div>`;
+    const others = podium.slice(1).map((it) =>
+      it.photo
+        ? `<div class="rk-tile"><img src="${esc(it.photo)}" alt="" loading="lazy">
+            <div class="rk-tile__cap">${rankNumeral(it.rank, 'leather', 'lg')}<span><span class="rk-name rk-name--tile">${esc(it.name)}</span>${subLine(it)}</span></div></div>`
+        : `<div class="rk-tile"><div class="rk-tile__box">${penBracket(true)}<span class="rk-name rk-name--tile rk-name--clamp">${esc(it.name)}</span></div>
+            <div class="rk-tile__cap">${rankNumeral(it.rank, 'leather', 'lg')}<span>${subLine(it)}</span></div></div>`,
+    ).join('');
+    top = `<section class="rk-top" aria-label="Top 3">
+        <div class="rk-lead">${lead}</div>
+        ${others ? `<div class="rk-tiles">${others}</div>` : ''}
+      </section>`;
+  }
+
+  const rows = list
+    .map(
+      (it) => `<li class="rk-row">
+        <span class="rk-row__n">${rankNumeral(it.rank, 'leather', 'md')}</span>
+        <span class="rk-row__text"><span class="rk-name">${esc(it.name)}</span>${subLine(it)}</span>
+        ${it.photo ? `<img class="rk-row__img" src="${esc(it.photo)}" alt="" loading="lazy">` : ''}
+      </li>`,
+    )
     .join('');
+  const listSection = list.length || hiddenCount
+    ? `<section class="rk-list" aria-label="The list">
+        ${list.length ? `<div class="m-between rk-list__hd"><span class="rk-list__lbl">The list</span><span class="m-cnt">4 to ${items.length}</span></div><ul>${rows}</ul>` : ''}
+        ${hiddenCount ? `<p class="rk-more">The rest of the list · ${hiddenCount} more in the app</p>` : ''}
+      </section>`
+    : '';
 
-  const moreTile = remaining > 0 ? morePseudoRow(remaining, 'rank') : '';
-
-  const remainingLine =
-    remaining > 0
-      ? `+ ${remaining} more ranked. The full list, with notes & receipts, is in the app.`
-      : `Sign up to see full details and build your own.`;
+  const cityOnly = String(r.city || '').split(',')[0].trim();
+  const title = r.category || r.title || 'Ranking';
+  const longTitle = Array.from(String(title).trim()).length > 24;
+  const initial = (creator.handle || creator.name || '?').replace(/^@/, '').trim().slice(0, 1).toUpperCase();
+  const author = `<div class="m-author">
+      ${creator.avatar
+        ? `<img class="m-avatar" src="${esc(creator.avatar)}" alt="" loading="lazy">`
+        : `<span class="m-avatar m-avatar--empty">${esc(initial)}</span>`}
+      <span class="m-author__name">${esc(creator.handle || creator.name)}</span>
+    </div>`;
 
   return `
-    <article class="card">
-      ${cardEyebrow('Ranking', null)}
-      <h1 class="card__title">${esc(r.title || 'Untitled ranking')}</h1>
-      <p class="card__sub">${esc(buildRankingSub(r))}</p>
-      ${creatorBlock(creator)}
-      <ol class="rank">${items || '<li class="rank__empty">Nothing plated yet.</li>'}${moreTile}</ol>
-      <div class="rule-gold"></div>
-      <div class="shift-note">
-        <span class="shift-note__label">Shift Note:</span> ${remainingLine}
+    <article class="m-sheet">
+      <div class="m-top">
+        <span class="m-kind">Ranking</span>
+        <span class="m-cnt">${total} ${total === 1 ? 'dish' : 'dishes'}</span>
       </div>
-      ${signupCta('See the full ranking', appUrl, ctx)}
+      ${penRule('pen-rule--brass')}
+      <div class="m-between rk-head">
+        <h1 class="m-title m-title--page${longTitle ? ' m-title--long' : ''}" dir="auto">${esc(title)}</h1>
+        ${cityOnly ? `<span class="rk-city">${esc(cityOnly)}</span>` : ''}
+      </div>
+      ${author}
+      ${top}
+      ${listSection}
+      ${signupCta('See the full ranking', appUrl, ctx, { campaign: 'share_rank', note: 'Rank your own in the app.', cls: 'm-cta' })}
     </article>`;
 }
 
-function menuCardBody({ m, creator, remaining, appUrl, ctx }) {
-  const dishes = (m.dishes_preview || [])
-    .map((d) => {
-      const stars = d.rating != null ? renderStars(d.rating) : '';
-      const label = d.rating != null ? ratingLabel(d.rating) : '';
-      const ratingRow = (stars || label)
-        ? `<div class="dish__rating">${stars}${label ? `<span class="dish__tier">${esc(label)}</span>` : ''}</div>`
-        : '';
-      return `
-      <li class="dish">
-        ${
-          d.image_url
-            ? `<div class="dish__thumb"><img src="${esc(d.image_url)}" alt="" loading="lazy"></div>`
-            : `<div class="dish__thumb dish__thumb--empty"></div>`
-        }
-        <div class="dish__body">
-          <div class="dish__name">${esc(d.name || 'Unnamed dish')}</div>
-          ${ratingRow}
+// ---------- Menu Card (the app's layout, "The Order") ----------
+//
+// Mirrors MenuCardSheet.tsx. The ordering rules below are ports of
+// src/lib/whatToOrder.ts, src/lib/dishVerdicts.ts and menuCardLines.ts. Keep
+// them in step with the app: if those files change, change these.
+
+const PEN_CORNER = 'M56 2.90L55.12 2.84L54.25 2.79L53.37 2.74L52.49 2.68L51.62 2.63L50.74 2.58L49.86 2.54L48.99 2.49L48.11 2.45L47.24 2.41L46.36 2.38L45.49 2.35L44.61 2.32L43.74 2.30L42.86 2.28L41.99 2.27L41.11 2.26L40.24 2.26L39.37 2.26L38.49 2.27L37.62 2.28L36.74 2.28L35.87 2.29L35 2.29L34.12 2.30L33.25 2.30L32.37 2.30L31.50 2.30L30.63 2.30L29.75 2.30L28.88 2.30L28 2.29L27.13 2.29L26.26 2.28L25.38 2.28L24.51 2.27L23.63 2.26L22.76 2.25L21.89 2.24L21.01 2.23L20.14 2.22L19.26 2.21L18.39 2.20L17.52 2.19L16.64 2.17L15.77 2.16L14.89 2.15L14.02 2.13L13.14 2.11L12.27 2.10L11.39 2.08L10.52 2.07L9.64 2.05L8.77 2.03L7.89 2.02L6.96 2L6.02 2.10L5.09 2.38L4.22 2.84L3.46 3.46L2.84 4.22L2.38 5.09L2.10 6.02L2 6.95L2 7.75L2 8.50L2 9.25L2 10L4 10L4 9.25L4 8.50L4 7.75L4 7.05L4.06 6.41L4.23 5.85L4.51 5.33L4.88 4.88L5.33 4.51L5.85 4.23L6.41 4.06L7.04 4L7.86 4.02L8.73 4.03L9.61 4.05L10.48 4.07L11.36 4.08L12.23 4.10L13.11 4.11L13.98 4.13L14.86 4.14L15.73 4.16L16.61 4.17L17.48 4.19L18.36 4.20L19.24 4.21L20.11 4.22L20.99 4.23L21.86 4.24L22.74 4.25L23.62 4.26L24.49 4.27L25.37 4.28L26.24 4.28L27.12 4.29L28 4.29L28.87 4.30L29.75 4.30L30.62 4.30L31.50 4.30L32.38 4.30L33.25 4.30L34.13 4.30L35 4.29L35.88 4.29L36.76 4.28L37.63 4.28L38.51 4.27L39.38 4.26L40.26 4.25L41.14 4.23L42.01 4.20L42.89 4.16L43.76 4.12L44.64 4.08L45.51 4.03L46.39 3.97L47.26 3.91L48.14 3.84L49.01 3.77L49.89 3.69L50.76 3.62L51.63 3.53L52.51 3.45L53.38 3.36L54.25 3.28L55.13 3.19L56 3.10Z';
+const PEN_MIDDLE = 'M2.09 0L2.10 16.67L2.11 33.33L2.12 50L2.14 66.67L2.15 83.33L2.16 100L2.17 116.67L2.18 133.33L2.18 150L2.19 166.67L2.20 183.33L2.21 200L2.21 216.67L2.22 233.33L2.22 250L2.23 266.67L2.23 283.33L2.24 300L2.24 316.67L2.24 333.33L2.24 350L2.24 366.67L2.24 383.33L2.24 400L2.24 416.67L2.23 433.33L2.23 450L2.23 466.67L2.22 483.33L2.22 500L2.21 516.67L2.20 533.33L2.20 550L2.19 566.67L2.18 583.33L2.17 600L2.16 616.67L2.15 633.33L2.14 650L2.13 666.67L2.12 683.33L2.11 700L2.09 716.67L2.08 733.33L2.07 750L2.06 766.67L2.04 783.33L2.03 800L2.02 816.67L2 833.33L1.99 850L1.98 866.67L1.96 883.33L1.95 900L1.94 916.67L1.92 933.33L1.91 950L1.90 966.67L1.89 983.33L1.88 1000L3.78 1000L3.80 983.33L3.81 966.67L3.83 950L3.85 933.33L3.87 916.67L3.89 900L3.91 883.33L3.93 866.67L3.95 850L3.97 833.33L3.99 816.67L4.02 800L4.04 783.33L4.06 766.67L4.08 750L4.10 733.33L4.12 716.67L4.14 700L4.16 683.33L4.18 666.67L4.20 650L4.21 633.33L4.23 616.67L4.25 600L4.26 583.33L4.28 566.67L4.29 550L4.30 533.33L4.31 516.67L4.32 500L4.33 483.33L4.34 466.67L4.35 450L4.35 433.33L4.36 416.67L4.36 400L4.36 383.33L4.36 366.67L4.36 350L4.36 333.33L4.35 316.67L4.35 300L4.34 283.33L4.34 266.67L4.33 250L4.32 233.33L4.31 216.67L4.29 200L4.28 183.33L4.27 166.67L4.25 150L4.24 133.33L4.22 116.67L4.20 100L4.19 83.33L4.17 66.67L4.15 50L4.13 33.33L4.11 16.67L4.09 -0Z';
+
+const COURSE_LABEL = { drink: 'Drink', start: 'Starter', side: 'Side', main: 'Main', dessert: 'Dessert' };
+const MEAL_LABEL = { brunch: 'Brunch', lunch: 'Lunch', dinner: 'Dinner', happy_hour: 'Happy Hour', just_drinks: 'Just Drinks' };
+
+// dishVerdicts.ts: 4-5 must, 3 solid, 1-2 skip, anything else unrated.
+function verdictFor(rating) {
+  if (typeof rating !== 'number' || !Number.isFinite(rating) || rating < 1) return 'unrated';
+  if (rating >= 4) return 'must';
+  if (rating <= 2) return 'skip';
+  return 'solid';
+}
+
+// whatToOrder.ts without the author's picks (the web page has no picks).
+function whatToOrder(items, slots = 3) {
+  const ranked = items.map((item, index) => ({ item, index, tier: Math.round(Number(item.rating)) }));
+  const eligibleFn = (it) => !it.notTried && ['must', 'solid'].includes(verdictFor(it.rating));
+  const auto = (a, b) => {
+    if (a.tier !== b.tier) return b.tier - a.tier;
+    const ap = a.item.hasPhoto ? 1 : 0;
+    const bp = b.item.hasPhoto ? 1 : 0;
+    if (ap !== bp) return bp - ap;
+    const ac = Math.max(1, Number(a.item.orderCount) || 1);
+    const bc = Math.max(1, Number(b.item.orderCount) || 1);
+    if (ac !== bc) return bc - ac;
+    return a.index - b.index;
+  };
+
+  const eligible = ranked.filter((r) => eligibleFn(r.item)).sort(auto);
+  const tiers = [];
+  for (const r of eligible) {
+    const last = tiers[tiers.length - 1];
+    if (last && last[0].tier === r.tier) last.push(r);
+    else tiers.push([r]);
+  }
+
+  const top = [];
+  const also = [];
+  let remaining = slots;
+  for (const tier of tiers) {
+    if (remaining <= 0) { also.push(...tier); continue; }
+    if (tier.length <= remaining) { top.push(...tier); remaining -= tier.length; continue; }
+    const chosen = tier.slice(0, remaining);
+    chosen.sort(auto);
+    top.push(...chosen);
+    also.push(...tier.filter((r) => !chosen.includes(r)));
+    remaining = 0;
+  }
+
+  let mode = 'advice';
+  if (top.length === 0) {
+    const record = ranked
+      .filter((r) => !r.item.notTried && verdictFor(r.item.rating) === 'skip')
+      .sort(auto)
+      .slice(0, slots);
+    if (record.length > 0) { top.push(...record); mode = 'record'; }
+    else mode = 'none';
+  }
+
+  const inTop = new Set(top.map((r) => r.index));
+  const byLogged = (a, b) => a.index - b.index;
+  const solid = also.filter((r) => verdictFor(r.item.rating) === 'solid');
+  const skip = [];
+  const notTried = [];
+  for (const r of ranked) {
+    if (inTop.has(r.index) || eligibleFn(r.item)) continue;
+    const v = verdictFor(r.item.rating);
+    if (r.item.notTried || v === 'unrated') notTried.push(r);
+    else if (v === 'solid') solid.push(r);
+    else if (v === 'skip') skip.push(r);
+  }
+  also.sort((a, b) => (a.tier !== b.tier ? b.tier - a.tier : a.index - b.index));
+  const unwrap = (rs) => rs.map((r) => r.item);
+  const rest = {
+    alsoOrder: unwrap(also.filter((r) => verdictFor(r.item.rating) === 'must')),
+    solid: unwrap(solid.sort(byLogged)),
+    skip: unwrap(skip.sort(byLogged)),
+    notTried: unwrap(notTried.sort(byLogged)),
+  };
+  return {
+    top: unwrap(top),
+    mode,
+    rest,
+    restCount: rest.alsoOrder.length + rest.solid.length + rest.skip.length + rest.notTried.length,
+  };
+}
+
+// menuCardLines.ts: one shape for dishes and drinks.
+function toMenuCardLines(m) {
+  const src = Array.isArray(m.dishes_all)
+    ? m.dishes_all
+    : (m.dishes_preview || []).map((d) => ({ ...d, type: 'dish', course_type: 'main', order_count: 1 }));
+  return src.map((d, i) => ({
+    key: i,
+    type: d.type === 'drink' ? 'drink' : 'dish',
+    name: d.name || 'Unnamed dish',
+    rating: typeof d.rating === 'number' ? d.rating : 0,
+    not_tried: !!d.not_tried,
+    order_count: Math.max(1, Number(d.order_count) || 1),
+    is_seasonal: !!d.is_seasonal,
+    is_shared: !!d.is_shared,
+    course_type: d.type === 'drink' ? 'drink' : (COURSE_LABEL[d.course_type] ? d.course_type : 'main'),
+    variant_name: d.variant_name || null,
+    photo_url: d.image_url || null,
+    notTried: !!d.not_tried,
+    hasPhoto: !!d.image_url,
+    orderCount: Math.max(1, Number(d.order_count) || 1),
+  }));
+}
+
+function lineTags(l) {
+  return [l.variant_name, l.is_shared ? 'Shared' : null, l.is_seasonal ? 'Seasonal' : null].filter(Boolean);
+}
+
+// How the table was booked. Mirrors bookingLine() in MenuCardVisitSheet.tsx,
+// with the booking platforms as "Booked on: Resy".
+function bookingLine(service) {
+  if (!service) return '';
+  const raw = String(service);
+  const v = raw.startsWith('Other:') ? raw.slice(6).trim() : raw.trim();
+  if (!v || v === 'Other') return '';
+  switch (v) {
+    case 'Walk-in': return 'Walked in';
+    case 'Someone else': return 'Someone else booked';
+    case 'Phone': return 'Booked by phone';
+    case 'Email': return 'Booked by email';
+    case 'Credit Card / Concierge': return 'Booked through Credit Card / Concierge';
+    default: return `Booked on: ${v}`;
+  }
+}
+
+function penRule(cls = '') {
+  return `<div class="pen-rule ${cls}" aria-hidden="true"></div>`;
+}
+
+const PEN_CORNER_SHORT = PEN_CORNER.replace(/([ML])([\d.]+) /g, (_, c, x) => {
+  const v = Number(x);
+  return `${c}${v <= 8 ? v : 8 + (v - 8) * (32 / 52)} `;
+});
+
+function penBracket(short = false) {
+  const w = short ? 40 : 60;
+  const d = short ? PEN_CORNER_SHORT : PEN_CORNER;
+  return `<div class="pbr${short ? ' pbr--short' : ''}" aria-hidden="true">
+    <svg class="pbr-t" width="${w}" height="10" viewBox="0 0 ${w} 10"><path d="${d}"/></svg>
+    <svg class="pbr-m" viewBox="0 0 6 1000" preserveAspectRatio="none"><path d="${PEN_MIDDLE}"/></svg>
+    <svg class="pbr-b" width="${w}" height="10" viewBox="0 0 ${w} 10"><path d="${d}"/></svg>
+  </div>`;
+}
+
+const BEAR = '<span class="m-bear" aria-hidden="true"></span>';
+
+function verdictWord(rating, extra = '') {
+  const best = Math.round(rating) === 5;
+  return `<span class="m-verdict${best ? ' m-verdict--top' : ''} ${extra}">${best ? BEAR.replace('m-bear', 'm-bear m-bear--sm') : ''}${esc(ratingLabel(rating))}</span>`;
+}
+
+function orderCount(n) {
+  return n > 1 ? `<span class="m-x" aria-label="${n} orders">×${n}</span>` : '';
+}
+
+function tableScale(step) {
+  const s = Math.min(5, Math.max(0, Math.round(step)));
+  const tone = s >= 4 ? 'ox' : s === 3 ? 'leather' : 'forest';
+  let dots = '';
+  for (let i = 0; i < 6; i++) dots += i === s ? `<i class="on on--${tone}"></i>` : '<i></i>';
+  return `<div class="m-scale" role="img" aria-label="Getting a table: step ${s + 1} of 6">
+    <div class="m-scale__track">${dots}</div>
+    <div class="m-scale__ends"><span>Walk in</span><span>Insider only</span></div>
+  </div>`;
+}
+
+function menuCardBody({ m, creator, appUrl, ctx }) {
+  const isTasting = m.is_tasting_menu === true;
+  const all = isTasting ? [] : toMenuCardLines(m);
+  const dishesOnly = all.filter((l) => l.type === 'dish');
+  // orderLines(): picks are about the food; with food on the card, drinks get their own bar.
+  const lines = dishesOnly.length > 0 ? dishesOnly : all;
+  const drinkBar = dishesOnly.length > 0 ? all.filter((l) => l.type === 'drink' && l.name.trim()) : [];
+  const order = whatToOrder(lines);
+  const top = order.top;
+  const picksTitle = order.mode === 'record' ? 'What I ordered' : 'What to order';
+
+  const ticket = m.ticket_number ? String(m.ticket_number).padStart(3, '0') : '';
+  const title = m.restaurant_name || 'Restaurant';
+  const longTitle = Array.from(title.trim()).length > 24;
+
+  // ── Fact line: "Dinner for 4 | Oct 2026" ──
+  const meal = MEAL_LABEL[m.meal_service] || '';
+  const party = Number(m.party_size) || 0;
+  const who = meal ? (party > 0 ? `${meal} for ${party}` : meal) : party > 0 ? `Party of ${party}` : '';
+  const when = m.visit_date ? formatMonth(m.visit_date) : '';
+  const factParts = [who, when].filter(Boolean);
+  const facts = factParts.length || m.is_go_to
+    ? `<div class="m-facts">
+        ${factParts.length ? `<p>${factParts.map((p) => `<span>${esc(p)}</span>`).join('<span aria-hidden="true">|</span>')}</p>` : ''}
+        ${m.is_go_to ? '<span class="m-marker"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.2 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8z"/></svg>Go-To</span>' : ''}
+      </div>`
+    : '';
+
+  // ── Author ──
+  const initial = (creator.handle || creator.name || '?').replace(/^@/, '').trim().slice(0, 1).toUpperCase();
+  const author = `<div class="m-author">
+      ${creator.avatar
+        ? `<img class="m-avatar" src="${esc(creator.avatar)}" alt="" loading="lazy">`
+        : `<span class="m-avatar m-avatar--empty">${esc(initial)}</span>`}
+      <span class="m-author__name">${esc(creator.handle || creator.name)}</span>
+    </div>`;
+
+  // ── Getting a table ──
+  const diff = typeof m.reservation_difficulty === 'number' ? m.reservation_difficulty : null;
+  const booked = bookingLine(m.reservation_service);
+  const tableNote = m.reservation_notes
+    ? `<p class="m-note"><strong>${(diff ?? 0) > 3 ? 'Access strategy:' : 'Tips:'}</strong> <span class="m-pre">${esc(m.reservation_notes)}</span></p>`
+    : '';
+  const table = diff !== null || booked
+    ? `<section class="m-table" aria-label="Getting a table">
+        <div class="m-table__row">
+          <span class="m-lbl">Getting a table</span>
+          ${diff !== null ? `<span class="m-table__val"><b>${esc(reservationDifficultyLabel(diff))}</b></span>` : ''}
         </div>
-      </li>`;
-    })
+        ${diff !== null ? tableScale(diff) : ''}
+        ${booked ? `<p class="m-booked">${esc(booked)}</p>` : ''}
+        ${tableNote}
+      </section>`
+    : (tableNote ? `<section class="m-table">${tableNote}</section>` : '');
+
+  // ── Drinks ──
+  const drinks = drinkBar.length
+    ? `<section class="m-drinks" aria-label="Drinks">
+        <div class="m-between"><span class="m-lbl">Drinks</span><span class="m-cnt">${drinkBar.length}</span></div>
+        <ul>${drinkBar
+          .map(
+            (d) => `<li>
+            ${d.photo_url ? `<img src="${esc(d.photo_url)}" alt="" loading="lazy">` : ''}
+            <span class="m-drink__name">${esc(d.name)}${orderCount(d.order_count)}</span>
+            ${!d.not_tried && d.rating > 0 ? `<span class="m-stars"><span aria-hidden="true">★</span> ${Math.round(d.rating)}</span>` : ''}
+          </li>`,
+          )
+          .join('')}</ul>
+      </section>`
+    : '';
+
+  // ── Rows ──
+  const courseWord = (l) => `<span class="m-course">${esc(COURSE_LABEL[l.course_type] || 'Main')}</span>`;
+  const restRow = (l, group) => {
+    const factsLine = [COURSE_LABEL[l.course_type] || 'Main', ...lineTags(l)].join(' · ');
+    const showVerdict = group !== 'Didn’t try' && !l.not_tried && Math.round(l.rating) >= 1;
+    return `<li class="m-row">
+      <span class="m-row__text">
+        <span class="m-name">${esc(l.name)}${orderCount(l.order_count)}</span>
+        <span class="m-course">${esc(factsLine)}</span>
+        ${showVerdict ? verdictWord(l.rating, 'm-verdict--row') : ''}
+      </span>
+      ${l.photo_url ? `<img class="m-row__img" src="${esc(l.photo_url)}" alt="" loading="lazy">` : ''}
+    </li>`;
+  };
+  const restGroups = [
+    ['Also order', order.rest.alsoOrder],
+    ['Solid', order.rest.solid],
+    ['Skip these', order.rest.skip],
+    ['Didn’t try', order.rest.notTried],
+  ].filter(([, xs]) => xs.length > 0);
+  const restList = restGroups
+    .map(
+      ([group, xs]) => `<section aria-label="${esc(group)}">
+        <div class="m-group"><h3>${esc(group)}</h3><span class="m-cnt">${xs.length}</span></div>
+        <ul>${xs.map((l) => restRow(l, group)).join('')}</ul>
+      </section>`,
+    )
     .join('');
 
-  const moreTile = remaining > 0 ? morePseudoRow(remaining, 'dish') : '';
+  // ── Picks: up to 3 ──
+  let picks = '';
+  if (!isTasting && top.length > 0) {
+    const first = top[0];
+    const others = top.slice(1);
+    const othersAsTiles = others.length === 2 && others.every((l) => !!l.photo_url);
+    const lead = first.photo_url
+      ? `<div class="m-lead">
+          <img src="${esc(first.photo_url)}" alt="${esc(first.name)}">
+          <div class="m-between m-lead__cap">
+            <span><span class="m-name m-name--lead">${esc(first.name)}${orderCount(first.order_count)}</span>${courseWord(first)}</span>
+            ${verdictWord(first.rating)}
+          </div>
+        </div>`
+      : `<div class="m-bracketed">
+          ${penBracket()}
+          ${verdictWord(first.rating)}
+          <span class="m-hero">${esc(first.name)}${orderCount(first.order_count)}</span>
+          ${courseWord(first)}
+        </div>`;
+    const more = othersAsTiles
+      ? `<div class="m-tiles">${others
+          .map(
+            (l) => `<div class="m-tile">
+              <img src="${esc(l.photo_url)}" alt="${esc(l.name)}" loading="lazy">
+              <span class="m-name">${esc(l.name)}${orderCount(l.order_count)}</span>
+              ${courseWord(l)}
+              ${verdictWord(l.rating, 'm-verdict--tile')}
+            </div>`,
+          )
+          .join('')}</div>`
+      : others.length
+        ? `<ul class="m-others">${others
+            .map(
+              (l) => `<li class="m-row m-row--big">
+                <span class="m-row__text">
+                  <span class="m-name m-name--big">${esc(l.name)}${orderCount(l.order_count)}</span>
+                  ${courseWord(l)}
+                  ${verdictWord(l.rating, 'm-verdict--row')}
+                </span>
+                ${l.photo_url ? `<img class="m-row__img m-row__img--big" src="${esc(l.photo_url)}" alt="" loading="lazy">` : ''}
+              </li>`,
+            )
+            .join('')}</ul>`
+        : '';
+    picks = `<section aria-label="${esc(picksTitle)}">
+        <div class="m-between m-sechd"><h2 class="m-title m-title--section">${esc(picksTitle)}</h2><span class="m-cnt">${top.length} of ${lines.length}</span></div>
+        ${penRule()}
+        ${lead}
+        ${more}
+      </section>`;
+  } else if (!isTasting && top.length === 0 && order.restCount > 0) {
+    picks = `<section aria-label="The order">
+        <div class="m-between m-sechd"><h2 class="m-title m-title--section">The order</h2><span class="m-cnt">${lines.length}</span></div>
+        ${penRule()}
+        ${restList}
+      </section>`;
+  }
 
-  const remainingLine =
-    remaining > 0
-      ? `+ ${remaining} more dishes. Every note, every bite, in the app.`
-      : `Sign up to see every note from this visit.`;
+  const tastingCover = isTasting
+    ? `<section aria-label="Part of the experience">
+        <div class="m-sechd"><h2 class="m-title m-title--section">Part of the experience</h2></div>
+        ${penRule()}
+        <p class="m-note m-note--plain">The chef planned these courses as a surprise. They open in the app once you log your visit or the menu changes.</p>
+      </section>`
+    : '';
 
-  // Visit date sits in the sub. Numeric overall_rating stays out of the
-  // preview entirely — the app uses a 1-5 scale and we only show stars/labels
-  // at the dish level.
-  const total = m.total_dish_count ?? (m.dishes_preview?.length ?? 0);
-  const eyebrowMeta = total > 0
-    ? `${total} ${total === 1 ? 'Dish Logged' : 'Dishes Logged'}`
-    : null;
+  const shift = m.would_try_next
+    ? `<div class="m-caption">
+        <svg class="m-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4"/><path d="M2 6h4M2 10h4M2 14h4M2 18h4"/><path d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/></svg>
+        <p><strong>Shift notes:</strong> <span class="m-pre">${esc(m.would_try_next)}</span></p>
+      </div>`
+    : '';
+  const comped = m.is_comped ? '<p class="m-comped">Meal comped by the restaurant or a sponsor.</p>' : '';
 
-  const sub = m.visit_date ? `Visited ${formatMonth(m.visit_date)}` : '';
+  const restSection = !isTasting && top.length > 0 && order.restCount > 0
+    ? `<section aria-label="The rest of the order" class="m-rest">
+        <div class="m-between m-sechd"><h2 class="m-title m-title--section">The rest of the order</h2><span class="m-cnt">${order.restCount} more</span></div>
+        ${penRule()}
+        ${restList}
+      </section>`
+    : '';
 
   return `
-    <article class="card">
-      ${cardEyebrow('Menu Card', eyebrowMeta)}
-      <h1 class="card__title">${esc(m.restaurant_name || 'Restaurant')}</h1>
-      ${sub ? `<p class="card__sub">${esc(sub)}</p>` : ''}
-      ${creatorBlock(creator, { isGoTo: m.is_go_to, isComped: m.is_comped })}
-      ${reservationManifest(m)}
-      <ul class="dishes">${dishes || '<li class="rank__empty">No dishes plated yet.</li>'}${moreTile}</ul>
-      <div class="rule-gold"></div>
-      <div class="shift-note">
-        <span class="shift-note__label">Shift Note:</span> ${remainingLine}
+    <article class="m-sheet">
+      <div class="m-top">
+        <span class="m-kind">${isTasting ? 'Tasting Menu' : 'Menu Card'}</span>
+        ${ticket ? `<span class="m-no">${BEAR}Nº ${esc(ticket)}</span>` : ''}
       </div>
-      ${signupCta('See the full menu card', appUrl, ctx)}
+      ${penRule()}
+      <h1 class="m-title m-title--page${longTitle ? ' m-title--long' : ''}" dir="auto">${esc(title)}</h1>
+      ${facts}
+      ${author}
+      ${table}
+      ${drinks}
+      ${picks}
+      ${tastingCover}
+      ${shift}
+      ${comped}
+      ${restSection}
+      ${signupCta('Open in WildHeavy', appUrl, ctx, { campaign: 'share_menu', note: 'Ate here too? Tap Make it mine in the app.', cls: 'm-cta' })}
     </article>`;
 }
 
@@ -371,148 +755,198 @@ function reservationManifest(m) {
     </aside>`;
 }
 
-// Inline intent-tag icons (Food / Drinks). Mirrors INTENT_TAG_CONFIG in the
-// app's src/types/routes.ts — extend both together when tags are added.
-function intentIconSvg(tag, size = 12) {
-  const attrs = `width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-1px"`;
-  if (tag === 'food') {
-    return `<svg ${attrs}><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Z"/><path d="M21 15v7"/></svg>`;
-  }
-  if (tag === 'drinks') {
-    return `<svg ${attrs}><path d="M8 22h8"/><path d="M7 10h10"/><path d="M12 15v7"/><path d="M12 15a5 5 0 0 0 5-5c0-2-.5-4-2-8H9c-1.5 4-2 6-2 8a5 5 0 0 0 5 5Z"/></svg>`;
-  }
-  return '';
+// ---------- Route and Spots (the app's layout) ----------
+//
+// Mirrors RouteDetail.tsx, SpreadParts.tsx and lib/spreadPage.ts. Keep the
+// pin colors, group titles and the "From" rules in step with those files.
+// Left in the app on purpose: the stop sheet, per-place and all-stops
+// Directions, the restaurant page, the attached Menu Card, "See them on the
+// map" (Spots).
+const SPREAD_PIN = {
+  drinks: { bg: '#C9A84C', fg: '#1A3629', label: 'Drinks' },
+  food: { bg: '#A0522D', fg: '#FBFBF9', label: 'Food' },
+  both: { bg: '#B87B3A', fg: '#FBFBF9', label: 'Both' },
+  untagged: { bg: '#2D2D2D', fg: '#FBFBF9', label: 'Not tagged' },
+};
+const SPREAD_INTENT_LABEL = { drinks: 'Drinks', food: 'Food', both: 'Food and drinks' };
+
+const SPREAD_ICON_ATTRS = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
+const SPREAD_TRANSPORT = {
+  walk: '<path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z"/><path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z"/><path d="M16 17h4"/><path d="M4 13h4"/>',
+  drive: '<path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/>',
+  transit: '<path d="M8 3.1V7a4 4 0 0 0 8 0V3.1"/><path d="m9 15-1-1"/><path d="m15 15 1-1"/><path d="M9 19c-2.8 0-5-2.2-5-5v-4a8 8 0 0 1 16 0v4c0 2.8-2.2 5-5 5Z"/><path d="m8 19-2 3"/><path d="m16 19 2 3"/>',
+  bike: '<circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/>',
+};
+const SPREAD_MODE_WORDS = {
+  walk: (m) => `${m} min walk`,
+  transit: (m) => `${m} min by transit`,
+  drive: (m) => `${m} min drive`,
+  bike: (m) => `${m} min by bike`,
+};
+const SPREAD_MODE_BARE = { walk: 'Walk', transit: 'Transit', drive: 'Drive', bike: 'Bike' };
+
+function spreadTravel(mode, minutes) {
+  const k = SPREAD_MODE_WORDS[mode] ? mode : 'walk';
+  const m = Number(minutes);
+  const text = Number.isFinite(m) && m > 0 ? SPREAD_MODE_WORDS[k](Math.round(m)) : SPREAD_MODE_BARE[k];
+  return `<span class="sp-travel"><svg ${SPREAD_ICON_ATTRS}>${SPREAD_TRANSPORT[k]}</svg>${esc(text)}</span>`;
 }
 
-// Small trailing intent marker on a stop/place name row.
-function intentNameSuffix(tag) {
-  const icon = intentIconSvg(tag);
-  return icon
-    ? `<span style="margin-left:6px;opacity:.65;color:var(--gold)">${icon}</span>`
-    : '';
+function spreadStopsOf(t) {
+  const raw = Array.isArray(t.stops) ? t.stops : [];
+  return raw.map((s, i) => {
+    const intent = s && SPREAD_INTENT_LABEL[s.intent_tag] ? s.intent_tag : null;
+    const note = typeof s.note === 'string' ? s.note.trim() : '';
+    return {
+      number: i + 1,
+      name: (s && s.name) || 'Unnamed place',
+      intent,
+      intentLabel: intent ? SPREAD_INTENT_LABEL[intent] : null,
+      neighborhood: (s && s.neighborhood) || null,
+      shortAddress: (s && s.short_address) || '',
+      note: note || null,
+      mode: s && s.transport_mode,
+      minutes: s && s.duration_minutes,
+    };
+  });
+}
+
+// The Giver, big, at the top (same block as the Menu Card and Ranking).
+function giverBlock(creator, trailing = '') {
+  const initial = (creator.handle || creator.name || '?').replace(/^@/, '').trim().slice(0, 1).toUpperCase();
+  return `<div class="m-author">
+      ${creator.avatar
+        ? `<img class="m-avatar" src="${esc(creator.avatar)}" alt="" loading="lazy">`
+        : `<span class="m-avatar m-avatar--empty">${esc(initial)}</span>`}
+      <span class="m-author__name">${esc(creator.handle || creator.name)}</span>
+      ${trailing}
+    </div>`;
+}
+
+function spreadSectionHead(title, count) {
+  return `<div class="m-sechd sp-sechd">
+      <div class="m-between"><h2 class="m-title m-title--section">${esc(title)}</h2><span class="m-cnt">${count}</span></div>
+      ${penRule('pen-rule--spread')}
+    </div>`;
+}
+
+function spreadHead(kind, t, creator, titleFallback, trailing = '') {
+  const cityOnly = String(t.city || '').split(',')[0].trim();
+  const title = t.title || titleFallback;
+  const longTitle = Array.from(String(title).trim()).length > 24;
+  return `
+      <div class="m-top">
+        <span class="m-kind">${kind}</span>
+        ${cityOnly ? `<span class="sp-city">${esc(cityOnly)}</span>` : ''}
+      </div>
+      ${penRule('pen-rule--spread')}
+      <h1 class="m-title m-title--page${longTitle ? ' m-title--long' : ''}" dir="auto">${esc(title)}</h1>`;
+}
+
+function spotsGroupsOf(stops) {
+  if (!stops.length) return [];
+  if (stops.every((s) => !s.intent)) return [{ title: 'The places', stops }];
+  return [
+    { title: 'For drinks', stops: stops.filter((s) => s.intent === 'drinks') },
+    { title: 'For food', stops: stops.filter((s) => s.intent === 'food') },
+    { title: 'For food and drinks', stops: stops.filter((s) => s.intent === 'both') },
+    { title: 'Also', stops: stops.filter((s) => !s.intent) },
+  ].filter((g) => g.stops.length > 0);
 }
 
 function spotsBody({ t, creator, appUrl, ctx }) {
-  // Unordered collection: pin nodes only. No Start/End labels, no meander
-  // connector, no durations — nothing that implies a sequence.
-  const stops = Array.isArray(t.stops) ? t.stops : [];
-  const total = t.total_stop_count || stops.length;
+  const stops = spreadStopsOf(t);
+  const total = Math.max(t.total_stop_count || 0, stops.length);
+  const count = `${total} ${total === 1 ? 'place' : 'places'}`;
+  const groups = spotsGroupsOf(stops);
+  const hidden = Math.max(0, total - stops.length);
 
-  const rows = stops
-    .map((s) => {
-      const nodeIcon = intentIconSvg(s.intent_tag, 11);
-      return `
-      <li class="timeline__row">
-        <div class="timeline__rail" aria-hidden="true">
-          <span class="timeline__node">${nodeIcon || '•'}</span>
-        </div>
-        <div class="timeline__body">
-          <div class="timeline__name">${esc(s.name || 'Unnamed place')}</div>
-        </div>
-      </li>`;
-    })
-    .join('');
-
-  const eyebrowMeta = total > 0
-    ? `${total} ${total === 1 ? 'Place' : 'Places'}`
-    : null;
+  const sections = groups.map((g) => `
+      <section aria-label="${esc(g.title)}">
+        ${spreadSectionHead(g.title, g.stops.length)}
+        <ul class="sp-spots">${g.stops.map((s) => `
+          <li class="sp-spot">
+            <span class="sp-dot" aria-hidden="true"></span>
+            <span class="sp-spot__text">
+              <span class="sp-name">${esc(s.name)}</span>
+              ${s.shortAddress ? `<span class="sp-sub">${esc(s.shortAddress)}</span>` : ''}
+              ${s.note ? `<span class="sp-snote">${esc(s.note)}</span>` : ''}
+            </span>
+          </li>`).join('')}
+        </ul>
+      </section>`).join('');
 
   return `
-    <article class="card">
-      ${cardEyebrow('Spots', eyebrowMeta)}
-      <h1 class="card__title">${esc(t.title || 'Untitled Spots')}</h1>
-      ${t.city ? `<p class="card__sub">${esc(t.city)}</p>` : ''}
-      ${creatorBlock(creator)}
-      <ol class="timeline">${rows || '<li class="rank__empty">No places on this list yet.</li>'}</ol>
-      <div class="rule-gold"></div>
-      <div class="shift-note">
-        <span class="shift-note__label">Shift Note:</span> Notes from the table live in the app.
-      </div>
-      ${signupCta('See all the spots', appUrl, ctx)}
+    <article class="m-sheet sp-sheet">
+      ${spreadHead('Spots', t, creator, 'Untitled Spots')}
+      ${giverBlock(creator, `<span class="sp-authorcount">${esc(count)}</span>`)}
+      ${t.description ? `<p class="sp-desc">${esc(t.description)}</p>` : ''}
+      ${sections || '<p class="sp-empty">No places on this list yet.</p>'}
+      ${hidden ? `<p class="rk-more">${hidden} more in the app</p>` : ''}
+      ${signupCta('See all the spots', appUrl, ctx, { campaign: 'share_spread', note: 'Directions to every place are in the app.', cls: 'm-cta' })}
     </article>`;
 }
 
 function routeBody({ t, creator, appUrl, ctx }) {
   if (t.kind === 'spots') return spotsBody({ t, creator, appUrl, ctx });
-  // Edge function returns ALL place stops as `t.stops` (notes are filtered
-  // out server-side). Per-leg duration_minutes and step notes are gatekept —
-  // those only show up inside the app.
-  //
-  // Backward compat: while the edge function is being redeployed, payloads
-  // may still arrive with the old `start_stop` / `end_stop` shape. Fall
-  // back to those so the preview renders something sensible in the gap.
-  let stops = Array.isArray(t.stops) ? t.stops : [];
+  let stops = spreadStopsOf(t);
+  // Backward compat: the old `start_stop` / `end_stop` payload shape.
   if (stops.length === 0 && (t.start_stop || t.end_stop)) {
-    stops = [t.start_stop, t.end_stop].filter(Boolean);
+    stops = spreadStopsOf({ stops: [t.start_stop, t.end_stop].filter(Boolean) });
   }
-  const total = t.total_stop_count || stops.length;
+  const total = Math.max(t.total_stop_count || 0, stops.length);
+  const n = stops.length;
 
-  const lastIdx = stops.length - 1;
-  const stopRows = stops
-    .map((s, i) => {
-      const labelParts = [];
-      if (i === 0) labelParts.push('Start');
-      else if (i === lastIdx && stops.length > 1) labelParts.push('End');
-      else labelParts.push(`Stop ${i + 1}`);
-      const label = labelParts.join(' ');
+  // Same key the app shows: Drinks, Food, Both always; Not tagged when needed.
+  const keys = ['drinks', 'food', 'both'];
+  if (stops.some((s) => !s.intent)) keys.push('untagged');
+  const key = `<ul class="sp-key" aria-label="Pin colors">${keys
+    .map((k) => `<li><span class="sp-keydot" style="background:${SPREAD_PIN[k].bg}"></span>${SPREAD_PIN[k].label}</li>`)
+    .join('')}</ul>`;
 
-      // Old-map node + dashed wavy connector. The rail itself is the visual:
-      // numbered brass markers stitched together by a hand-drawn-ish dotted
-      // route path. Alternates curve direction so it reads as a meander, not
-      // a straight subway line.
-      const curveLeft = i % 2 === 0;
-      const connector = i < lastIdx
-        ? `<span class="timeline__line">
-             <svg viewBox="0 0 28 48" preserveAspectRatio="none" aria-hidden="true">
-               <path d="${
-                 curveLeft
-                   ? 'M 14 0 C 2 12, 26 24, 14 36 S 6 48, 14 48'
-                   : 'M 14 0 C 26 12, 2 24, 14 36 S 22 48, 14 48'
-               }"
-                     fill="none"
-                     stroke="var(--gold)"
-                     stroke-width="1.4"
-                     stroke-linecap="round"
-                     stroke-dasharray="2.5 4"
-                     opacity="0.62"/>
-             </svg>
-           </span>`
-        : '';
-
-      return `
-      <li class="timeline__row">
-        <div class="timeline__rail" aria-hidden="true">
-          <span class="timeline__node">${i + 1}</span>
-          ${connector}
+  const rows = stops.map((s, i) => {
+    const isFirst = i === 0;
+    const isLast = i === n - 1;
+    const edge = n === 1 ? 'only' : isFirst ? 'first' : isLast ? 'last' : 'middle';
+    const pin = SPREAD_PIN[s.intent || 'untagged'];
+    const sub = [s.intentLabel, s.neighborhood, s.shortAddress].filter(Boolean).join(' · ');
+    const after = !isLast || s.note
+      ? `<div class="sp-grid">
+          <span class="sp-rail">${!isLast ? '<i class="sp-line"></i>' : ''}</span>
+          <span class="sp-after">
+            ${s.note ? `<span class="sp-note">${esc(s.note)}</span>` : ''}
+            ${!isLast ? `<span class="sp-move">${spreadTravel(s.mode, s.minutes)}</span>` : ''}
+          </span>
+        </div>`
+      : '';
+    return `
+      <li class="sp-stop">
+        <div class="sp-grid">
+          <span class="sp-rail"><i class="sp-line sp-line--${edge}"></i><b class="sp-pin" style="background:${pin.bg};color:${pin.fg}">${s.number}</b></span>
+          <span class="sp-main">
+            <span class="sp-name">${esc(s.name)}</span>
+            ${sub ? `<span class="sp-sub">${esc(sub)}</span>` : ''}
+          </span>
         </div>
-        <div class="timeline__body">
-          <div class="timeline__label">${esc(label)}</div>
-          <div class="timeline__name">${esc(s.name || 'Unnamed stop')}${intentNameSuffix(s.intent_tag)}</div>
-        </div>
+        ${after}
       </li>`;
-    })
-    .join('');
+  }).join('');
 
-  // Eyebrow shows stop count instead of city (city is in title context anyway
-  // for most routes, and durations are gatekept).
-  const eyebrowMeta = total > 0
-    ? `${total} ${total === 1 ? 'Stop' : 'Stops'}`
-    : null;
-
-  const sub = t.city ? t.city : '';
+  const hidden = Math.max(0, total - n);
+  const count = `${total} ${total === 1 ? 'stop' : 'stops'}`;
 
   return `
-    <article class="card">
-      ${cardEyebrow('Route', eyebrowMeta)}
-      <h1 class="card__title">${esc(t.title || 'Untitled route')}</h1>
-      ${sub ? `<p class="card__sub">${esc(sub)}</p>` : ''}
-      ${creatorBlock(creator)}
-      <ol class="timeline">${stopRows || '<li class="rank__empty">No stops on this walk yet.</li>'}</ol>
-      <div class="rule-gold"></div>
-      <div class="shift-note">
-        <span class="shift-note__label">Shift Note:</span> Time between stops & notes from the table live in the app.
-      </div>
-      ${signupCta('See the full route', appUrl, ctx)}
+    <article class="m-sheet sp-sheet">
+      ${spreadHead('Route', t, creator, 'Untitled route')}
+      <p class="sp-count">${esc(count)}</p>
+      ${giverBlock(creator)}
+      ${t.map_url ? `<div class="sp-map"><img src="${esc(t.map_url)}" alt="Map of the route" loading="lazy"></div>` : ''}
+      ${t.description ? `<p class="sp-desc">${esc(t.description)}</p>` : ''}
+      ${spreadSectionHead('The stops', total)}
+      ${n ? key : ''}
+      ${n ? `<ol class="sp-stops">${rows}</ol>` : '<p class="sp-empty">No stops on this route yet.</p>'}
+      ${hidden ? `<p class="rk-more">${hidden} more in the app</p>` : ''}
+      ${signupCta('See the full route', appUrl, ctx, { campaign: 'share_spread', note: 'Directions for every stop are in the app.', cls: 'm-cta' })}
     </article>`;
 }
 
@@ -574,16 +1008,16 @@ function creatorBlock(creator, badges = {}) {
     </div>`;
 }
 
-function signupCta(label, appUrl, ctx = {}) {
+function signupCta(label, appUrl, ctx = {}, opts = {}) {
   // On iOS, route the CTA to the App Store when we have an ID configured.
   // The intent: turn share-link traffic into installs. Without an APP_STORE_APP_ID
   // set, this falls through to the existing wildheavy.app behavior.
   const useAppStore = !!(ctx.ios && APP_STORE_APP_ID);
-  const href = useAppStore ? appStoreUrl() : (appUrl || 'https://wildheavy.app');
+  const href = useAppStore ? appStoreUrl(opts.campaign) : (appUrl || 'https://wildheavy.app');
   const finalLabel = useAppStore ? 'Get on the App Store' : label;
   return `
-    <a class="btn btn--primary btn--cta" href="${esc(href)}">${esc(finalLabel)} \u2192</a>
-    <p class="cta__note">Free \u00b7 Your dining file, kept in your pocket</p>`;
+    <a class="${opts.cls ? esc(opts.cls) : 'btn btn--primary btn--cta'}" href="${esc(href)}">${esc(finalLabel)} \u2192</a>
+    <p class="${opts.cls ? 'm-ctanote' : 'cta__note'}">${esc(opts.note || 'Free \u00b7 Your dining file, kept in your pocket')}</p>`;
 }
 
 // ---------- OG description builders ----------
@@ -777,7 +1211,7 @@ function renderPage(state, status = 200, ctx = {}) {
   // to emit unconditionally when we have an App ID. The `app-argument` value
   // gives the app a deep-link hint when a user already has it installed.
   const smartBanner = APP_STORE_APP_ID
-    ? `<meta name="apple-itunes-app" content="app-id=${esc(APP_STORE_APP_ID)}, app-argument=${esc(state.appUrl || 'https://wildheavy.app')}">`
+    ? `<meta name="apple-itunes-app" content="app-id=${esc(APP_STORE_APP_ID)}${APP_STORE_PROVIDER_TOKEN && state.campaign ? `, affiliate-data=pt=${esc(APP_STORE_PROVIDER_TOKEN)}&ct=${esc(state.campaign)}` : ''}, app-argument=${esc(state.appUrl || 'https://wildheavy.app')}">`
     : '';
 
   const html = `<!DOCTYPE html>
@@ -787,6 +1221,7 @@ function renderPage(state, status = 200, ctx = {}) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>${esc(state.ogTitle)}</title>
 <meta name="description" content="${esc(state.ogDescription)}">
+<meta name="robots" content="noindex, nofollow">
 ${smartBanner}
 
 <meta property="og:type" content="article">
@@ -807,12 +1242,12 @@ ${state.status === 'ok' ? `<meta property="og:image:width" content="1200">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,300..800;1,300..700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;600;700&family=Special+Elite&display=swap">
-<link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,300..800;1,300..700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@900&family=Bitter:ital,wght@0,300..800;1,300..700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;600;700&family=Special+Elite&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@900&family=Bitter:ital,wght@0,300..800;1,300..700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
 
 <style>
 :root {
-  --paper: #EDEBE3;
+  --paper: #FBFBF9;
   --paper-bright: #F4F2EA;
   --paper-dark: #E3E0D6;
   --ink: #1A3629;
@@ -833,6 +1268,7 @@ ${state.status === 'ok' ? `<meta property="og:image:width" content="1200">
   --font-type: 'Special Elite', ui-monospace, monospace;
   --radius: 2px;
   --radius-card: 4px;
+  --pen-rule-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 6' preserveAspectRatio='none'%3E%3Cpath d='M0 3.1L2.5 2.94L5 2.79L7.5 2.64L10 2.51L12.5 2.39L15 2.28L16.67 2.23L17.5 2.2L20 2.14L22.5 2.1L25 2.09L27.5 2.1L30 2.1L32.5 2.1L33.33 2.1L35 2.1L37.5 2.1L40 2.11L50 2.11L66.67 2.13L83.33 2.14L100 2.15L116.67 2.16L133.33 2.18L150 2.19L166.67 2.2L183.33 2.21L200 2.22L216.67 2.23L233.33 2.23L250 2.24L266.67 2.25L283.33 2.26L300 2.26L316.67 2.27L333.33 2.27L350 2.27L366.67 2.27L383.33 2.28L400 2.28L416.67 2.28L433.33 2.27L450 2.27L466.67 2.27L483.33 2.27L500 2.26L516.67 2.26L533.33 2.25L550 2.24L566.67 2.24L583.33 2.23L600 2.22L616.67 2.21L633.33 2.2L650 2.19L666.67 2.18L683.33 2.17L700 2.15L716.67 2.14L733.33 2.13L750 2.11L766.67 2.1L783.33 2.08L800 2.07L816.67 2.05L833.33 2.04L850 2.02L866.67 2L883.33 1.99L900 1.97L916.67 1.96L933.33 1.94L950 1.92L960 1.91L962.5 1.91L965 1.91L966.67 1.91L967.5 1.91L970 1.9L972.5 1.9L975 1.9L977.5 1.91L980 1.94L982.5 1.99L983.33 2.02L985 2.07L987.5 2.16L990 2.27L992.5 2.39L995 2.52L997.5 2.66L1000 2.8L1000 2.8L997.5 2.95L995 3.09L992.5 3.22L990 3.35L987.5 3.46L985 3.56L983.33 3.61L982.5 3.64L980 3.7L977.5 3.73L975 3.75L972.5 3.75L970 3.75L967.5 3.76L966.67 3.76L965 3.76L962.5 3.76L960 3.77L950 3.78L933.33 3.8L916.67 3.82L900 3.84L883.33 3.87L866.67 3.89L850 3.91L833.33 3.94L816.67 3.96L800 3.99L783.33 4.01L766.67 4.04L750 4.06L733.33 4.09L716.67 4.11L700 4.13L683.33 4.16L666.67 4.18L650 4.2L633.33 4.22L616.67 4.25L600 4.27L583.33 4.29L566.67 4.3L550 4.32L533.33 4.34L516.67 4.35L500 4.37L483.33 4.38L466.67 4.39L450 4.4L433.33 4.41L416.67 4.41L400 4.42L383.33 4.42L366.67 4.43L350 4.43L333.33 4.43L316.67 4.42L300 4.42L283.33 4.42L266.67 4.41L250 4.4L233.33 4.39L216.67 4.38L200 4.37L183.33 4.35L166.67 4.34L150 4.32L133.33 4.31L116.67 4.29L100 4.27L83.33 4.25L66.67 4.23L50 4.2L40 4.19L37.5 4.19L35 4.18L33.33 4.18L32.5 4.18L30 4.18L27.5 4.17L25 4.17L22.5 4.15L20 4.11L17.5 4.05L16.67 4.02L15 3.96L12.5 3.85L10 3.72L7.5 3.58L5 3.43L2.5 3.27L0 3.1Z'/%3E%3C/svg%3E");
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
@@ -853,10 +1289,7 @@ body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background:
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.10   0 0 0 0 0.08   0 0 0 0 0.05  0 0 0 0.28 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
-    radial-gradient(ellipse at 50% 0%, #F4F2EA 0%, var(--paper) 45%, #E6E3D8 100%);
-  opacity: 0.6;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='7'%3E%3Cpath d='M0 3.5 Q5 1.2 10 3.5 T20 3.5 T30 3.5 T40 3.5' fill='none' stroke='%231A3629' stroke-width='0.6' stroke-opacity='0.075'/%3E%3C/svg%3E");
   pointer-events: none;
   z-index: 0;
 }
@@ -1565,6 +1998,182 @@ body::before {
   text-decoration-thickness: 1px;
 }
 .foot a:hover { color: var(--oxblood); text-decoration-color: var(--oxblood); }
+
+/* ---- The app's Menu Card (m-*) ---- */
+.pen-rule {
+  display: block; width: 100%; height: 6px; flex-shrink: 0;
+  background-color: currentColor;
+  -webkit-mask: var(--pen-rule-mask) no-repeat 0 0 / 100% 100%;
+  mask: var(--pen-rule-mask) no-repeat 0 0 / 100% 100%;
+  color: var(--ink);
+}
+.m-sheet { --hair: rgba(26,54,41,.16); --strong: #AFB9B4; --star: #A8772B; color: var(--ink); padding: 4px 2px 8px; }
+.m-sheet p { margin: 0; color: inherit; }
+.m-sheet h1, .m-sheet h2, .m-sheet h3 { margin: 0; }
+.m-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-bottom: 8px; }
+.m-kind { font-weight: 600; font-size: 15px; white-space: nowrap; }
+.m-no { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-weight: 700; font-size: 15px; color: var(--oxblood); }
+.m-bear { display: inline-block; width: 18px; height: 17px; background: currentColor;
+  -webkit-mask: url(https://wildheavy.com/bear-mark.png) center/contain no-repeat; mask: url(https://wildheavy.com/bear-mark.png) center/contain no-repeat; }
+.m-bear--sm { width: 14px; height: 13px; }
+.m-title {
+  font-family: 'Big Shoulders Display', 'Bitter', system-ui, serif; font-weight: 900; font-style: normal;
+  font-synthesis: none; letter-spacing: 0; line-height: 1.05; padding-bottom: .12em; color: var(--ink);
+  overflow-wrap: break-word; text-wrap: initial;
+}
+.m-title--page { font-size: 36px; margin-top: 14px !important; }
+.m-title--long { font-size: 30px; }
+.m-title--section { font-size: 22px; color: var(--oxblood); }
+.m-facts { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin-top: 10px; }
+.m-facts p { display: flex; flex-wrap: wrap; gap: 0 6px; font-size: 14px; color: rgba(26,54,41,.78); }
+.m-marker { display: inline-flex; align-items: center; gap: 4px; font-size: 12.5px; font-weight: 600; color: #8A5A34; white-space: nowrap; }
+.m-marker svg { width: 14px; height: 14px; fill: var(--star); stroke: var(--star); stroke-width: 1.5; stroke-linejoin: round; }
+.m-author { display: flex; align-items: center; gap: 16px; margin-top: 22px; min-width: 0; }
+.m-avatar { width: 76px; height: 76px; border-radius: 50%; object-fit: cover; flex: none; background: var(--ink); color: #FBFBF9; display: inline-flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 600; box-shadow: 0 0 0 3px #FBFBF9, 0 0 0 4.5px rgba(26,54,41,.35); margin-left: 5px; }
+.m-author__name { font-size: 22px; font-weight: 600; line-height: 1.15; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.m-booked { margin-top: 8px !important; font-size: 14px; color: rgba(26,54,41,.78) !important; }
+.m-lbl { font-size: 10.5px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: rgba(26,54,41,.7); }
+.m-cnt { font-family: var(--font-mono); font-size: 12px; color: rgba(26,54,41,.7); white-space: nowrap; }
+.m-between { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.m-sechd { padding: 28px 0 8px; }
+.m-table { margin-top: 16px; border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair); padding: 12px 0; }
+.m-table__row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.m-table__val { font-size: 14px; text-align: right; }
+.m-table__val b { font-weight: 600; }
+.m-scale { padding-top: 4px; }
+.m-scale__track { position: relative; display: flex; justify-content: space-between; align-items: center; height: 18px; margin: 0 4px; }
+.m-scale__track::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; transform: translateY(-50%); background: rgba(26,54,41,.18); }
+.m-scale__track i { position: relative; width: 9px; height: 9px; border-radius: 50%; border: 2px solid rgba(26,54,41,.35); background: #FBFBF9; box-sizing: border-box; }
+.m-scale__track i.on { width: 16px; height: 16px; border: 0; box-shadow: 0 0 0 3px #FBFBF9; }
+.m-scale__track i.on--forest { background: #1F4A33; }
+.m-scale__track i.on--leather { background: #8A5A34; }
+.m-scale__track i.on--ox { background: var(--oxblood); }
+.m-scale__ends { display: flex; justify-content: space-between; margin-top: 2px; font-size: 11.5px; color: rgba(26,54,41,.7); }
+.m-note { font-size: 14px; line-height: 1.4; margin-top: 8px !important; }
+.m-note strong, .m-caption strong { font-weight: 600; }
+.m-note--plain { margin-top: 12px !important; }
+.m-pre { white-space: pre-line; }
+.m-drinks { border-bottom: 1px solid var(--hair); padding: 12px 0; }
+.m-drinks ul { list-style: none; margin: 8px 0 0; padding: 0; }
+.m-drinks li { display: flex; align-items: center; gap: 12px; padding: 5px 0; }
+.m-drinks img { width: 44px; height: 44px; object-fit: cover; flex: none; }
+.m-drink__name { flex: 1; min-width: 0; font-family: var(--font-display); font-weight: 600; font-size: 15.5px; line-height: 1.25; }
+.m-stars { font-family: var(--font-mono); font-size: 13px; white-space: nowrap; }
+.m-stars span { color: var(--star); }
+.m-x { margin-left: 5px; font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: rgba(26,54,41,.7); }
+.m-name { display: block; font-family: var(--font-display); font-weight: 600; font-size: 16px; line-height: 1.2; }
+.m-name--lead { font-size: 17px; line-height: 1.22; }
+.m-name--big { font-size: 18px; }
+.m-course { display: block; margin-top: 2px; font-size: 12.5px; font-weight: 600; color: rgba(26,54,41,.7); }
+.m-verdict { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; font-size: 13px; font-weight: 700; color: var(--ink); }
+.m-verdict--top { color: var(--oxblood); }
+.m-verdict--row, .m-verdict--tile { margin-top: 4px; }
+.m-lead { margin-top: 14px; }
+.m-lead img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.m-lead__cap { padding-top: 10px; align-items: flex-start; }
+.m-bracketed { position: relative; margin-top: 16px; min-height: 104px; padding: 16px 4px 16px 18px; }
+.m-hero { display: block; margin-top: 6px; font-family: var(--font-display); font-weight: 700; font-size: 26px; line-height: 1.12; }
+.pbr { position: absolute; left: 1px; top: 1px; bottom: 1px; width: 60px; pointer-events: none; color: var(--ink); }
+.pbr svg { position: absolute; left: 0; display: block; fill: currentColor; }
+.pbr-t { top: 0; }
+.pbr-m { top: 9.5px; width: 6px; height: calc(100% - 19px); }
+.pbr-b { bottom: 0; transform: scaleY(-1); }
+.m-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: start; margin-top: 20px; }
+.m-tile { min-width: 0; }
+.m-tile img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; margin-bottom: 8px; }
+.m-others, .m-sheet section ul { list-style: none; margin: 0; padding: 0; }
+.m-others { margin-top: 12px !important; border-top: 1px solid var(--hair); }
+.m-row { display: flex; align-items: center; gap: 14px; min-height: 72px; padding: 8px 0; border-bottom: 1px solid var(--hair); }
+.m-row--big { padding: 14px 0; }
+.m-row__text { flex: 1; min-width: 0; }
+.m-row__img { width: 56px; height: 56px; object-fit: cover; flex: none; }
+.m-row__img--big { width: 112px; height: 112px; }
+.m-group { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 20px 0 6px; border-bottom: 1px solid var(--strong); }
+.m-group h3 { font-family: var(--font-body); font-size: 13px; font-weight: 600; letter-spacing: 0; color: rgba(26,54,41,.7); }
+.m-sheet ul li:last-child.m-row { border-bottom: 0; }
+.m-rest .m-sechd { padding-top: 32px; }
+.m-caption { display: flex; align-items: flex-start; gap: 8px; padding-top: 18px; font-size: 14.5px; line-height: 1.45; color: rgba(26,54,41,.86); }
+.m-ic { width: 16px; height: 16px; flex: none; margin-top: 2px; fill: none; stroke: var(--ink); stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+.m-comped { padding-top: 8px; font-size: 12.5px; color: rgba(26,54,41,.7) !important; }
+.m-cta {
+  display: flex; align-items: center; justify-content: center; margin-top: 28px; min-height: 52px; padding: 0 20px;
+  background: var(--ink); color: #FBFBF9 !important; border-radius: 2px; text-decoration: none !important;
+  font-family: var(--font-body); font-weight: 600; font-size: 16px; letter-spacing: 0; text-transform: none;
+}
+.m-cta:hover { background: #12271c; color: #FBFBF9 !important; }
+.m-ctanote { margin-top: 10px !important; text-align: center; font-size: 13.5px; color: rgba(26,54,41,.7) !important; }
+.pen-rule--brass { height: 9px; background: linear-gradient(90deg, #7a5a24 0%, #b8904a 14%, #f3dd9b 30%, #c9a24e 44%, #8a6a2f 58%, #d8bb72 74%, #f6e7b4 84%, #9c7633 100%); }
+
+/* ---- Route and Spots (sp-*) ---- */
+.pen-rule--spread { color: #466B8F; }
+.sp-city { font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: rgba(26,54,41,.7); }
+.sp-count { margin-top: 8px !important; font-family: var(--font-mono); font-size: 12px; font-variant-numeric: tabular-nums; color: rgba(26,54,41,.7) !important; }
+.sp-authorcount { margin-left: auto; flex: none; font-family: var(--font-mono); font-size: 12px; font-variant-numeric: tabular-nums; color: rgba(26,54,41,.7); }
+.sp-map { margin-top: 18px; border: 1px solid var(--hair); }
+.sp-map img { display: block; width: 100%; aspect-ratio: 35 / 23; object-fit: cover; background: #ECEBE6; }
+.sp-desc { margin-top: 16px !important; font-size: 15px; line-height: 1.4; color: rgba(26,54,41,.78) !important; white-space: pre-line; }
+.sp-sechd { padding-top: 26px; }
+.sp-sechd .m-between { padding-bottom: 4px; }
+.sp-key { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12.5px; color: rgba(26,54,41,.7); }
+.sp-key li { display: flex; align-items: center; gap: 5px; }
+.sp-keydot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
+.sp-stops { list-style: none; margin: 18px 0 0; padding: 0; }
+.sp-grid { display: grid; grid-template-columns: 24px 1fr; column-gap: 12px; }
+.sp-rail { position: relative; }
+.sp-line { position: absolute; left: 11px; top: 0; bottom: 0; width: 2px; background: #466B8F; }
+.sp-line--first { top: 13px; }
+.sp-line--last { bottom: auto; height: 13px; }
+.sp-line--only { display: none; }
+.sp-pin { position: absolute; left: 0; top: 2px; z-index: 1; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 12px; font-weight: 700; box-shadow: 0 0 0 3px #FBFBF9; }
+.sp-main { display: block; min-width: 0; padding-bottom: 6px; }
+.sp-name { display: block; font-family: var(--font-display); font-weight: 600; font-size: 17px; line-height: 1.22; }
+.sp-sub { display: block; margin-top: 2px; font-size: 13px; color: rgba(26,54,41,.7); }
+.sp-after { display: block; min-width: 0; padding-bottom: 12px; }
+.sp-note { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; padding-top: 8px; font-family: var(--font-display); font-weight: 500; font-style: italic; font-size: 14px; line-height: 1.4; color: #3F4A44; }
+.sp-move { display: block; padding-top: 10px; }
+.sp-travel { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 11.5px; color: rgba(26,54,41,.7); }
+.sp-travel svg { width: 14px; height: 14px; flex: none; }
+.sp-spots { list-style: none; margin: 0; padding: 0; }
+.sp-spot { display: flex; align-items: center; gap: 14px; min-height: 64px; padding: 10px 0; border-bottom: 1px solid var(--hair); }
+.sp-spot:last-child { border-bottom: 0; }
+.sp-dot { flex: none; width: 9px; height: 9px; margin-left: 2px; border-radius: 50%; background: #466B8F; }
+.sp-spot__text { flex: 1; min-width: 0; }
+.sp-snote { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: 5px; font-size: 14px; line-height: 1.38; color: #3F4A44; }
+.sp-empty { padding: 24px 0; font-size: 14px; color: rgba(26,54,41,.7) !important; }
+.rk-head { align-items: baseline; margin-top: 0; }
+.rk-head .m-title--page { margin-top: 14px !important; }
+.rk-city { flex: none; font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: rgba(26,54,41,.7); }
+.rk-n { display: inline-block; flex: none; font-family: 'Big Shoulders Display', 'Bitter', system-ui, serif; font-weight: 900; font-style: normal; font-synthesis: none; line-height: .8; font-variant-numeric: tabular-nums; user-select: none; }
+.rk-n--xl { font-size: 52px; } .rk-n--lg { font-size: 40px; } .rk-n--md { font-size: 30px; }
+.rk-n--leather { color: #8A5A34; }
+.rk-n--brass { background-image: linear-gradient(180deg, #7a5a24 0%, #c9a24e 30%, #f3dd9b 52%, #b8904a 74%, #7a5a24 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.rk-name { display: block; font-family: var(--font-display); font-weight: 600; font-size: 16px; line-height: 1.2; }
+.rk-name--lead { font-size: 22px; line-height: 1.15; }
+.rk-name--tile { font-size: 15px; line-height: 1.2; }
+.rk-name--clamp { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; font-size: 17px; }
+.rk-sub { display: block; margin-top: 2px; font-size: 13px; line-height: 1.3; color: rgba(26,54,41,.72); }
+.rk-top { padding-top: 22px; }
+.rk-lead__img { display: block; width: 100%; aspect-ratio: 5 / 3; object-fit: cover; }
+.rk-lead__cap { display: flex; align-items: flex-start; gap: 12px; margin-top: 12px; }
+.rk-lead__txt { min-width: 0; flex: 1; padding-top: 2px; }
+.rk-lead__nophoto { display: flex; align-items: stretch; gap: 12px; }
+.rk-lead__nophoto .rk-n { align-self: center; font-size: 92px; }
+.rk-bracketed { position: relative; min-width: 0; flex: 1; display: flex; flex-direction: column; justify-content: center; min-height: 112px; padding: 16px 4px 16px 20px; box-sizing: border-box; }
+.pbr--short { width: 40px; }
+.rk-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: start; margin-top: 20px; }
+.rk-tile { min-width: 0; }
+.rk-tile img { display: block; width: 100%; aspect-ratio: 6 / 5; object-fit: cover; }
+.rk-tile__box { position: relative; display: flex; align-items: center; width: 100%; aspect-ratio: 6 / 5; padding: 0 4px 0 16px; box-sizing: border-box; }
+.rk-tile__cap { display: flex; align-items: flex-start; gap: 8px; margin-top: 8px; }
+.rk-tile__cap > span:last-child { min-width: 0; padding-top: 2px; }
+.rk-list { padding-top: 8px; }
+.rk-list__hd { padding-bottom: 8px; border-bottom: 1px solid var(--hair); }
+.rk-list__lbl { font-size: 13px; font-weight: 600; color: rgba(26,54,41,.7); }
+.rk-row { display: flex; align-items: center; gap: 16px; min-height: 64px; padding: 12px 0; border-bottom: 1px solid var(--hair); }
+.rk-row__n { width: 36px; flex: none; }
+.rk-row__text { flex: 1; min-width: 0; }
+.rk-row__img { width: 56px; height: 56px; object-fit: cover; flex: none; }
+.rk-more { padding: 16px 0; font-size: 14px; font-weight: 600; color: rgba(26,54,41,.78) !important; border-bottom: 1px solid var(--hair); }
 </style>
 </head>
 <body>
@@ -1586,6 +2195,7 @@ body::before {
     headers: {
       'Content-Type': 'text/html; charset=utf-8',
       'Cache-Control': 'public, max-age=60, s-maxage=60',
+      'X-Robots-Tag': 'noindex, nofollow',
     },
   });
 }
