@@ -176,9 +176,7 @@ function notFoundState() {
     ogImage: 'https://wildheavy.com/og-image.png',
     appUrl: 'https://wildheavy.app',
     bodyHtml: stateHtml({
-      kicker: 'Not in the kitchen',
       title: 'Nothing in the kitchen by that name.',
-      sub: 'That link doesn\u2019t match anything in our house.',
       ctaLabel: 'Back to WildHeavy',
       ctaHref: 'https://wildheavy.com',
     }),
@@ -205,9 +203,9 @@ function errorState(msg) {
 function stateHtml({ kicker, title, sub, ctaLabel, ctaHref }) {
   return `
     <section class="state">
-      <div class="eyebrow"><span>${esc(kicker)}</span></div>
+      ${kicker ? `<div class="eyebrow"><span>${esc(kicker)}</span></div>` : ''}
       <h1 class="state__title">${esc(title)}</h1>
-      <p class="state__sub">${esc(sub)}</p>
+      ${sub ? `<p class="state__sub">${esc(sub)}</p>` : ''}
       <a class="btn btn--primary" href="${esc(ctaHref)}">${esc(ctaLabel)} \u2192</a>
     </section>`;
 }

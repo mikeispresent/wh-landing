@@ -89,12 +89,21 @@ function guestCheck(m, handle, size, wordmarkUri) {
   const noun = hasDrinks ? (total === 1 ? 'item' : 'items') : total === 1 ? 'dish' : 'dishes';
   const serial = typeof m.ticket_number === 'number' ? `Nº ${String(m.ticket_number).padStart(3, '0')}` : '';
 
+  // Tasting courses carry no stars. The right column shows the member's top 3
+  // pick number (or the course number when no picks were made), never blank.
+  const tasting = m.is_tasting_menu === true;
+  const picked = tasting && dishes.some((d) => typeof d.top_rank === 'number');
+  const rightLabel = tasting ? (picked ? 'Top 3' : 'Course') : 'Verdict';
+
   // Every Top Rank Worthy row gets the stamp; every other verdict is pen.
   const rows = dishes
     .map((d) => {
       const r = d.rating == null ? null : Math.round(Number(d.rating));
       let verdict = '';
-      if (r === 5) {
+      if (tasting) {
+        const n = picked ? d.top_rank : d.course_no;
+        verdict = typeof n === 'number' ? pen(`No. ${n}`, 'wrap') : '';
+      } else if (r === 5) {
         verdict = `<div class="stamp">Top Rank<br>Worthy</div>`;
       } else if (RATING_WORDS[r]) {
         verdict = pen(RATING_WORDS[r], 'wrap');
@@ -120,7 +129,7 @@ function guestCheck(m, handle, size, wordmarkUri) {
   <div class="line big"><div class="lbl">Restaurant</div>${pen(m.restaurant_name || 'Restaurant', 'fit name')}</div>
   <div class="opts">${boxes}</div>
   <div class="grid g3${hasPhoto(dishes) ? '' : ' nph'}">
-    <div class="row hd"><div class="c"></div><div class="c"><span class="lbl">Order</span></div><div class="c"><span class="lbl">Verdict</span></div></div>
+    <div class="row hd"><div class="c"></div><div class="c"><span class="lbl">Order</span></div><div class="c"><span class="lbl">${rightLabel}</span></div></div>
     ${rows}
     <div class="row">${'<div class="c"></div>'}<div class="c">${pen(more, 'fit small')}</div><div class="c"></div></div>
     ${blankRows(3, size.extraBlank)}

@@ -130,7 +130,7 @@ const STORY_CORS = { 'Access-Control-Allow-Origin': '*' };
 // deploys and are keyed by URL, so without this a design fix stays invisible
 // for the full TTL. Content edits are handled separately by the client
 // passing ?v=<updated_at>.
-const STORY_CACHE_VERSION = '11';
+const STORY_CACHE_VERSION = '12';
 
 async function handleStory(request, env, ctx, match, url) {
   if (request.method === 'OPTIONS') {
