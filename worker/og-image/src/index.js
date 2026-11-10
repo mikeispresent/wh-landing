@@ -10,9 +10,10 @@
  * IG DM / Twitter unfurls show the actual content (top items, ratings,
  * stops) instead of a lone photo or the logo.
  *
- * Design language: "The Institution" — mirrors share-preview.js tokens.
- * Any failure redirects to the static og-image.png so scrapers always
- * get an image.
+ * Design: "The Plate" on forest (2026-11-10), drawn in src/card.js. Half
+ * the card is the real photo or route map, the other half is the title and
+ * the top entries in the app's own type. Any failure redirects to the static
+ * og-image.png so scrapers always get an image.
  *
  * Deploy: npm install && npx wrangler deploy   (Workers Paid plan required)
  */
@@ -22,6 +23,7 @@ import { WORDMARK_FOREST } from './brand.js';
 import { buildStory, isAllowedPhotoUrl, STORY_W, STORY_H } from './story.js';
 import { buildPaperHtml, PAPER_SIZES } from './paper.js';
 import { renderInBrowser } from './browser.js';
+import { shape, plateCard } from './card.js';
 
 // wildheavy-prod. The old Lovable Cloud project (kufhzivrzvqayvzbwrpn) was
 // decommissioned in the 2026-08 backend migration — its DNS no longer
@@ -29,25 +31,13 @@ import { renderInBrowser } from './browser.js';
 const EDGE_FN = 'https://dxwjkuqsncatvovjwrzv.supabase.co/functions/v1/share-preview';
 const PREFIX_TO_TYPE = { r: 'ranking', m: 'menu_card', t: 'route' };
 const FALLBACK_IMG = 'https://wildheavy.com/og-image.png';
-const ROMAN = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x'];
-
-// Institution palette — keep in sync with share-preview.js / wh-design.css.
-const C = {
-  paper: '#EDEBE3',
-  bright: '#F4F2EA',
-  dark: '#E3E0D6',
-  ink: '#1A3629',
-  mute: 'rgba(26,54,41,0.58)',
-  gold: '#B8904A',
-  goldSoft: '#9E7A3B',
-  oxblood: '#7A2621',
-  rule: 'rgba(26,54,41,0.18)',
-  ruleGold: 'rgba(184,144,74,0.55)',
-};
 
 const WIDTH = 1200;
 const HEIGHT = 630;
-const MAX_ROWS = 3; // items shown on the card; spots/routes show up to 4
+// Bump on any change to card.js or pen.js. Edge cache entries survive
+// deploys and are keyed by URL, so without this a design change stays
+// invisible for the full 24h TTL.
+const OG_CACHE_VERSION = '2';
 
 export default {
   async fetch(request, env, ctx) {
@@ -61,7 +51,10 @@ export default {
 
     // Edge cache: scrapers hit once, everyone after gets the cached PNG.
     const cache = caches.default;
-    const cached = await cache.match(request);
+    const cacheUrl = new URL(url);
+    cacheUrl.searchParams.set('_v', OG_CACHE_VERSION);
+    const cacheKey = new Request(cacheUrl.toString(), { method: 'GET' });
+    const cached = await cache.match(cacheKey);
     if (cached) return cached;
 
     try {
@@ -74,15 +67,21 @@ export default {
       if (!res.ok) return Response.redirect(FALLBACK_IMG, 302);
       const data = await res.json();
 
-      // Swap remote photo URLs for time-boxed data URIs before rendering.
-      if (data.content_type === 'ranking') {
-        await resolveImages((data.ranking?.items_preview || []).slice(0, MAX_ROWS));
-      } else if (data.content_type === 'menu_card') {
-        await resolveImages((data.menu_card?.dishes_preview || []).slice(0, MAX_ROWS));
-      }
+      // Swap remote photo URLs for time-boxed data URIs before rendering:
+      // the shown entries' photos, the route's map, the creator's avatar.
+      const k = data.content_type;
+      const list = k === 'ranking' ? data.ranking?.items_preview
+        : k === 'menu_card' ? data.menu_card?.dishes_preview
+        : k === 'route' ? data.route?.stops : null;
+      await Promise.all([
+        resolveImages((list || []).slice(0, 4)),
+        (async () => { if (k === 'route' && data.route?.map_url) data.route.map_uri = await fetchThumb(data.route.map_url); })(),
+        (async () => { if (data.creator?.avatar_url) data.creator.avatar_uri = await fetchThumb(data.creator.avatar_url); })(),
+      ]);
 
-      const html = buildCard(data);
-      if (!html) return Response.redirect(FALLBACK_IMG, 302);
+      const card = shape(data);
+      if (!card) return Response.redirect(FALLBACK_IMG, 302);
+      const html = plateCard(card);
 
       const fonts = await loadFonts();
       const img = new ImageResponse(html, { width: WIDTH, height: HEIGHT, fonts, format: 'png' });
@@ -96,9 +95,10 @@ export default {
           'Cache-Control': 'public, max-age=3600, s-maxage=86400',
         },
       });
-      ctx.waitUntil(cache.put(request, response.clone()));
+      ctx.waitUntil(cache.put(cacheKey, response.clone()));
       return response;
-    } catch {
+    } catch (err) {
+      if (url.searchParams.has('debug')) return new Response(String(err && err.stack), { status: 500 });
       return Response.redirect(FALLBACK_IMG, 302);
     }
   },
@@ -249,211 +249,6 @@ function jsonErr(status, code) {
   });
 }
 
-// ---------- Card dispatch ----------
-function buildCard(data) {
-  const creator = data.creator || {};
-  const creatorName = creator.display_name || creator.username || 'A WildHeavy regular';
-  const handle = creator.username ? `@${creator.username}` : '';
-
-  if (data.content_type === 'ranking') return rankingCard(data.ranking, creatorName, handle);
-  if (data.content_type === 'menu_card') return menuCardCard(data.menu_card, creatorName, handle);
-  if (data.content_type === 'route') return routeCard(data.route, creatorName, handle);
-  return null;
-}
-
-// ---------- Ranking ----------
-function rankingCard(r, creatorName, handle) {
-  const total = r.total_item_count || (r.items_preview || []).length;
-  const items = (r.items_preview || []).slice(0, MAX_ROWS);
-  const remaining = Math.max(0, total - items.length);
-
-  const rows = items
-    .map((d, i) => {
-      const pos = ROMAN[i] || String(i + 1);
-      return row(
-        `<div style="display:flex;width:56px;justify-content:center;font-family:Bitter;font-weight:700;font-size:36px;color:${C.gold};">${esc(pos)}</div>`,
-        `<div style="display:flex;flex-direction:column;flex:1;min-width:0;">
-           <div style="display:flex;font-family:Bitter;font-weight:700;font-size:28px;color:${C.ink};max-width:760px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(clip(d.name || 'Unnamed', 48))}</div>
-           ${d.restaurant_name ? `<div style="display:flex;font-family:'JetBrains Mono';font-size:14px;letter-spacing:2px;color:${C.mute};margin-top:3px;">${esc(clip(d.restaurant_name.toUpperCase(), 46))}</div>` : ''}
-         </div>`,
-        thumb(d.image_url)
-      );
-    })
-    .join('');
-
-  const eyebrow = `RANKING${total ? ` · ${total} ${total === 1 ? 'ENTRY' : 'ENTRIES'}` : ''}`;
-  const foot = remaining > 0 ? `+ ${remaining} MORE — IN THE APP` : 'FULL LIST IN THE APP';
-
-  return shell({ eyebrow, title: r.title || 'Untitled ranking', sub: bylineLine(creatorName, handle, r.city), rows, foot });
-}
-
-// ---------- Menu card ----------
-function menuCardCard(m, creatorName, handle) {
-  const total = m.total_item_count ?? m.total_dish_count ?? (m.dishes_preview || []).length;
-  const dishes = (m.dishes_preview || []).slice(0, MAX_ROWS);
-  const remaining = Math.max(0, total - dishes.length);
-
-  const rows = dishes
-    .map((d) => {
-      const label = ratingLabel(d.rating);
-      return row(
-        thumb(d.image_url),
-        `<div style="display:flex;flex-direction:column;flex:1;min-width:0;">
-           <div style="display:flex;font-family:Bitter;font-weight:700;font-size:28px;color:${C.ink};max-width:800px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(clip(d.name || 'Unnamed dish', 48))}</div>
-           ${d.rating != null
-             ? `<div style="display:flex;align-items:center;margin-top:6px;">
-                  ${ratingBars(d.rating)}
-                  ${label ? `<div style="display:flex;font-family:'JetBrains Mono';font-size:15px;letter-spacing:2px;color:${C.mute};margin-left:14px;">${esc(label.toUpperCase())}</div>` : ''}
-                </div>`
-             : ''}
-         </div>`,
-        ''
-      );
-    })
-    .join('');
-
-  const eyebrow = `MENU CARD${total ? ` · ${total} ${total === 1 ? 'DISH LOGGED' : 'DISHES LOGGED'}` : ''}`;
-  const foot = remaining > 0 ? `+ ${remaining} MORE DISHES — IN THE APP` : 'EVERY NOTE IN THE APP';
-
-  return shell({ eyebrow, title: m.restaurant_name || 'Restaurant', sub: bylineLine(creatorName, handle), rows, foot });
-}
-
-// ---------- Spots / Route ----------
-function routeCard(t, creatorName, handle) {
-  const isSpots = t.kind === 'spots';
-  let stops = Array.isArray(t.stops) ? t.stops : [];
-  if (stops.length === 0 && (t.start_stop || t.end_stop)) {
-    stops = [t.start_stop, t.end_stop].filter(Boolean); // pre-Spots payload compat
-  }
-  const total = t.total_stop_count || stops.length;
-  const shown = stops.slice(0, 4);
-  const remaining = Math.max(0, total - shown.length);
-  const lastIdx = shown.length - 1;
-
-  const rows = shown
-    .map((s, i) => {
-      const marker = isSpots
-        ? `<div style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:22px;background:${C.gold};color:${C.bright};font-family:'JetBrains Mono';font-weight:700;font-size:18px;">●</div>`
-        : `<div style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:22px;background:${C.gold};color:${C.bright};font-family:'JetBrains Mono';font-weight:700;font-size:18px;">${i + 1}</div>`;
-      // "END" only when this is genuinely the route's final stop (nothing hidden).
-      const isTrueEnd = i === lastIdx && remaining === 0 && stops.length > 1;
-      const label = isSpots
-        ? ''
-        : (i === 0 ? 'START' : isTrueEnd ? 'END' : `STOP ${i + 1}`);
-      return `
-        <div style="display:flex;align-items:center;padding:10px 0;">
-          <div style="display:flex;width:64px;justify-content:center;">${marker}</div>
-          <div style="display:flex;flex-direction:column;flex:1;min-width:0;margin-left:16px;">
-            ${label ? `<div style="display:flex;font-family:'JetBrains Mono';font-size:13px;letter-spacing:3px;color:${C.goldSoft};margin-bottom:2px;">${esc(label)}</div>` : ''}
-            <div style="display:flex;font-family:Bitter;font-weight:700;font-size:30px;color:${C.ink};max-width:900px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(clip(s?.name || 'Unnamed', 52))}</div>
-          </div>
-        </div>`;
-    })
-    .join('');
-
-  const noun = isSpots ? (total === 1 ? 'PLACE' : 'PLACES') : (total === 1 ? 'STOP' : 'STOPS');
-  const eyebrow = `${isSpots ? 'SPOTS' : 'ROUTE'}${total ? ` · ${total} ${noun}` : ''}`;
-  const foot = remaining > 0 ? `+ ${remaining} MORE — IN THE APP` : 'NOTES FROM THE TABLE IN THE APP';
-
-  return shell({
-    eyebrow,
-    title: t.title || (isSpots ? 'Untitled Spots' : 'Untitled route'),
-    sub: bylineLine(creatorName, handle, t.city),
-    rows,
-    foot,
-    rowsGap: 0,
-  });
-}
-
-// ---------- Shared layout ----------
-function shell({ eyebrow, title, sub, rows, foot, rowsGap = 12 }) {
-  const t = clip(title, 60);
-  const titleSize = t.length > 30 ? 46 : 56;
-
-  return `
-  <div style="display:flex;flex-direction:column;width:${WIDTH}px;height:${HEIGHT}px;background:${C.paper};padding:36px;">
-    <div style="display:flex;flex-direction:column;flex:1;background:${C.bright};border:1px solid ${C.rule};border-radius:6px;padding:36px 48px 32px;">
-
-      <div style="display:flex;align-items:center;justify-content:space-between;">
-        <div style="display:flex;align-items:center;">
-          <div style="display:flex;font-family:'JetBrains Mono';font-weight:700;font-size:18px;letter-spacing:5px;color:${C.goldSoft};">${esc(eyebrow)}</div>
-        </div>
-        ${wordmark(40)}
-      </div>
-
-      <div style="display:flex;font-family:'Big Shoulders Display';font-weight:900;font-size:${titleSize}px;line-height:1.05;color:${C.ink};margin-top:14px;max-width:1080px;">${esc(t)}</div>
-      ${sub ? `<div style="display:flex;font-family:'JetBrains Mono';font-size:16px;letter-spacing:2px;color:${C.mute};margin-top:10px;">${esc(sub)}</div>` : ''}
-
-      <div style="display:flex;flex-direction:column;flex:1;justify-content:center;margin-top:14px;overflow:hidden;${rowsGap ? `gap:${rowsGap}px;` : ''}">
-        ${rows || `<div style="display:flex;font-family:Bitter;font-weight:700;font-size:28px;color:${C.mute};">Nothing plated yet.</div>`}
-      </div>
-
-      <div style="display:flex;align-items:center;margin-top:14px;">
-        <div style="display:flex;flex:1;height:1px;background:linear-gradient(90deg,rgba(184,144,74,0.05),${C.gold},rgba(184,144,74,0.05));"></div>
-      </div>
-      <div style="display:flex;justify-content:center;margin-top:10px;">
-        <div style="display:flex;font-family:'JetBrains Mono';font-weight:700;font-size:16px;letter-spacing:4px;color:${C.oxblood};">${esc(foot)}</div>
-      </div>
-
-    </div>
-  </div>`;
-}
-
-// A standard content row: [left][middle][right] on paper background.
-function row(left, middle, right) {
-  return `
-  <div style="display:flex;align-items:center;background:${C.paper};border:1px solid ${C.rule};border-radius:4px;padding:10px 16px;">
-    ${left}
-    <div style="display:flex;flex:1;min-width:0;margin-left:16px;margin-right:16px;">${middle}</div>
-    ${right}
-  </div>`;
-}
-
-// The wordmark is ARTWORK, never typeset. This used to be the string
-// "WILDHEAVY" set in letterspaced JetBrains Mono, which meant the link
-// preview and the app disagreed about what the brand looks like.
-function wordmark(h) {
-  const w = Math.round((WORDMARK_FOREST.w / WORDMARK_FOREST.h) * h);
-  return `<div style="display:flex;width:${w}px;height:${h}px;"><img src="${WORDMARK_FOREST.uri}" width="${w}" height="${h}" style="width:${w}px;height:${h}px;" /></div>`;
-}
-
-function thumb(dataUri) {
-  return dataUri
-    ? `<div style="display:flex;width:72px;height:72px;border-radius:4px;overflow:hidden;border:1px solid ${C.rule};"><img src="${dataUri}" width="72" height="72" style="width:72px;height:72px;object-fit:cover;" /></div>`
-    : `<div style="display:flex;width:72px;height:72px;border-radius:4px;background:${C.dark};border:1px solid ${C.rule};"></div>`;
-}
-
-function bylineLine(name, handle, city) {
-  const parts = [`BY ${name.toUpperCase()}`];
-  if (handle) parts.push(handle.toUpperCase());
-  if (city) parts.push(city.toUpperCase());
-  return clip(parts.join(' · '), 70);
-}
-
-// 5-segment brass bars — mirrors the app's rating scale without star glyphs
-// (glyph coverage in embedded fonts is not guaranteed).
-function ratingBars(n) {
-  const filled = Math.max(0, Math.min(5, Math.round(Number(n) || 0)));
-  let bars = '';
-  for (let i = 0; i < 5; i++) {
-    bars += `<div style="display:flex;width:24px;height:8px;border-radius:2px;background:${C.gold};opacity:${i < filled ? 1 : 0.22};margin-right:5px;"></div>`;
-  }
-  return `<div style="display:flex;align-items:center;">${bars}</div>`;
-}
-
-// Mirrors src/lib/ratingDefinitions.ts — keep in sync.
-function ratingLabel(n) {
-  if (n == null || Number.isNaN(Number(n))) return '';
-  switch (Math.round(Number(n))) {
-    case 5: return 'Top Rank Worthy';
-    case 4: return "Can't Miss";
-    case 3: return 'Solid';
-    case 2: return 'Decent';
-    case 1: return 'Skip It';
-    default: return '';
-  }
-}
-
 // ---------- Thumbnails: fetch -> data URI (bounded, best-effort) ----------
 // Satori can fetch remote images itself, but pre-fetching lets us time-box
 // and size-cap each one so a slow/huge photo can't sink the whole render.
@@ -540,19 +335,4 @@ async function fetchGoogleFontTtf(cssFamily) {
   const fontRes = await fetch(match[1]);
   if (!fontRes.ok) throw new Error(`Font fetch failed for ${cssFamily}`);
   return fontRes.arrayBuffer();
-}
-
-// ---------- Helpers ----------
-function clip(s, max) {
-  const str = String(s ?? '');
-  return str.length > max ? `${str.slice(0, max - 1)}…` : str;
-}
-
-// NOTE: satori-html does NOT decode HTML entities, so classic escaping
-// (&amp; etc.) renders literally on the card. Only neutralize tag-opening
-// characters; everything else passes through as plain text.
-function esc(s) {
-  return String(s ?? '')
-    .replace(/</g, '‹')
-    .replace(/>/g, '›');
 }
