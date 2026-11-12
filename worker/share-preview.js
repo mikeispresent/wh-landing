@@ -143,7 +143,7 @@ function previewState(data, slug, ctx = {}) {
       status: 'ok',
       ogTitle: buildListTitle(l, creatorName),
       ogDescription: buildListDescription(l),
-      ogImage: 'https://wildheavy.com/og-image.png',
+      ogImage: dynamicOgImage('list', slug),
       appUrl,
       campaign: 'share_list',
       bodyHtml: listBody({ l, creator: { name: creatorName, handle: creatorHandle, avatar }, appUrl, ctx }),
@@ -1159,7 +1159,7 @@ function buildRouteDescription(t) {
 // the actual content — top items, ratings, stops — at /og/{prefix}/{slug}.png.
 // It falls back to the static og-image.png internally on any failure, so this
 // URL is always safe to emit.
-const TYPE_TO_PREFIX = { ranking: 'r', menu_card: 'm', route: 't' };
+const TYPE_TO_PREFIX = { ranking: 'r', menu_card: 'm', route: 't', list: 'l' };
 
 function dynamicOgImage(contentType, slug) {
   const p = TYPE_TO_PREFIX[contentType];

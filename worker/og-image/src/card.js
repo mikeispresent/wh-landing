@@ -81,6 +81,21 @@ export function shape(data) {
       hero: t.map_uri || null,
     };
   }
+  if (data.content_type === 'list') {
+    // A My Recs list: the first four places, best dish first, as the page shows them.
+    const l = data.list;
+    const places = Array.isArray(l.places) ? l.places : [];
+    const total = l.place_count || places.length;
+    const shown = places.slice(0, 4);
+    return {
+      type: 'l', kind: 'Where to eat', ink: T.forest, handle, avatar,
+      title: l.title || 'My Recs', city: cityOnly(l.city) === l.title ? '' : cityOnly(l.city),
+      count: `${total} ${total === 1 ? 'place' : 'places'}`,
+      rows: shown.map((p) => ({ main: p.name || 'Unnamed', sub: p.best_dish?.name || '', photo: p.image_url || null })),
+      more: Math.max(0, total - shown.length),
+      hero: shown.find((p) => p.image_url)?.image_url || null,
+    };
+  }
   return null;
 }
 
@@ -144,7 +159,7 @@ export function plateCard(s, dark = true) {
   const long = s.title.length > 30;
   const ts = s.title.length <= 16 ? 96 : long ? 58 : 76;
   const lines = long ? 3 : 2;
-  const list = s.rows.slice(0, s.type === 't' ? 4 : 3).map((r) => {
+  const list = s.rows.slice(0, s.type === 't' || s.type === 'l' ? 4 : 3).map((r) => {
     const mark = s.type === 'r' ? div(`width:44px;`, numeral(r.n, 44, dark))
       : s.type === 't' ? div(`width:48px;`, pinImg(34, r.pin.bg, r.pin.fg, s.spots ? '' : String(r.n))) : '';
     const tail = s.type === 'm' && r.verdict ? txt(`font-family:'JetBrains Mono';font-weight:700;font-size:20px;color:${lead};text-transform:uppercase;margin-left:14px;flex-shrink:0;`, r.verdict) : '';
