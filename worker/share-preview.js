@@ -76,7 +76,9 @@ export default {
 
     let res;
     try {
-      res = await fetch(`${EDGE_FN}?type=${type}&slug=${slug}`, {
+      // ?app=1 is the app's own preview frame: not a link open, so not counted.
+      const src = url.searchParams.get('app') === '1' ? '&src=app' : '';
+      res = await fetch(`${EDGE_FN}?type=${type}&slug=${slug}${src}`, {
         headers: { Accept: 'application/json' },
       });
     } catch {
@@ -970,7 +972,10 @@ function routeBody({ t, creator, appUrl, ctx }) {
 // ---------- My Recs list ----------
 //
 // One row per place: the name, the Giver's best dish there, the photo. A row
-// links to that place's Menu Card page when there is one to open.
+// links to that place's Menu Card page when there is one to open. The first
+// LIST_VISIBLE places show (best dish first, so they are the strongest); the
+// rest wait behind "Show all", the same idea as a Ranking's first 20.
+const LIST_VISIBLE = 20;
 const LIST_STAR = '<svg class="ls-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.2 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8z"></path></svg>';
 
 function listCity(l) {
@@ -1000,7 +1005,8 @@ function listBody({ l, creator, appUrl, ctx }) {
   const longTitle = Array.from(String(title).trim()).length > 24;
   const anyLink = places.some((p) => p.card_slug);
 
-  const rows = places.map((p) => {
+  const rows = places.map((p, i) => {
+    const more = i >= LIST_VISIBLE ? ' class="ls-extra"' : '';
     const d = p.best_dish;
     const dish = d && d.name
       ? `<span class="ls-lbl">Best dish</span>
@@ -1013,8 +1019,8 @@ function listBody({ l, creator, appUrl, ctx }) {
             </span>
             ${p.image_url ? `<img class="ls-img" src="${esc(p.image_url)}" alt="" loading="lazy">` : ''}`;
     return p.card_slug
-      ? `<li><a class="ls-row" href="/m/${encodeURIComponent(p.card_slug)}">${inner}</a></li>`
-      : `<li><span class="ls-row">${inner}</span></li>`;
+      ? `<li${more}><a class="ls-row" href="/m/${encodeURIComponent(p.card_slug)}">${inner}</a></li>`
+      : `<li${more}><span class="ls-row">${inner}</span></li>`;
   }).join('');
 
   return `
@@ -1032,7 +1038,8 @@ function listBody({ l, creator, appUrl, ctx }) {
           <div class="m-between"><h2 class="m-title m-title--section">My places</h2><span class="m-cnt">${total}</span></div>
           ${penRule()}
         </div>
-        <ul class="ls-rows">${rows}</ul>
+        <ul class="ls-rows" id="ls-rows">${rows}</ul>
+        ${places.length > LIST_VISIBLE ? `<button type="button" class="ls-all" onclick="document.getElementById('ls-rows').classList.add('ls-open');this.remove();window.dispatchEvent(new Event('resize'));">Show all ${places.length}</button>` : ''}
         ${anyLink ? '<p class="ls-hint">Tap a place for the full Menu Card.</p>' : ''}
       </section>
       ${signupCta('Open in WildHeavy', appUrl, ctx, { campaign: 'share_list', note: 'Been to these? Log them and make your own list.', cls: 'm-cta' })}
@@ -2266,6 +2273,9 @@ body::before {
 .ls-rows { list-style: none; margin: 0; padding: 0; }
 .ls-row { display: flex; align-items: center; gap: 14px; min-height: 64px; padding: 16px 0; border-bottom: 1px solid var(--hair); color: inherit !important; text-decoration: none !important; }
 .ls-rows li:last-child .ls-row { border-bottom: 0; }
+.ls-rows .ls-extra { display: none; }
+.ls-rows.ls-open .ls-extra { display: block; }
+.ls-all { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 48px; margin-top: 4px; border: 1px solid var(--strong); border-radius: 2px; background: transparent; color: var(--ink); font-family: var(--font-body); font-weight: 600; font-size: 15px; cursor: pointer; }
 .ls-text { display: block; flex: 1; min-width: 0; }
 .ls-name { display: block; font-family: var(--font-display); font-weight: 600; font-size: 18px; line-height: 1.2; }
 .ls-lbl { display: block; margin-top: 8px; font-size: 10.5px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: rgba(26,54,41,.78); }
