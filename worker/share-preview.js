@@ -411,7 +411,6 @@ function toMenuCardLines(m) {
     not_tried: !!d.not_tried,
     order_count: Math.max(1, Number(d.order_count) || 1),
     is_seasonal: !!d.is_seasonal,
-    is_shared: !!d.is_shared,
     course_type: d.type === 'drink' ? 'drink' : (COURSE_LABEL[d.course_type] ? d.course_type : 'main'),
     variant_name: d.variant_name || null,
     photo_url: d.image_url || null,
@@ -422,7 +421,7 @@ function toMenuCardLines(m) {
 }
 
 function lineTags(l) {
-  return [l.variant_name, l.is_shared ? 'Shared' : null, l.is_seasonal ? 'Seasonal' : null].filter(Boolean);
+  return [l.variant_name, l.is_seasonal ? 'Seasonal' : null].filter(Boolean);
 }
 
 // How the table was booked. Mirrors bookingLine() in MenuCardVisitSheet.tsx,
