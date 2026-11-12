@@ -5,6 +5,7 @@
  *   /r/{slug}  -> ranking preview
  *   /m/{slug}  -> menu card preview
  *   /t/{slug}  -> route preview
+ *   /l/{slug}  -> My Recs list (neighborhood, quick list, would go back)
  *
  * Everything else passes through to the origin (GitHub Pages).
  *
@@ -18,10 +19,11 @@
  *        wildheavy.com/r/*   ->  share-preview
  *        wildheavy.com/m/*   ->  share-preview
  *        wildheavy.com/t/*   ->  share-preview
+ *        wildheavy.com/l/*   ->  share-preview
  */
 
 const EDGE_FN = 'https://dxwjkuqsncatvovjwrzv.supabase.co/functions/v1/share-preview';
-const PREFIX_TO_TYPE = { r: 'ranking', m: 'menu_card', t: 'route' };
+const PREFIX_TO_TYPE = { r: 'ranking', m: 'menu_card', t: 'route', l: 'list' };
 
 // Roman numerals for top-N positions (preview shows ≤3, supports up to 10).
 const ROMAN = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x'];
@@ -63,7 +65,7 @@ function isIos(userAgent) {
 export default {
   async fetch(request) {
     const url = new URL(request.url);
-    const match = url.pathname.match(/^\/([rmt])\/([A-Za-z0-9_-]{8,32})\/?$/);
+    const match = url.pathname.match(/^\/([rmtl])\/([A-Za-z0-9_-]{8,32})\/?$/);
 
     // Not a share path -> pass through to GitHub Pages origin.
     if (!match) return fetch(request);
@@ -128,6 +130,23 @@ function previewState(data, slug, ctx = {}) {
       appUrl,
       campaign: 'share_menu',
       bodyHtml: menuCardBody({ m, creator: { name: creatorName, handle: creatorHandle, avatar }, appUrl, ctx }),
+    };
+  }
+
+  if (data.content_type === 'list') {
+    const l = data.list;
+    // A list has no page of its own in the app; the Giver's profile does.
+    const appUrl = creator.username
+      ? `https://wildheavy.app/profile/${encodeURIComponent(creator.username)}`
+      : 'https://wildheavy.app/feed';
+    return {
+      status: 'ok',
+      ogTitle: buildListTitle(l, creatorName),
+      ogDescription: buildListDescription(l),
+      ogImage: 'https://wildheavy.com/og-image.png',
+      appUrl,
+      campaign: 'share_list',
+      bodyHtml: listBody({ l, creator: { name: creatorName, handle: creatorHandle, avatar }, appUrl, ctx }),
     };
   }
 
@@ -948,6 +967,78 @@ function routeBody({ t, creator, appUrl, ctx }) {
 }
 
 // ---------- Shared UI bits ----------
+// ---------- My Recs list ----------
+//
+// One row per place: the name, the Giver's best dish there, the photo. A row
+// links to that place's Menu Card page when there is one to open.
+const LIST_STAR = '<svg class="ls-star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.2 6.1 20.6l1.3-6.6L2.5 9.4l6.6-.8z"></path></svg>';
+
+function listCity(l) {
+  return String(l.city || '').split(',')[0].trim();
+}
+
+function buildListTitle(l, creatorName) {
+  const city = listCity(l);
+  if (l.kind === 'neighborhood') return `Where to eat in ${l.title}, by ${creatorName}`;
+  if (l.kind === 'go_back') return `Where ${creatorName} would go back${city ? ` in ${city}` : ''}`;
+  return `${l.title}${city ? ` in ${city}` : ''}, by ${creatorName}`;
+}
+
+function buildListDescription(l) {
+  const names = (l.places || []).map((p) => p.name).filter(Boolean);
+  const more = Math.max(0, (l.place_count || names.length) - 3);
+  const lead = names.slice(0, 3).join(', ');
+  return trim(more ? `${lead} and ${more} more.` : `${lead}.`);
+}
+
+function listBody({ l, creator, appUrl, ctx }) {
+  const places = Array.isArray(l.places) ? l.places : [];
+  const total = Math.max(l.place_count || 0, places.length);
+  const count = `${total} ${total === 1 ? 'place' : 'places'}`;
+  const city = listCity(l);
+  const title = l.title || 'My Recs';
+  const longTitle = Array.from(String(title).trim()).length > 24;
+  const anyLink = places.some((p) => p.card_slug);
+
+  const rows = places.map((p) => {
+    const d = p.best_dish;
+    const dish = d && d.name
+      ? `<span class="ls-lbl">Best dish</span>
+            <span class="ls-dish">${typeof d.rating === 'number' ? `${LIST_STAR}<span class="ls-num">${esc(String(d.rating))}</span>` : ''}<span class="ls-dishname">${esc(d.name)}</span></span>`
+      : '';
+    const inner = `
+            <span class="ls-text">
+              <span class="ls-name">${esc(p.name)}</span>
+              ${dish}
+            </span>
+            ${p.image_url ? `<img class="ls-img" src="${esc(p.image_url)}" alt="" loading="lazy">` : ''}`;
+    return p.card_slug
+      ? `<li><a class="ls-row" href="/m/${encodeURIComponent(p.card_slug)}">${inner}</a></li>`
+      : `<li><span class="ls-row">${inner}</span></li>`;
+  }).join('');
+
+  return `
+    <article class="m-sheet ls-sheet">
+      <div class="m-top">
+        <span class="m-kind">Where to eat</span>
+        <span class="ls-count">${esc(count)}</span>
+      </div>
+      ${penRule()}
+      <h1 class="m-title m-title--page${longTitle ? ' m-title--long' : ''}" dir="auto">${esc(title)}</h1>
+      ${city && city !== title ? `<p class="ls-city">${esc(city)}</p>` : ''}
+      ${giverBlock(creator)}
+      <section aria-label="My places">
+        <div class="m-sechd">
+          <div class="m-between"><h2 class="m-title m-title--section">My places</h2><span class="m-cnt">${total}</span></div>
+          ${penRule()}
+        </div>
+        <ul class="ls-rows">${rows}</ul>
+        ${anyLink ? '<p class="ls-hint">Tap a place for the full Menu Card.</p>' : ''}
+      </section>
+      ${signupCta('Open in WildHeavy', appUrl, ctx, { campaign: 'share_list', note: 'Been to these? Log them and make your own list.', cls: 'm-cta' })}
+    </article>`;
+}
+
 function cardEyebrow(label, meta) {
   const right = meta ? ` \u00b7 ${meta}` : '';
   return `
@@ -2170,6 +2261,20 @@ body::before {
 .rk-row__n { width: 36px; flex: none; }
 .rk-row__text { flex: 1; min-width: 0; }
 .rk-row__img { width: 56px; height: 56px; object-fit: cover; flex: none; }
+.ls-count { font-family: var(--font-mono); font-weight: 700; font-size: 15px; color: var(--oxblood); white-space: nowrap; }
+.ls-city { margin-top: 10px !important; font-size: 14px; color: rgba(26,54,41,.78) !important; }
+.ls-rows { list-style: none; margin: 0; padding: 0; }
+.ls-row { display: flex; align-items: center; gap: 14px; min-height: 64px; padding: 16px 0; border-bottom: 1px solid var(--hair); color: inherit !important; text-decoration: none !important; }
+.ls-rows li:last-child .ls-row { border-bottom: 0; }
+.ls-text { display: block; flex: 1; min-width: 0; }
+.ls-name { display: block; font-family: var(--font-display); font-weight: 600; font-size: 18px; line-height: 1.2; }
+.ls-lbl { display: block; margin-top: 8px; font-size: 10.5px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: rgba(26,54,41,.78); }
+.ls-dish { display: flex; align-items: center; gap: 5px; margin-top: 2px; font-size: 14.5px; min-width: 0; }
+.ls-dishname { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ls-star { width: 13px; height: 13px; flex: none; fill: var(--star); }
+.ls-num { font-family: var(--font-mono); font-size: 13px; }
+.ls-img { width: 96px; height: 96px; object-fit: cover; flex: none; }
+.ls-hint { margin-top: 6px !important; font-size: 13.5px; color: rgba(26,54,41,.78) !important; }
 .rk-more { padding: 16px 0; font-size: 14px; font-weight: 600; color: rgba(26,54,41,.78) !important; border-bottom: 1px solid var(--hair); }
 </style>
 </head>
@@ -2184,6 +2289,20 @@ body::before {
     ${state.bodyHtml}
     <p class="foot">Shared from <a href="https://wildheavy.com">WildHeavy</a></p>
   </div>
+  <script>
+  // Inside the app's preview frame: tell the app how tall this page is, so the
+  // frame fits it and there is one scroll. Does nothing on a normal visit.
+  (function () {
+    if (window.parent === window) return;
+    function tell() {
+      try { window.parent.postMessage({ whHeight: document.documentElement.scrollHeight }, '*'); } catch (e) {}
+    }
+    window.addEventListener('load', tell);
+    window.addEventListener('resize', tell);
+    document.addEventListener('load', tell, true);
+    tell();
+  })();
+  </script>
 </body>
 </html>`;
 
