@@ -24,6 +24,11 @@
 
 const EDGE_FN = 'https://dxwjkuqsncatvovjwrzv.supabase.co/functions/v1/share-preview';
 const PREFIX_TO_TYPE = { r: 'ranking', m: 'menu_card', t: 'route', l: 'list' };
+// Good call on a list goes straight to Supabase with the public (anon) key,
+// the same key the app ships with. The database function does the checking:
+// one per browser per list, the owner never counts, an hourly ceiling.
+const SUPABASE_URL = 'https://dxwjkuqsncatvovjwrzv.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR4d2prdXFzbmNhdHZvdmp3cnp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYwMTc0OTcsImV4cCI6MjEwMTU5MzQ5N30.y-YIbJVUU1wYuEm1caEK-x75_-QjBF6dpWUivjbJKM0';
 
 // Roman numerals for top-N positions (preview shows ≤3, supports up to 10).
 const ROMAN = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x'];
@@ -61,10 +66,34 @@ function isIos(userAgent) {
   return /iPhone|iPod|iPad/.test(userAgent);
 }
 
+// ---------- Good call ----------
+// POST /l/{slug}/good-call  { device }  ->  { count } or { error }
+async function goodCall(request, slug) {
+  const json = (body, status = 200) =>
+    new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
+  if (request.method !== 'POST') return json({ error: 'method_not_allowed' }, 405);
+  let device = '';
+  try { device = String((await request.json()).device || ''); } catch (_) { /* empty body */ }
+  if (!/^[A-Za-z0-9_-]{16,64}$/.test(device)) return json({ error: 'bad_device' }, 400);
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/good_call_rec_list`, {
+      method: 'POST',
+      headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ p_slug: slug, p_device: device }),
+    });
+    if (!res.ok) return json({ error: 'not_counted' }, res.status === 400 ? 404 : 502);
+    return json({ count: await res.json() });
+  } catch (_) {
+    return json({ error: 'not_counted' }, 502);
+  }
+}
+
 // ---------- Router ----------
 export default {
   async fetch(request) {
     const url = new URL(request.url);
+    const gc = url.pathname.match(/^\/l\/([A-Za-z0-9_-]{8,32})\/good-call\/?$/);
+    if (gc) return goodCall(request, gc[1]);
     const match = url.pathname.match(/^\/([rmtl])\/([A-Za-z0-9_-]{8,32})\/?$/);
 
     // Not a share path -> pass through to GitHub Pages origin.
@@ -148,7 +177,7 @@ function previewState(data, slug, ctx = {}) {
       ogImage: dynamicOgImage('list', slug),
       appUrl,
       campaign: 'share_list',
-      bodyHtml: listBody({ l, creator: { name: creatorName, handle: creatorHandle, avatar }, appUrl, ctx }),
+      bodyHtml: listBody({ l, slug, creator: { name: creatorName, handle: creatorHandle, avatar }, appUrl, ctx }),
     };
   }
 
@@ -996,7 +1025,7 @@ function buildListDescription(l) {
   return trim(more ? `${lead} and ${more} more.` : `${lead}.`);
 }
 
-function listBody({ l, creator, appUrl, ctx }) {
+function listBody({ l, slug, creator, appUrl, ctx }) {
   const places = Array.isArray(l.places) ? l.places : [];
   const total = Math.max(l.place_count || 0, places.length);
   const count = `${total} ${total === 1 ? 'place' : 'places'}`;
@@ -1042,8 +1071,41 @@ function listBody({ l, creator, appUrl, ctx }) {
         ${places.length > LIST_VISIBLE ? `<button type="button" class="ls-all" onclick="document.getElementById('ls-rows').classList.add('ls-open');this.remove();window.dispatchEvent(new Event('resize'));">Show all ${places.length}</button>` : ''}
         ${anyLink ? '<p class="ls-hint">Tap a place for the full Menu Card.</p>' : ''}
       </section>
+      ${goodCallBlock(slug, creator)}
       ${signupCta('Open in WildHeavy', appUrl, ctx, { campaign: 'share_list', note: 'Been to these? Log them and make your own list.', cls: 'm-cta' })}
     </article>`;
+}
+
+// The friend who got the list tells the Giver it was a good rec. One tap, no
+// sign-in. The browser remembers it was sent, so the button stays "sent".
+function goodCallBlock(slug, creator) {
+  const who = creator.handle || creator.name || 'them';
+  return `
+      <div class="ls-gc">
+        <p class="ls-gc__q">Tried one of these?</p>
+        <button type="button" class="ls-gc__btn" id="ls-gc" data-slug="${esc(slug)}">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Good call</span>
+        </button>
+        <p class="ls-gc__note" id="ls-gc-note">Tell ${esc(who)} it was a good rec.</p>
+      </div>
+      <script>
+      (function () {
+        var b = document.getElementById('ls-gc'); if (!b) return;
+        var slug = b.getAttribute('data-slug'), note = document.getElementById('ls-gc-note');
+        var store = function (k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } };
+        var done = function () { b.disabled = true; b.classList.add('ls-gc__btn--done'); b.querySelector('span').textContent = 'Good call sent'; note.textContent = 'Thanks. ${esc(who).replace(/'/g, "\\'")} will see it.'; };
+        if (store('wh-gc-' + slug)) done();
+        b.addEventListener('click', function () {
+          var device = store('wh-device');
+          if (!device) { device = (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2) + Date.now()).replace(/[^A-Za-z0-9]/g, ''); store('wh-device', device); }
+          b.disabled = true;
+          fetch('/l/' + slug + '/good-call', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ device: device }) })
+            .then(function (r) { if (!r.ok) throw r; store('wh-gc-' + slug, '1'); done(); })
+            .catch(function () { b.disabled = false; note.textContent = 'That did not go through. Try again.'; });
+        });
+      })();
+      </script>`;
 }
 
 function cardEyebrow(label, meta) {
@@ -2285,6 +2347,11 @@ body::before {
 .ls-num { font-family: var(--font-mono); font-size: 13px; }
 .ls-img { width: 96px; height: 96px; object-fit: cover; flex: none; }
 .ls-hint { margin-top: 6px !important; font-size: 13.5px; color: rgba(26,54,41,.78) !important; }
+.ls-gc { margin-top: 28px; padding-top: 22px; border-top: 1px solid var(--hair); text-align: center; }
+.ls-gc__q { font-family: var(--font-display); font-weight: 600; font-size: 18px; margin: 0 0 12px !important; }
+.ls-gc__btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; min-width: 200px; padding: 0 22px; border: 1.5px solid var(--ink); border-radius: 2px; background: transparent; color: var(--ink); font-family: var(--font-body); font-weight: 600; font-size: 16px; cursor: pointer; }
+.ls-gc__btn--done { background: var(--ink); color: #FBFBF9; cursor: default; }
+.ls-gc__note { margin-top: 10px !important; font-size: 13.5px; color: rgba(26,54,41,.78) !important; }
 .rk-more { padding: 16px 0; font-size: 14px; font-weight: 600; color: rgba(26,54,41,.78) !important; border-bottom: 1px solid var(--hair); }
 </style>
 </head>
