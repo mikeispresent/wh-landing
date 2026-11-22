@@ -6,6 +6,7 @@
  *   /og/m/{slug}.png  -> menu card
  *   /og/t/{slug}.png  -> spots / route card
  *   /og/l/{slug}.png  -> My Recs list card (neighborhood, quick list, would go back)
+ *   /og/w/{slug}.png  -> Want to try: a sent list or collection
  *
  * The share-preview Worker points its og:image tags here, so iMessage /
  * IG DM / Twitter unfurls show the actual content (top items, ratings,
@@ -30,7 +31,7 @@ import { shape, plateCard } from './card.js';
 // decommissioned in the 2026-08 backend migration — its DNS no longer
 // resolves, which broke every /og/* and /story/* render until 2026-08-17.
 const EDGE_FN = 'https://dxwjkuqsncatvovjwrzv.supabase.co/functions/v1/share-preview';
-const PREFIX_TO_TYPE = { r: 'ranking', m: 'menu_card', t: 'route', l: 'list' };
+const PREFIX_TO_TYPE = { r: 'ranking', m: 'menu_card', t: 'route', l: 'list', w: 'want' };
 const FALLBACK_IMG = 'https://wildheavy.com/og-image.png';
 
 const WIDTH = 1200;
@@ -38,16 +39,16 @@ const HEIGHT = 630;
 // Bump on any change to card.js or pen.js. Edge cache entries survive
 // deploys and are keyed by URL, so without this a design change stays
 // invisible for the full 24h TTL.
-const OG_CACHE_VERSION = '2';
+const OG_CACHE_VERSION = '3';
 
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
-    const storyMatch = url.pathname.match(/^\/story\/([rmt])\/([A-Za-z0-9_-]{8,32})\.png$/);
+    const storyMatch = url.pathname.match(/^\/story\/([rmtw])\/([A-Za-z0-9_-]{8,32})\.png$/);
     if (storyMatch) return handleStory(request, env, ctx, storyMatch, url);
 
-    const match = url.pathname.match(/^\/og\/([rmtl])\/([A-Za-z0-9_-]{8,32})\.png$/);
+    const match = url.pathname.match(/^\/og\/([rmtlw])\/([A-Za-z0-9_-]{8,32})\.png$/);
     if (!match) return Response.redirect(FALLBACK_IMG, 302);
 
     // Edge cache: scrapers hit once, everyone after gets the cached PNG.
@@ -74,7 +75,8 @@ export default {
       const list = k === 'ranking' ? data.ranking?.items_preview
         : k === 'menu_card' ? data.menu_card?.dishes_preview
         : k === 'route' ? data.route?.stops
-        : k === 'list' ? data.list?.places : null;
+        : k === 'list' ? data.list?.places
+        : k === 'want' ? data.want?.places : null;
       await Promise.all([
         resolveImages((list || []).slice(0, 4)),
         (async () => { if (k === 'route' && data.route?.map_url) data.route.map_uri = await fetchThumb(data.route.map_url); })(),
@@ -108,7 +110,8 @@ export default {
 
 // ---------- Story (1080x1920) ----------
 //
-// GET /story/{r|m|t}/{slug}.png?variant=photo|clean&photo=<storage url>
+// GET /story/{r|m|t|w}/{slug}.png?variant=photo|clean&photo=<storage url>
+// (w is a Want to try collection: paper card only, no Satori fallback.)
 //
 // Unlike the OG path this does NOT fall back to a static image on failure.
 // A 1200x630 landscape PNG dropped into a 9:16 slot looks broken, and the
@@ -132,7 +135,7 @@ const STORY_CORS = { 'Access-Control-Allow-Origin': '*' };
 // deploys and are keyed by URL, so without this a design fix stays invisible
 // for the full TTL. Content edits are handled separately by the client
 // passing ?v=<updated_at>.
-const STORY_CACHE_VERSION = '12';
+const STORY_CACHE_VERSION = '13';
 
 async function handleStory(request, env, ctx, match, url) {
   if (request.method === 'OPTIONS') {

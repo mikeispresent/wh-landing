@@ -96,6 +96,22 @@ export function shape(data) {
       hero: shown.find((p) => p.image_url)?.image_url || null,
     };
   }
+  if (data.content_type === 'want') {
+    // A sent Want to try list or collection: the first four places.
+    const w = data.want;
+    const places = Array.isArray(w.places) ? w.places : [];
+    const total = w.place_count || places.length;
+    const shown = places.slice(0, 4);
+    return {
+      // The whole list is itself titled Want to try, so its label says My list.
+      type: 'l', kind: w.is_collection ? 'Want to try' : 'My list', ink: T.spread, handle, avatar,
+      title: w.title || 'Want to try', city: w.city_line && w.city_line !== w.title ? w.city_line : '',
+      count: `${total} ${total === 1 ? 'place' : 'places'}`,
+      rows: shown.map((p) => ({ main: p.name || 'A place', sub: p.neighborhood || '', photo: p.image_url || null })),
+      more: Math.max(0, total - shown.length),
+      hero: shown.find((p) => p.image_url)?.image_url || null,
+    };
+  }
   return null;
 }
 

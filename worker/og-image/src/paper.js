@@ -6,6 +6,8 @@
  *   menu_card -> Guest Check   (diner order pad)
  *   ranking   -> Lineup Card   (dugout batting order)
  *   route     -> Route Card / Spots Card (punch card)
+ *   want      -> Want to Try note (a pale blue note held by a pushpin, on a
+ *                drawn dark green map; a collection from Want to try)
  *
  * Two sizes, chosen by the app (it cannot know where the user will post):
  *   story -> 1080x1920 (Instagram/Facebook Stories)
@@ -20,6 +22,8 @@
  * is false if the pen face fell back (width probe), so the Worker can refuse
  * to ship a card in the wrong font.
  */
+
+import { LOGO_FULL_FOREST } from './brand.js';
 
 export const PAPER_SIZES = {
   story: { w: 1080, h: 1920, top: 250, bottom: 250, extraBlank: 3 },
@@ -57,6 +61,9 @@ export function buildPaperHtml(data, { format = 'story', wordmarkUri }) {
   } else if (data.content_type === 'route' && data.route) {
     body = punchCard(data.route, handle, size, wordmarkUri);
     kind = 'punch';
+  } else if (data.content_type === 'want' && data.want) {
+    body = wantNote(data.want, handle, size, wordmarkUri);
+    kind = 'want';
   }
   if (!body) return null;
 
@@ -65,9 +72,12 @@ export function buildPaperHtml(data, { format = 'story', wordmarkUri }) {
   // Capped at 3 on purpose: the rest live in the app.
   let tablePhotos = topPhotos(data).slice(0, 3);
   if (tablePhotos.length === 1) tablePhotos = [tablePhotos[0], tablePhotos[0], tablePhotos[0]];
-  const table = tablePhotos.length
-    ? `<div class="table n${tablePhotos.length}">${tablePhotos.map((u) => `<img src="${escAttr(u)}" alt="">`).join('')}</div>`
-    : '';
+  // A Want to try note sits on the drawn map, never on photos (Nov 22 2026).
+  const table = kind === 'want'
+    ? WANT_MAP
+    : tablePhotos.length
+      ? `<div class="table n${tablePhotos.length}">${tablePhotos.map((u) => `<img src="${escAttr(u)}" alt="">`).join('')}</div>`
+      : '';
 
   return `<!doctype html><html><head><meta charset="utf-8">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -223,6 +233,61 @@ function punchCard(t, handle, size, wordmarkUri) {
   ${stub('')}`;
 }
 
+// ---------- Want to Try note (a collection) ----------
+// The places and where they are. Nothing about booking, and nothing about the
+// member's plans: the payload has none of it.
+function wantNote(w, handle, size, wordmarkUri) {
+  const places = Array.isArray(w.places) ? w.places : [];
+  const total = w.place_count || places.length;
+  const cap = size === PAPER_SIZES.post ? 3 : 4;
+  const shown = places.slice(0, cap);
+  const remaining = Math.max(0, total - shown.length);
+
+  const rows = shown
+    .map(
+      (p, i) => `<div class="row d"><div class="c num">${i + 1}</div>
+        <div class="c stack">${pen((p && p.name) || 'A place', 'fit')}${p && p.neighborhood ? pen(p.neighborhood, 'fit sub') : ''}</div></div>`
+    )
+    .join('');
+  const more = remaining > 0 ? `+ ${remaining} more, the full list in the app` : 'pin these in the app';
+
+  return `
+  <span class="pin"></span><span class="pin cap"></span>
+  ${masthead(LOGO_FULL_FOREST.uri, 'Want to Try', '').replace('class="wm"', 'class="wm full"')}
+  <div class="line big"><div class="lbl">${w.is_collection ? 'Collection' : 'List'}</div>${pen(w.title || 'Want to try', 'fit name')}</div>
+  <div class="fields f2">
+    ${field('City', w.city_line || '')}
+    ${field('Kept by', handle)}
+  </div>
+  <div class="grid gw">
+    <div class="row hd"><div class="c"><span class="lbl">No.</span></div><div class="c"><span class="lbl">Place</span></div></div>
+    ${rows}
+    <div class="row"><div class="c num">${shown.length + 1}</div><div class="c">${pen(more, 'fit small')}</div></div>
+  </div>
+  <div class="total"><div class="c tl">To try</div><div class="c">${pen(`${total} ${total === 1 ? 'place' : 'places'}`, 'fit')}</div></div>
+  ${stub('')}`;
+}
+
+// The drawn map behind a Want to try note. A pattern, not a real map of any
+// city (map tiles from Google can't go into a shareable image). Turned half
+// around so the river runs along the bottom.
+const WANT_MAP = `<div class="map"><svg viewBox="0 0 1080 1920" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<pattern id="blk" width="150" height="104" patternUnits="userSpaceOnUse" patternTransform="rotate(-9)"><rect width="150" height="104" fill="#1b3325"/><path d="M0 0H150M0 0V104" stroke="#28503a" stroke-width="7"/><path d="M75 0V104" stroke="#224533" stroke-width="3"/></pattern>
+<radialGradient id="vig" cx="50%" cy="45%" r="75%"><stop offset="0" stop-color="#16291e" stop-opacity="0"/><stop offset="1" stop-color="#0f1d15" stop-opacity="0.7"/></radialGradient>
+</defs>
+<rect width="1080" height="1920" fill="url(#blk)"/>
+<path d="M-40 420C180 360 300 520 470 470S820 250 1120 330V120C860 60 700 250 480 300S200 200 -40 250Z" fill="#183648"/>
+<path d="M700 1500l240-60 60 250-250 70Z" fill="#234a34"/>
+<path d="M90 1180l170-30 40 190-180 40Z" fill="#234a34"/>
+<path d="M-20 900L1100 640" stroke="#356b4c" stroke-width="16"/>
+<path d="M-20 1700L1100 1480" stroke="#356b4c" stroke-width="13"/>
+<path d="M260 -20L640 1940" stroke="#356b4c" stroke-width="13"/>
+<path d="M-20 1340C300 1250 520 1420 1100 1040" stroke="#2f6045" stroke-width="10" fill="none"/>
+<path d="M860 -20L960 1940" stroke="#2f6045" stroke-width="9"/>
+<rect width="1080" height="1920" fill="url(#vig)"/>
+</svg></div>`;
+
 // ---------- Pieces ----------
 function masthead(wordmarkUri, title, serial) {
   return `<div class="top">
@@ -323,15 +388,25 @@ body{background:radial-gradient(ellipse at 50% 40%,#2b4a37 0%,#1a2f22 75%);font-
 .check{--paper:#e6ecd8;--rot:-1.6deg}
 .lineup{--paper:#efe6cf;--rot:1.2deg}
 .punch{--paper:#ecd6c9;--rot:-0.9deg}
+.want{--paper:#dfe7ec;--rot:1.1deg}
+.paper.want{padding-top:56px}
+.map{position:absolute;inset:0;background:#16291e;overflow:hidden}
+.map svg{display:block;width:100%;height:100%;transform:rotate(180deg)}
+.map ~ .stage .paper{box-shadow:0 4px 0 rgba(0,0,0,.12),0 40px 80px rgba(0,0,0,.55)}
+.pin{position:absolute;left:50%;top:-26px;margin-left:-32px;width:64px;height:64px;border-radius:50%;background:radial-gradient(circle at 36% 30%,#8fb0cf 0%,#466B8F 46%,#2F4D69 100%);box-shadow:0 10px 14px rgba(0,0,0,.38),inset 0 -4px 6px rgba(0,0,0,.22);z-index:3}
+.pin.cap{top:-12px;margin-left:-14px;width:28px;height:28px;background:radial-gradient(circle at 38% 32%,#a9c3da 0%,#5d83a8 70%);box-shadow:0 2px 3px rgba(0,0,0,.25)}
 .lbl{font-size:17px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;line-height:1}
 .h{font-family:'Reenie Beanie',cursive;color:var(--pen);font-size:54px;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:clip;max-width:100%}
 .top{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:var(--heavy);padding-bottom:14px;gap:20px}
 .top .wm{height:88px;width:auto}
+.top .wm.full{height:150px}
+.want .top .no{min-width:94px}
 .top .gc{font-family:Bitter,serif;font-weight:800;font-size:56px;letter-spacing:-.01em;line-height:1;flex:1;text-align:center;white-space:nowrap}
 .top .no{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--ox);font-size:28px;min-width:60px;text-align:right}
 .fields{display:grid;border-bottom:var(--heavy)}
 .f4{grid-template-columns:1.15fr .7fr .9fr 1.7fr}
 .f3{grid-template-columns:1fr 1fr 1.4fr}
+.f2{grid-template-columns:1fr 1.4fr}
 .f{border-right:var(--hair);padding:9px 12px 6px;height:100px;display:flex;flex-direction:column;justify-content:space-between;min-width:0}
 .f:last-child{border-right:0}
 .f .h{font-size:48px}
@@ -347,6 +422,7 @@ body{background:radial-gradient(ellipse at 50% 40%,#2b4a37 0%,#1a2f22 75%);font-
 .row.d{height:122px}
 .g3 .row{grid-template-columns:128px 1fr 205px}
 .gl .row{grid-template-columns:76px 128px 1fr}
+.gw .row{grid-template-columns:76px 1fr}
 .gp .row{grid-template-columns:96px 128px 1fr 92px 92px}
 .g3.nph .row{grid-template-columns:1fr 205px}
 .g3.nph .row>.c:nth-child(1){display:none}

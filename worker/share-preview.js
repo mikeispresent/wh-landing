@@ -6,6 +6,7 @@
  *   /m/{slug}  -> menu card preview
  *   /t/{slug}  -> route preview
  *   /l/{slug}  -> My Recs list (neighborhood, quick list, would go back)
+ *   /w/{slug}  -> Want to try: a sent list or collection
  *
  * Everything else passes through to the origin (GitHub Pages).
  *
@@ -20,10 +21,12 @@
  *        wildheavy.com/m/*   ->  share-preview
  *        wildheavy.com/t/*   ->  share-preview
  *        wildheavy.com/l/*   ->  share-preview
+ *      Add this one for Want to try links (Nov 22 2026):
+ *        wildheavy.com/w/*   ->  share-preview
  */
 
 const EDGE_FN = 'https://dxwjkuqsncatvovjwrzv.supabase.co/functions/v1/share-preview';
-const PREFIX_TO_TYPE = { r: 'ranking', m: 'menu_card', t: 'route', l: 'list' };
+const PREFIX_TO_TYPE = { r: 'ranking', m: 'menu_card', t: 'route', l: 'list', w: 'want' };
 // Good call on a list goes straight to Supabase with the public (anon) key,
 // the same key the app ships with. The database function does the checking:
 // one per browser per list, the owner never counts, an hourly ceiling.
@@ -94,7 +97,7 @@ export default {
     const url = new URL(request.url);
     const gc = url.pathname.match(/^\/l\/([A-Za-z0-9_-]{8,32})\/good-call\/?$/);
     if (gc) return goodCall(request, gc[1]);
-    const match = url.pathname.match(/^\/([rmtl])\/([A-Za-z0-9_-]{8,32})\/?$/);
+    const match = url.pathname.match(/^\/([rmtlw])\/([A-Za-z0-9_-]{8,32})\/?$/);
 
     // Not a share path -> pass through to GitHub Pages origin.
     if (!match) return fetch(request);
@@ -161,6 +164,21 @@ function previewState(data, slug, ctx = {}) {
       appUrl,
       campaign: 'share_menu',
       bodyHtml: menuCardBody({ m, creator: { name: creatorName, handle: creatorHandle, avatar }, appUrl, ctx }),
+    };
+  }
+
+  if (data.content_type === 'want') {
+    const w = data.want;
+    // Opens the same link inside the app, where every place has a pin.
+    const appUrl = `https://wildheavy.app/want/${encodeURIComponent(slug)}`;
+    return {
+      status: 'ok',
+      ogTitle: buildWantTitle(w, creatorName),
+      ogDescription: buildWantDescription(w),
+      ogImage: dynamicOgImage('want', slug),
+      appUrl,
+      campaign: 'share_want',
+      bodyHtml: wantBody({ w, creator: { name: creatorName, handle: creatorHandle, avatar }, appUrl, ctx }),
     };
   }
 
@@ -1076,6 +1094,101 @@ function listBody({ l, slug, creator, appUrl, ctx }) {
     </article>`;
 }
 
+// ---------- Want to try: a sent list or collection ----------
+//
+// wildheavy.com/w/{slug} (Nov 22 2026). The owner sent their whole Want to
+// try, or one collection. Shown: the places, their neighborhood and city, the
+// collection's name, one member photo per place, and the restaurant's own
+// "reservations open" answer. Never anything about the member's plans: the
+// payload has no reminders, booked dates or Been, so the page cannot show them.
+const WT_PIN = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 14 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H9a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>';
+const WT_CAL = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>';
+
+function buildWantTitle(w, creatorName) {
+  return w.is_collection ? `${w.title}: places ${creatorName} wants to try` : `Places ${creatorName} wants to try`;
+}
+
+function buildWantDescription(w) {
+  const names = (w.places || []).map((p) => p.name).filter(Boolean);
+  const more = Math.max(0, (w.place_count || names.length) - 3);
+  const lead = names.slice(0, 3).join(', ');
+  return trim(more ? `${lead} and ${more} more.` : `${lead}.`);
+}
+
+function wantBody({ w, creator, appUrl, ctx }) {
+  const places = Array.isArray(w.places) ? w.places : [];
+  const total = Math.max(w.place_count || 0, places.length);
+  const count = `${total} ${total === 1 ? 'place' : 'places'}`;
+  const title = w.title || 'Want to try';
+  const longTitle = Array.from(String(title).trim()).length > 24;
+  const cities = Array.isArray(w.cities) ? w.cities : [];
+  // More than one city: a section for each, most places first, the way the
+  // app's city chips are ordered. One city (or none we can tell): one section.
+  const byCity = cities.length > 1;
+
+  let shownSoFar = 0;
+  const row = (p) => {
+    const more = shownSoFar >= LIST_VISIBLE ? ' class="ls-extra"' : '';
+    shownSoFar += 1;
+    const where = byCity ? p.neighborhood : (p.neighborhood || (cities.length ? '' : p.city));
+    // The sentence arrives already broken into lines at the comma, so no word
+    // is left stranded. It gets the row's full width, under the photo.
+    const res = p.reservations
+      ? `<span class="wt-res">${WT_CAL}<span>${esc(p.reservations).replace(/\n/g, '<br>')}</span></span>`
+      : '';
+    return `<li${more}><span class="ls-row">
+            <span class="ls-text">
+              <span class="ls-name">${esc(p.name || 'A place')}</span>
+              ${where ? `<span class="wt-where">${esc(where)}</span>` : ''}
+            </span>
+            ${p.image_url ? `<img class="ls-img" src="${esc(p.image_url)}" alt="" loading="lazy">` : ''}
+            ${res}</span></li>`;
+  };
+  const section = (name, rows) => {
+    if (rows.length === 0) return '';
+    // A city whose every place is past the first 20 waits behind Show all too.
+    const hide = shownSoFar >= LIST_VISIBLE ? ' ls-extra' : '';
+    return `<section class="wt-city${hide}" aria-label="${esc(name)}">
+          ${spreadSectionHead(name, rows.length)}
+          <ul>${rows.map(row).join('')}</ul>
+        </section>`;
+  };
+
+  let sections;
+  if (byCity) {
+    const known = new Set(cities.map((c) => c.name));
+    sections = cities.map((c) => section(c.name, places.filter((p) => p.city === c.name))).join('')
+      + section('Other places', places.filter((p) => !p.city || !known.has(p.city)));
+  } else {
+    sections = section('The places', places);
+  }
+
+  const who = creator.handle || creator.name;
+  const initial = (who || '?').replace(/^@/, '').trim().slice(0, 1).toUpperCase();
+  return `
+    <article class="m-sheet ls-sheet">
+      <div class="m-top">
+        <span class="m-kind wt-kind">${WT_PIN}${w.is_collection ? 'Want to try' : 'My list'}</span>
+        <span class="ls-count">${esc(count)}</span>
+      </div>
+      ${penRule('pen-rule--spread')}
+      <h1 class="m-title m-title--page${longTitle ? ' m-title--long' : ''}" dir="auto">${esc(title)}</h1>
+      ${w.city_line && w.city_line !== title ? `<p class="ls-city">${esc(w.city_line)}</p>` : ''}
+      <div class="m-author">
+        ${creator.avatar
+          ? `<img class="m-avatar" src="${esc(creator.avatar)}" alt="" loading="lazy">`
+          : `<span class="m-avatar m-avatar--empty">${esc(initial)}</span>`}
+        <span class="wt-by">
+          <span class="m-author__name">${esc(who)}</span>
+          <span class="wt-say">Places I want to try.</span>
+        </span>
+      </div>
+      <div class="ls-rows wt-rows" id="ls-rows">${sections}</div>
+      ${places.length > LIST_VISIBLE ? `<button type="button" class="ls-all" onclick="document.getElementById('ls-rows').classList.add('ls-open');this.remove();window.dispatchEvent(new Event('resize'));">Show all ${places.length}</button>` : ''}
+      ${signupCta('Open in WildHeavy', appUrl, ctx, { campaign: 'share_want', note: 'Want to go too? Pin these to your own list.', cls: 'm-cta wt-cta' })}
+    </article>`;
+}
+
 // The friend who got the list tells the Giver it was a good rec. One tap, no
 // sign-in. The browser remembers it was sent, so the button stays "sent".
 function goodCallBlock(slug, creator) {
@@ -1228,7 +1341,7 @@ function buildRouteDescription(t) {
 // the actual content — top items, ratings, stops — at /og/{prefix}/{slug}.png.
 // It falls back to the static og-image.png internally on any failure, so this
 // URL is always safe to emit.
-const TYPE_TO_PREFIX = { ranking: 'r', menu_card: 'm', route: 't', list: 'l' };
+const TYPE_TO_PREFIX = { ranking: 'r', menu_card: 'm', route: 't', list: 'l', want: 'w' };
 
 function dynamicOgImage(contentType, slug) {
   const p = TYPE_TO_PREFIX[contentType];
@@ -2347,6 +2460,18 @@ body::before {
 .ls-num { font-family: var(--font-mono); font-size: 13px; }
 .ls-img { width: 96px; height: 96px; object-fit: cover; flex: none; }
 .ls-hint { margin-top: 6px !important; font-size: 13.5px; color: rgba(26,54,41,.78) !important; }
+/* Want to try: a sent list or collection (/w/). Built on the list page's rows. */
+.wt-kind { display: inline-flex; align-items: center; gap: 7px; }
+.wt-kind svg { flex: none; color: #2F4D69; }
+.wt-by { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.wt-say { font-size: 14px; color: rgba(26,54,41,.78); }
+.wt-where { display: block; margin-top: 3px; font-size: 14px; color: rgba(26,54,41,.78); }
+.wt-rows .ls-row { flex-wrap: wrap; row-gap: 10px; }
+.wt-res { display: flex; align-items: flex-start; gap: 6px; flex: 0 0 100%; font-size: 14.5px; line-height: 1.35; }
+.wt-res svg { flex: none; margin-top: 2px; color: #2F4D69; }
+.wt-rows ul { list-style: none; margin: 0; padding: 0; }
+.wt-rows ul li:last-child .ls-row { border-bottom: 0; }
+.wt-cta { margin-top: 24px; }
 .ls-gc { margin-top: 28px; padding-top: 22px; border-top: 1px solid var(--hair); text-align: center; }
 .ls-gc__q { font-family: var(--font-display); font-weight: 600; font-size: 18px; margin: 0 0 12px !important; }
 .ls-gc__btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; min-width: 200px; padding: 0 22px; border: 1.5px solid var(--ink); border-radius: 2px; background: transparent; color: var(--ink); font-family: var(--font-body); font-weight: 600; font-size: 16px; cursor: pointer; }
