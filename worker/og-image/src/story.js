@@ -383,7 +383,7 @@ function routeBody(t, C) {
   return (
     header(C, {
       eyebrow: `${isSpots ? 'SPOTS' : 'ROUTE'}${total ? ` · ${total} ${noun}` : ''}`,
-      title: t.title || (isSpots ? 'Untitled Spots' : 'Untitled route'),
+      title: t.title || (isSpots ? 'Untitled list' : 'Untitled route'),
       sub: subLine(t.city),
     }) +
     rowsBox(C, rows, isSpots ? 'No places yet.' : 'No stops yet.') +

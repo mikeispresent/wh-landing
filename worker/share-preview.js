@@ -207,7 +207,7 @@ function previewState(data, slug, ctx = {}) {
   return {
     status: 'ok',
     ogTitle: isSpots
-      ? `${t.title}: Spots${t.city ? ` in ${t.city}` : ` by ${creatorName}`}`
+      ? `${t.title}: a list${t.city ? ` in ${t.city}` : ` by ${creatorName}`}`
       : `${t.title}, a route by ${creatorName}`,
     ogDescription: buildRouteDescription(t),
     ogImage: dynamicOgImage('route', slug),
@@ -908,15 +908,12 @@ function spreadHead(kind, t, creator, titleFallback, trailing = '') {
       <h1 class="m-title m-title--page${longTitle ? ' m-title--long' : ''}" dir="auto">${esc(title)}</h1>`;
 }
 
+// The member's own order (Nov 23 2026), the same as the app. Food or Drinks
+// is a label on each place; the list is never re-sorted into groups.
+const INTENT_LABEL = { drinks: 'Drinks', food: 'Food', both: 'Food and drinks' };
 function spotsGroupsOf(stops) {
   if (!stops.length) return [];
-  if (stops.every((s) => !s.intent)) return [{ title: 'The places', stops }];
-  return [
-    { title: 'For drinks', stops: stops.filter((s) => s.intent === 'drinks') },
-    { title: 'For food', stops: stops.filter((s) => s.intent === 'food') },
-    { title: 'For food and drinks', stops: stops.filter((s) => s.intent === 'both') },
-    { title: 'Also', stops: stops.filter((s) => !s.intent) },
-  ].filter((g) => g.stops.length > 0);
+  return [{ title: 'The places', stops }];
 }
 
 function spotsBody({ t, creator, appUrl, ctx }) {
@@ -934,7 +931,7 @@ function spotsBody({ t, creator, appUrl, ctx }) {
             <span class="sp-dot" aria-hidden="true"></span>
             <span class="sp-spot__text">
               <span class="sp-name">${esc(s.name)}</span>
-              ${s.shortAddress ? `<span class="sp-sub">${esc(s.shortAddress)}</span>` : ''}
+              ${[INTENT_LABEL[s.intent], s.shortAddress].filter(Boolean).length ? `<span class="sp-sub">${esc([INTENT_LABEL[s.intent], s.shortAddress].filter(Boolean).join(', '))}</span>` : ''}
               ${s.note ? `<span class="sp-snote">${esc(s.note)}</span>` : ''}
             </span>
           </li>`).join('')}
@@ -943,7 +940,7 @@ function spotsBody({ t, creator, appUrl, ctx }) {
 
   return `
     <article class="m-sheet sp-sheet">
-      ${spreadHead('Spots', t, creator, 'Untitled Spots')}
+      ${spreadHead('List', t, creator, 'Untitled list')}
       ${giverBlock(creator, `<span class="sp-authorcount">${esc(count)}</span>`)}
       ${t.description ? `<p class="sp-desc">${esc(t.description)}</p>` : ''}
       ${sections || '<p class="sp-empty">No places on this list yet.</p>'}

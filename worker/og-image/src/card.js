@@ -73,8 +73,8 @@ export function shape(data) {
     const total = t.total_stop_count || stops.length;
     const shown = stops.slice(0, 4);
     return {
-      type: 't', kind: spots ? 'Spots' : 'Route', ink: T.spread, handle, avatar, spots,
-      title: stripTail(t.title, t.city) || (spots ? 'Untitled Spots' : 'Untitled route'), city: cityOnly(t.city),
+      type: 't', kind: spots ? 'List' : 'Route', ink: T.spread, handle, avatar, spots,
+      title: stripTail(t.title, t.city) || (spots ? 'Untitled list' : 'Untitled route'), city: cityOnly(t.city),
       count: `${total} ${spots ? (total === 1 ? 'place' : 'places') : (total === 1 ? 'stop' : 'stops')}`,
       rows: shown.map((s, i) => ({ n: i + 1, main: s.name || 'Unnamed', sub: s.short_address || s.neighborhood || '', pin: PIN[s.intent_tag] || PIN.untagged, photo: s.image_url || null })),
       more: Math.max(0, total - shown.length),

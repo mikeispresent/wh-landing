@@ -217,8 +217,8 @@ function punchCard(t, handle, size, wordmarkUri) {
   const noun = isSpots ? (total === 1 ? 'place' : 'places') : total === 1 ? 'stop' : 'stops';
 
   return `
-  ${masthead(wordmarkUri, isSpots ? 'Spots Card' : 'Route Card', '')}
-  <div class="line big"><div class="lbl">${isSpots ? 'Spots' : 'Route'}</div>${pen(stripLocationTail(t.title, t.city) || (isSpots ? 'Untitled Spots' : 'Untitled route'), 'fit name')}</div>
+  ${masthead(wordmarkUri, isSpots ? 'List Card' : 'Route Card', '')}
+  <div class="line big"><div class="lbl">${isSpots ? 'List' : 'Route'}</div>${pen(stripLocationTail(t.title, t.city) || (isSpots ? 'Untitled list' : 'Untitled route'), 'fit name')}</div>
   <div class="fields f3">
     ${field('City', cityOnly(t.city))}
     ${field(isSpots ? 'Places' : 'Stops', `${total} ${noun}`)}
