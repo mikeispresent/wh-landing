@@ -104,7 +104,9 @@ export default {
 
     const [, prefix, slug] = match;
     const type = PREFIX_TO_TYPE[prefix];
-    const ctx = { ios: isIos(request.headers.get('User-Agent') || '') };
+    // ?app=1: the page is showing inside the WildHeavy app (a link-only item a
+    // friend opened there). No "Open in WildHeavy" or sign-up button in that case.
+    const ctx = { ios: isIos(request.headers.get('User-Agent') || ''), inApp: url.searchParams.get('app') === '1' };
 
     let res;
     try {
@@ -141,7 +143,7 @@ function previewState(data, slug, ctx = {}) {
 
   if (data.content_type === 'ranking') {
     const r = data.ranking;
-    const appUrl = buildAppUrl('ranking', r.id);
+    const appUrl = data.link_only ? linkOnlyAppUrl('r', slug) : buildAppUrl('ranking', r.id);
     return {
       status: 'ok',
       ogTitle: `${r.title} by ${creatorName}`,
@@ -155,7 +157,7 @@ function previewState(data, slug, ctx = {}) {
 
   if (data.content_type === 'menu_card') {
     const m = data.menu_card;
-    const appUrl = buildAppUrl('menu_card', m.id);
+    const appUrl = data.link_only ? linkOnlyAppUrl('m', slug) : buildAppUrl('menu_card', m.id);
     return {
       status: 'ok',
       ogTitle: `${m.restaurant_name}, a menu card by ${creatorName}`,
@@ -201,7 +203,7 @@ function previewState(data, slug, ctx = {}) {
 
   // route
   const t = data.route;
-  const appUrl = buildAppUrl('route', t.id);
+  const appUrl = data.link_only ? linkOnlyAppUrl('t', slug) : buildAppUrl('route', t.id);
   // Backward compat: payloads without `kind` (pre-Spots edge fn) are ordered.
   const isSpots = t.kind === 'spots';
   return {
@@ -1276,6 +1278,8 @@ function creatorBlock(creator, badges = {}) {
 }
 
 function signupCta(label, appUrl, ctx = {}, opts = {}) {
+  // Already inside the app: nothing to open or install.
+  if (ctx.inApp) return '';
   // On iOS, route the CTA to the App Store when we have an ID configured.
   // The intent: turn share-link traffic into installs. Without an APP_STORE_APP_ID
   // set, this falls through to the existing wildheavy.app behavior.
@@ -1348,6 +1352,12 @@ function dynamicOgImage(contentType, slug) {
 }
 
 // ---------- Helpers ----------
+// A link-only item (sent by its owner while set to Only me) has no page of its
+// own a friend may open in the app. The app shows this same page in a frame.
+function linkOnlyAppUrl(prefix, slug) {
+  return `https://wildheavy.app/shared/${prefix}/${encodeURIComponent(slug)}`;
+}
+
 function buildAppUrl(type, contentId) {
   const id = encodeURIComponent(contentId || '');
   switch (type) {
