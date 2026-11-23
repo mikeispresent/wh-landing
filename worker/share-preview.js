@@ -1419,6 +1419,9 @@ function humanizeEnum(v) {
   if (!v || typeof v !== 'string') return '';
   const overrides = {
     friends_casual: 'Friends',
+    work_dinner: 'Work Meal',
+    work_team: 'Work Meal, Team',
+    work_client: 'Work Meal, Client',
     solo_visit: 'Solo Visit',
     date_night: 'Date Night',
     happy_hour: 'Happy Hour',
