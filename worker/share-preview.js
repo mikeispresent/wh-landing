@@ -229,8 +229,7 @@ function unavailableState() {
     // wildheavy.app app-site-association lists /feed but not "/".
     appUrl: 'https://wildheavy.app/feed',
     bodyHtml: stateHtml({
-      kicker: 'Off the menu',
-      title: 'This link isn\u2019t on the menu.',
+      title: 'This link is off the menu.',
       sub: 'The regular who made this either set it private or pulled it down.',
       ctaLabel: 'Open WildHeavy',
       ctaHref: 'https://wildheavy.app/feed',
@@ -246,7 +245,8 @@ function notFoundState() {
     ogImage: 'https://wildheavy.com/og-image.png',
     appUrl: 'https://wildheavy.app',
     bodyHtml: stateHtml({
-      title: 'Nothing in the kitchen by that name.',
+      title: 'This link is off the menu.',
+      sub: 'It may have been taken down.',
       ctaLabel: 'Back to WildHeavy',
       ctaHref: 'https://wildheavy.com',
     }),
