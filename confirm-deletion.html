@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Delete Account · WildHeavy</title>
+    <meta name="robots" content="noindex">
+    <meta name="description" content="Confirm your WildHeavy account deletion.">
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@900&family=Bitter:ital,wght@0,300..800;1,300..700&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="wh-design.css?v=21">
+    <style>
+        .reset-container {
+            max-width: 500px;
+            margin: 80px auto;
+            padding: 0 24px;
+        }
+
+        .reset-form {
+            background: var(--paper-bright);
+            border: 1px solid var(--rule);
+            border-radius: var(--radius-card);
+            padding: 40px 32px;
+            box-shadow: var(--shadow-press);
+        }
+
+        .reset-form h2 {
+            font-family: var(--font-title);
+            font-size: 2.3rem;
+            font-weight: 900;
+            color: var(--ink);
+            margin-bottom: 12px;
+            letter-spacing: 0;
+            font-style: normal;
+            font-synthesis: none;
+        }
+
+        .reset-form p {
+            font-size: 0.96rem;
+            color: var(--ink-soft);
+            margin-bottom: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--ink-mute);
+            margin-bottom: 8px;
+        }
+
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--rule);
+            border-radius: var(--radius);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--ink);
+            background: white;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="password"]:focus {
+            border-color: var(--gold);
+        }
+
+        .password-hint {
+            font-size: 0.75rem;
+            color: var(--ink-mute);
+            margin-top: 4px;
+        }
+
+        .error {
+            color: var(--oxblood);
+            font-size: 0.75rem;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .error.show { display: block; }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: var(--radius-card);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .message.success {
+            background: rgba(22, 163, 74, 0.1);
+            color: #16a34a;
+            border-left: 3px solid #16a34a;
+        }
+
+        .message.error-msg {
+            background: rgba(122, 38, 33, 0.1);
+            color: var(--oxblood);
+            border-left: 3px solid var(--oxblood);
+        }
+
+        .hidden { display: none; }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--rule);
+            border-top-color: var(--ink);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-right: 6px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-wrapper">
+
+        <header class="site-masthead">
+            <a href="/" class="site-masthead__brand" aria-label="WildHeavy home">
+                <img src="Wild Heavy - Logo Branding - Transparent - Edited.png" alt="WildHeavy">
+            </a>
+            <div class="site-masthead__line">We’re all regulars here.<span class="tm">™</span></div>
+            <div class="site-masthead__rule"></div>
+        </header>
+
+        <!-- Confirm view: a second tap, so mail scanners that open links never delete anything -->
+        <div class="reset-container hidden" id="confirmView">
+            <div class="reset-form">
+                <h2>Delete your account?</h2>
+                <p>Tap below and we'll delete your WildHeavy account and personal information now. This can't be undone.</p>
+                <div id="confirmMessage" class="hidden"></div>
+                <button type="button" class="btn btn--primary" style="width: 100%; text-align: center; margin-top: 24px;" id="confirmBtn">Delete my account</button>
+                <a href="/" style="display: block; text-align: center; margin-top: 16px; color: var(--ink-soft); text-decoration: underline;">Keep my account</a>
+            </div>
+        </div>
+
+        <div class="reset-container hidden" id="doneView">
+            <div class="reset-form">
+                <h2>Your account is deleted</h2>
+                <p>We deleted your WildHeavy account and personal information. A receipt is on its way to your email.</p>
+                <a href="/" style="display: block; text-align: center; margin-top: 16px; color: var(--ink-soft); text-decoration: underline;">Visit wildheavy.com</a>
+            </div>
+        </div>
+
+        <div class="reset-container hidden" id="badView">
+            <div class="reset-form">
+                <h2 id="badTitle">This link doesn't work</h2>
+                <p id="badText">It may have expired or been replaced by a newer one. Reply to our email or write to support@wildheavy.com and we'll send a new link.</p>
+                <a href="mailto:support@wildheavy.com" class="btn btn--primary" style="width: 100%; text-align: center; display: block; margin-top: 24px;">Email support</a>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="legal-footer">
+        <div class="legal-footer__monogram"><span>Certified Heavy</span><span>Est. 2019</span></div>
+        <div class="legal-footer__links">
+            <a href="/">Home</a>
+            <a href="/about.html">About</a>
+            <a href="/blog.html">Off Menu</a>
+            <a href="/guidelines.html">Guidelines</a>
+            <a href="/terms.html">Terms</a>
+            <a href="/privacy.html">Privacy</a>
+            <a href="/dmca.html">DMCA</a>
+            <a href="/account-deletion.html">Delete Account</a>
+            <a href="mailto:support@wildheavy.com">Contact</a>
+        </div>
+        <div class="legal-footer__copy">&copy; 2026 Present Advisory LLC · Est. Chicago</div>
+        <div class="legal-footer__copy legal-footer__copy--tm">WildHeavy<span class="tm">™</span> is a trademark of Present Advisory LLC.</div>
+        <div class="legal-footer__disclaimer">
+            WildHeavy is an independent entity and is not affiliated with, endorsed by, or sponsored by any restaurant or third-party platform listed herein. All trademarks are property of their respective owners.
+        </div>
+    </footer>
+
+    <script>
+        // Emailed account deletion (Nov 2026). The link carries a one-time
+        // token. Nothing happens on page load: the member must tap the button.
+        const FN_URL = 'https://dxwjkuqsncatvovjwrzv.supabase.co/functions/v1/deletion-request';
+        const ANON_KEY = 'sb_publishable_Eb7RJwMEQz9Tz_P33mx2_A_gA_U13Lt';
+        const token = new URLSearchParams(window.location.search).get('t') || '';
+        const show = (id) => {
+            ['confirmView', 'doneView', 'badView'].forEach((v) => document.getElementById(v).classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+        };
+        const bad = (title, text) => {
+            if (title) document.getElementById('badTitle').textContent = title;
+            if (text) document.getElementById('badText').textContent = text;
+            show('badView');
+        };
+        if (!token) {
+            bad('Delete your account', 'To delete your account, open WildHeavy and go to Account, then Delete account. Or email support@wildheavy.com from the address on your account.');
+        } else {
+            show('confirmView');
+        }
+        document.getElementById('confirmBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('confirmBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading-spinner"></span>Deleting...';
+            try {
+                const r = await fetch(FN_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', apikey: ANON_KEY, Authorization: 'Bearer ' + ANON_KEY },
+                    body: JSON.stringify({ action: 'confirm', token }),
+                });
+                const out = await r.json().catch(() => ({}));
+                if (out.ok) { show('doneView'); return; }
+                if (out.reason === 'failed') {
+                    bad('Something went wrong', "We couldn't finish deleting your account. We've been alerted and will finish it. You can also tap your email link again later.");
+                    return;
+                }
+                bad();
+            } catch (e) {
+                btn.disabled = false;
+                btn.textContent = 'Delete my account';
+                const m = document.getElementById('confirmMessage');
+                m.className = 'message error-msg';
+                m.textContent = 'No connection. Check your internet and try again.';
+            }
+        });
+    </script>
+</body>
+</html>
